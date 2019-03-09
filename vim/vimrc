@@ -1,0 +1,155 @@
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-dispatch'
+" Plugin 'tpope/fugitive'
+" Plugin 'joonty/vim-do'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'rdnetto/YCM-Generator'
+" suan/vim-instant-markdown
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'vim-latex/vim-latex'
+call vundle#end()            " required
+
+" basic miscellaneous
+filetype plugin indent on
+syntax enable
+set encoding=utf-8
+
+set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
+set virtualedit=onemore             " Allow for cursor beyond last character
+set history=1000                    " Store a ton of history (default is 20)
+" set spell                           " Spell checking on
+set hidden                          " Allow buffer switching without saving
+
+set gdefault                    " Substitute all words on a line, :s///g gets only the first
+set showmatch                   " Show matching brackets/parenthesis
+set matchtime=3                 " for 3 ms
+set incsearch                   " Find as you type search
+set hlsearch                    " Highlight search terms
+set ignorecase                  " Case insensitive search
+set smartcase                   " Case sensitive when uc present
+set wildmenu                    " Show list instead of just completing
+set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
+set wildignore=*.pyc,*.class
+
+set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
+set splitright                  " Puts new vsplit windows to the right of the current
+set splitbelow                  " Puts new split windows to the bottom of the current
+
+set scrolloff=8
+set listchars=tab:>-,trail:~,extends:>,precedes:<,space:·,eol:¬
+set number
+set relativenumber
+set numberwidth=3
+set cursorline				" highlight current line
+" set cursorcolumn
+set showmode
+
+set backspace=indent,eol,start
+set shiftwidth=4                " Use indents of 4 spaces
+set expandtab                   " Tabs are spaces, not tabs
+set tabstop=4                   " An indentation every four columns
+set softtabstop=4               " Let backspace delete indent
+
+" optics
+set linespace=0
+set guifont=Menlo:h10
+set background=dark
+colorscheme antares
+
+" Setting up the directories
+set directory=~/.myvim/swap
+set backup                      " Backups are nice ...
+set backupdir=~/.myvim/backup
+if has('persistent_undo')
+    set undofile                " So is persistent undo ...
+    set undolevels=1000         " Maximum number of changes that can be undone
+    set undoreload=10000        " Maximum number lines to save for undo on a buffer reload
+    set undodir=~/.myvim/undo
+endif
+
+
+if has('clipboard')
+    if has('unnamedplus')  " When possible use + register for copy-paste
+        set clipboard=unnamed,unnamedplus
+    else         " On mac and Windows, use * register for copy-paste
+        set clipboard=unnamed
+    endif
+endif
+" status line TODO
+if has('cmdline_info')
+    set ruler                   " Show the ruler
+    set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
+    set showcmd                 " Show partial commands in status line and
+                                " Selected characters/lines in visual mode
+endif
+" http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
+" Restore cursor to file position in previous editing session
+function! ResCur()
+    if line("'\"") <= line("$")
+        silent! normal! g`"
+        return 1
+    endif
+endfunction
+augroup resCur
+    autocmd!
+    autocmd BufWinEnter * call ResCur()
+augroup END
+
+
+" mappings and shortcuts
+inoremap jk <ESC>
+" nnoremap ; :
+
+let mapleader = "\<Space>"
+
+" leadermap
+
+" toggle things
+" clear highlight
+nnoremap <silent> <leader>nh :set hlsearch!<CR>
+nnoremap <silent> <leader>nc :set cursorcolumn!<CR>
+
+" quick save and quit
+nnoremap <leader>w :update<CR>
+nnoremap <leader>q :q<CR>
+
+" split screen
+nnoremap <leader>d <C-w>v
+nnoremap <leader>s <C-w>s
+" navigate windows
+nnoremap <leader>h <C-w>h
+nnoremap <leader>j <C-w>j
+nnoremap <leader>k <C-w>k
+nnoremap <leader>l <C-w>l
+" move windows around
+nnoremap <leader>mh <C-w><S-h>
+nnoremap <leader>mj <C-w><S-j>
+nnoremap <leader>mk <C-w><S-k>
+nnoremap <leader>ml <C-w><S-l>
+
+" this should be only for c/c++
+nnoremap <leader>mm :Make<CR>
+" nnoremap <leader>mr :!./%:r.out<CR>
+nnoremap <leader>mr :Do ./%:r.out<CR>
+
+" move properly when lines are wrapped
+nnoremap j gj
+nnoremap k gk
+
+" Yank from the cursor to the end of the line, to be consistent with C and D.
+nnoremap Y y$
+
+
+" Plugins
+map <C-n> :NERDTreeToggle<CR>
+let g:NERDSpaceDelims = 1
+
+" let g:do_refresh_key
