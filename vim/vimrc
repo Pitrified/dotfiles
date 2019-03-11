@@ -153,3 +153,7 @@ map <C-n> :NERDTreeToggle<CR>
 let g:NERDSpaceDelims = 1
 
 " let g:do_refresh_key
+
+if filereadable(expand('~/.vimrc.local'))
+    source ~/.vimrc.local
+endif
