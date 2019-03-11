@@ -1,0 +1,108 @@
+# https://github.com/nickjj/dotfiles/blob/master/.tmux.conf
+
+# 256 colors for vim
+set -g default-terminal "screen-256color"
+
+# Mouse works as expected
+set-option -g mouse on
+
+# Ensure window titles get renamed automatically.
+setw -g automatic-rename
+
+# big scrollback
+set -g history-limit 10000
+
+# Use the system clipboard
+# set-option -g default-command "reattach-to-user-namespace -l bash"
+# https://github.com/rtomayko/dotfiles/blob/rtomayko/.tmux.conf
+
+# Status bar and colors
+# '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+# Status bar.
+set -g status-fg colour69
+set -g status-bg default
+set -g status-left ''
+#set -g status-right-length 0
+# I keep the clock hidden, but uncomment the last 2 lines to enable it
+set -g status-right-length 20
+set -g status-right '%a %Y-%m-%d %H:%M'
+
+set -g pane-border-fg default
+set -g pane-border-bg default
+set -g pane-active-border-fg colour69
+set -g pane-active-border-bg default
+
+# Highlight the active window in the status bar.
+set-window-option -g window-status-current-attr bold
+set-window-option -g window-status-current-fg colour69
+# '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+# -----------------------------------------------------------------------------
+# Change prefix from Ctrl-b to Alt-f
+# -----------------------------------------------------------------------------
+set -g prefix M-f
+bind M-f send-prefix
+
+# -----------------------------------------------------------------------------
+# Unbind default keys
+# -----------------------------------------------------------------------------
+unbind C-b
+unbind '"'
+unbind %
+
+# -----------------------------------------------------------------------------
+# Remap new bindings
+# -----------------------------------------------------------------------------
+# Reload the tmux config.
+bind-key r source-file ~/.tmux.conf
+
+# Split panes.
+bind-key h split-window -v
+bind-key v split-window -h
+
+# Move around panes with ALT + vim keys.
+bind-key -n M-k select-pane -U
+bind-key -n M-h select-pane -L
+bind-key -n M-j select-pane -D
+bind-key -n M-l select-pane -R
+
+# switch panes in direction w/ lower vim keys
+# bind h select-pane -L
+# bind j select-pane -D
+# bind k select-pane -U
+# bind l select-pane -R
+
+# resize panes in direction w/ upper vim keys
+# bind-key J resize-pane -D 5
+# bind-key K resize-pane -U 5
+# bind-key H resize-pane -L 5
+# bind-key L resize-pane -R 5
+
+# resize panes less w/ Alt + vim keys
+# bind-key M-j resize-pane -D
+# bind-key M-k resize-pane -U
+# bind-key M-h resize-pane -L
+# bind-key M-l resize-pane -R
+
+
+# possible clipboard
+bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "xclip -i -f -selection primary | xclip -i -selection clipboard"
+
+
+# -----------------------------------------------------------------------------
+# Plugin Manager - https://github.com/tmux-plugins/tpm
+# In order to use the plugins below you need to install TPM and the plugins.
+#   Step 1) git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+#   Step 2) Reload tmux if it's already started with `r
+#   Step 3) Launch tmux and hit `I (capital i) to fetch any plugins
+# -----------------------------------------------------------------------------
+# List of plugins.
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+# set -g @plugin 'tmux-plugins/tmux-yank'
+
+# Settings for tmux-resurrect:
+set -g @resurrect-save-bash-history 'on'
+
+# Initialize TPM (keep this line at the very bottom of your tmux.conf).
+run -b '~/.tmux/plugins/tpm/tpm'
