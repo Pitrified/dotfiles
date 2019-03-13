@@ -15,6 +15,7 @@ Plugin 'rdnetto/YCM-Generator'
 " suan/vim-instant-markdown
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-latex/vim-latex'
+Plugin 'easymotion/vim-easymotion'
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -57,6 +58,9 @@ set shiftwidth=4                " Use indents of 4 spaces
 set expandtab                   " Tabs are spaces, not tabs
 set tabstop=4                   " An indentation every four columns
 set softtabstop=4               " Let backspace delete indent
+
+" properly highlight for .tex
+let g:tex_flavor = "latex"
 
 " optics
 set linespace=0

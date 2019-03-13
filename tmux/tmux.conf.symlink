@@ -12,6 +12,10 @@ setw -g automatic-rename
 # big scrollback
 set -g history-limit 10000
 
+# start windows and panes numbering at 1
+set -g base-index 1
+setw -g pane-base-index 1
+
 # Use the system clipboard
 # set-option -g default-command "reattach-to-user-namespace -l bash"
 # https://github.com/rtomayko/dotfiles/blob/rtomayko/.tmux.conf
