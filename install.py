@@ -1,6 +1,7 @@
 from os import listdir
 from os.path import expanduser
 from os.path import isdir
+from os.path import islink
 from os.path import isfile
 from os.path import join
 from os.path import splitext
@@ -21,8 +22,8 @@ def backup(dir_old, myfile, dir_back, newfile=None):
     oldfull = join(dir_old, myfile)
     newfull = join(dir_back, newfile)
     print(f'Backing up: {oldfull}')
-    if not isfile(oldfull) and not isdir(oldfull):
-        print('Not a file nor a folder')
+    if not isfile(oldfull) and not isdir(oldfull) and not islink(oldfull):
+        print('       !!!! Not a file nor a folder nor a link')
         return
     print(f'      Into: {newfull}')
 
@@ -54,13 +55,19 @@ def main():
     backup(dir_home, '.bash_aliases', dir_back)
     bashalia = join(dir_home, '.bash_aliases')
     addsource(bashalia, '~/.bash_aliases.local')
-    createsymlink(dir_dot, 'vim', dir_home, '.vim', dir_back)
+    #  createsymlink(dir_dot, 'vim', dir_home, '.vim', dir_back)
 
     dirs = [d for d in listdir(dir_dot) if isConfDir(dir_dot, d ) ]
     for topic in dirs:
+        print()
+        topic_name, topic_ext = splitext(topic)
+        print(f'Topic: {topic_name} {topic_ext}')
+        if topic_ext == '.symlink':
+            createsymlink(dir_dot, topic, dir_home, f'.{topic_name}', dir_back)
+
         dir_topic = join(dir_dot, topic)
         configs = [c for c in listdir(dir_topic)]
-        print(f'\n{dir_topic}: {configs}')
+        print(f'{dir_topic}: {configs}')
         for config in configs:
             name, ext = splitext(config)
             #  print(f'{config}: {name}  {ext}')

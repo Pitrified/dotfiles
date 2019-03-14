@@ -1,0 +1,10 @@
+windows:
+  - name: bash
+    root: ~/uni/alg-ing/appunti
+  - name: git
+    root: ~/uni/alg-ing/appunti
+    layout: even-horizontal
+    panes:
+      - git status
+      - la
+
