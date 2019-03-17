@@ -7,4 +7,13 @@ windows:
     panes:
       - git status
       - la
+  - name: latexmk
+    root: ~/uni/alg-ing/appunti
+    panes:
+      - latexmk -pdf -pvc main.tex
+  - name: vim
+    root: ~/uni/alg-ing/appunti
+    layout: even-horizontal
+    panes:
+      - vim ~/uni/alg-ing/appunti/chapters/divide-conquer.tex
 

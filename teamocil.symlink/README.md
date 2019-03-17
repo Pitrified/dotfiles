@@ -8,10 +8,10 @@ $ teamocil [options] [layout-name]
 ```
 
 * `--list`: Lists all available layouts in `~/.teamocil`
-* `--layout`: Takes a custom file path to a YAML layout file instead of `[layout-name]`
 * `--here`: Uses the current window as the layout’s first window
 * `--edit`: Opens the layout file with `$EDITOR` instead of executing it
 * `--show`: Shows the layout content instead of executing it
+* `--layout`: Takes a custom file path to a YAML layout file instead of `[layout-name]`
 
 #### Custom window layout
 * even-horizontal
