@@ -3,11 +3,19 @@
 
 ## Vim tips and tricks
 
-* `g;`
+* `g;` go to last place an edit was made
 * `ab sht ShortHand` press `C-V`
 * tabs gt gT
 * marks and motion
 * go to last modified text/last change
+* in insert mode paste yanked text without leaving the insert mode `<C-r>0`
+* If yanked text contains new line characters, `<C-r><C-p>0` will take care of fixing indentation issues.
+* `<C-h>` " delete back one character (backspace)
+* `<C-w>` " delete back one word
+* `<C-u>` " delete back to start of line
+* `<C-k>` " delete forward to end of line
+* run normal mode across a range, visually select then `:normal somecommand`, accepts `.`
+* `"ap` and `"add` to edit macros
 
 ### Commands
 

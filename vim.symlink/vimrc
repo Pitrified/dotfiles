@@ -16,6 +16,7 @@ Plugin 'rdnetto/YCM-Generator'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-latex/vim-latex'
 Plugin 'easymotion/vim-easymotion'
+Plugin 'altercation/vim-colors-solarized'
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -66,7 +67,9 @@ let g:tex_flavor = "latex"
 set linespace=0
 set guifont=Menlo:h10
 set background=dark
-colorscheme antares
+" colorscheme antares
+let g:solarized_termcolors=256  " needed for terminal use 
+colorscheme solarized
 
 " Setting up the directories
 set directory=~/.myvim/swap
@@ -111,6 +114,8 @@ augroup END
 " mappings and shortcuts
 inoremap jk <ESC>
 " nnoremap ; :
+
+nnoremap <f5> :set paste!<CR>
 
 let mapleader = "\<Space>"
 
