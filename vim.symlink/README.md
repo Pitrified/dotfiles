@@ -16,7 +16,7 @@
 * `<C-k>` " delete forward to end of line
 * run normal mode across a range, visually select then `:normal somecommand`, accepts `.`
 * `"ap` and `"add` to edit macros
-
+* `autocmd BufWritePost $MYVIMRC source $MYVIMRC` to constantly reload vimrc while editing it
 ### Commands
 
 [qua](https://github.com/VSCodeVim/Vim/blob/master/ROADMAP.md) ci sono comandi in lista

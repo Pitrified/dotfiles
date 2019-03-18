@@ -161,6 +161,9 @@ nnoremap Y y$
 map <C-n> :NERDTreeToggle<CR>
 let g:NERDSpaceDelims = 1
 
+let g:ycm_complete_in_comments=1
+let g:ycm_min_num_of_chars_for_completion=1
+
 " let g:do_refresh_key
 
 if filereadable(expand('~/.vimrc.local'))
