@@ -34,9 +34,9 @@
 * `` `[`` enclose selection in `[]`
 * `` `{`` enclose selection in `{}`
 * `` `$`` enclose selection in `$$` or `\[\]` char or line select
-* `` `in`` expands to `\int_{<++>}^{<++>}<++>`
-* `` `su`` expands to `\sum_{<++>}^{<++>}<++>`
-* `` `pr`` expands to `\prod_{<++>}^{<++>}<++>`
+* `` `R`` expands to `\prod_{<++>}^{<++>}<++>`
+* `` `U`` expands to `\sum_{<++>}^{<++>}<++>`
+* `` `N`` expands to `\int_{<++>}^{<++>}<++>`
 
 #### Alt key Macros
 * `Alt-L` extend bracket constructs or insert label
