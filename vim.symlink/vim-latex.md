@@ -14,13 +14,13 @@
 * `EMP` minipage
 
 #### Bindings
-* `\`a` greek letters, some uppercase
-* `\`/` fraction
-* `\`|` big |
-* `\`2` sqrt
-* `\`(` enclose selection in ()
-* `\`[` enclose selection in []
-* `\`{` enclose selection in {}
+* ``\`a`` greek letters, some uppercase
+* ``\`/`` fraction
+* ``\`|`` big |
+* ``\`2`` sqrt
+* ``\`(`` enclose selection in ()
+* ``\`[`` enclose selection in []
+* ``\`{`` enclose selection in {}
 
 #### Alt key Macros
 * `Alt-L` extend bracket constructs or insert label
