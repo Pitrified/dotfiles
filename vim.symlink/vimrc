@@ -17,7 +17,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-latex/vim-latex'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'altercation/vim-colors-solarized'
-" Plugin 'luochen1990/rainbow'
+Plugin 'luochen1990/rainbow'
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -61,11 +61,19 @@ set expandtab                   " Tabs are spaces, not tabs
 set tabstop=4                   " An indentation every four columns
 set softtabstop=4               " Let backspace delete indent
 
-" properly highlight for .tex
+" proper highlight for .tex
 let g:tex_flavor = "latex"
 
 " optics
 set linespace=0
+set guifont=Menlo:h10   
+set background=dark 
+" colorscheme antares   
+let g:solarized_termcolors=256  " needed for terminal use     
+colorscheme solarized 
+
+" Setting up the directories 
+set directory=~/.myvim/swap
 set backup                      " Backups are nice ...
 set backupdir=~/.myvim/backup
 if has('persistent_undo')
@@ -118,6 +126,7 @@ let mapleader = "\<Space>"
 " clear highlight
 nnoremap <silent> <leader>nh :set hlsearch!<CR>
 nnoremap <silent> <leader>nc :set cursorcolumn!<CR>
+nnoremap <leader>nr :RainbowToggle<CR>
 
 " quick save and quit
 nnoremap <leader>w :update<CR>
@@ -153,6 +162,8 @@ nnoremap Y y$
 " Plugins
 map <C-n> :NERDTreeToggle<CR>
 let g:NERDSpaceDelims = 1
+
+let g:rainbow_active = 1 " toggle with :RainbowToggle
 
 let g:ycm_complete_in_comments=1
 let g:ycm_min_num_of_chars_for_completion=1
