@@ -17,6 +17,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-latex/vim-latex'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'altercation/vim-colors-solarized'
+" Plugin 'luochen1990/rainbow'
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -65,14 +66,6 @@ let g:tex_flavor = "latex"
 
 " optics
 set linespace=0
-set guifont=Menlo:h10
-set background=dark
-" colorscheme antares
-let g:solarized_termcolors=256  " needed for terminal use 
-colorscheme solarized
-
-" Setting up the directories
-set directory=~/.myvim/swap
 set backup                      " Backups are nice ...
 set backupdir=~/.myvim/backup
 if has('persistent_undo')
@@ -145,7 +138,7 @@ nnoremap <leader>mk <C-w><S-k>
 nnoremap <leader>ml <C-w><S-l>
 
 " this should be only for c/c++
-nnoremap <leader>mm :Make<CR>
+nnoremap <leader>mm :update<CR>:Make<CR>
 " nnoremap <leader>mr :!./%:r.out<CR>
 nnoremap <leader>mr :Do ./%:r.out<CR>
 
