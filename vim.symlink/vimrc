@@ -18,6 +18,7 @@ Plugin 'vim-latex/vim-latex'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'luochen1990/rainbow'
+Plugin 'morhetz/gruvbox'
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -66,11 +67,17 @@ let g:tex_flavor = "latex"
 
 " optics
 set linespace=0
-set guifont=Menlo:h10   
 set background=dark 
 " colorscheme antares   
+" colorscheme gruvbox   
 let g:solarized_termcolors=256  " needed for terminal use     
 colorscheme solarized 
+" GVIM
+" set guifont=Menlo:h10   
+" set guifont=Hack\ 10   
+" set guioptions-=m  "menu bar
+" set guioptions-=T  "toolbar
+" set guioptions-=r  "scrollbar
 
 " Setting up the directories 
 set directory=~/.myvim/swap
