@@ -19,6 +19,7 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'luochen1990/rainbow'
 Plugin 'morhetz/gruvbox'
+Plugin 'aonemd/kuroi.vim'
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -62,6 +63,8 @@ set expandtab                   " Tabs are spaces, not tabs
 set tabstop=4                   " An indentation every four columns
 set softtabstop=4               " Let backspace delete indent
 
+set mouse=a
+
 " proper highlight for .tex
 let g:tex_flavor = "latex"
 
@@ -70,8 +73,14 @@ set linespace=0
 set background=dark 
 " colorscheme antares   
 " colorscheme gruvbox   
-let g:solarized_termcolors=256  " needed for terminal use     
-colorscheme solarized 
+
+" set t_Co=256
+set termguicolors
+colorscheme kuroi
+
+" let g:solarized_termcolors=256  " needed for terminal use     
+" colorscheme solarized 
+
 " GVIM
 " set guifont=Menlo:h10   
 " set guifont=Hack\ 10   
@@ -123,7 +132,6 @@ augroup END
 inoremap jk <ESC>
 " nnoremap ; :
 
-nnoremap <f5> :set paste!<CR>
 
 let mapleader = "\<Space>"
 
@@ -133,6 +141,10 @@ let mapleader = "\<Space>"
 " clear highlight
 nnoremap <silent> <leader>nh :set hlsearch!<CR>
 nnoremap <silent> <leader>nc :set cursorcolumn!<CR>
+nnoremap <silent> <leader>nw :set wrap!<CR>
+nnoremap <silent> <leader>nl :set list!<CR>
+nnoremap <leader>np :set paste!<CR>
+" nnoremap <f5> :set paste!<CR>
 nnoremap <leader>nr :RainbowToggle<CR>
 
 " quick save and quit
@@ -174,8 +186,12 @@ let g:rainbow_active = 1 " toggle with :RainbowToggle
 
 let g:ycm_complete_in_comments=1
 let g:ycm_min_num_of_chars_for_completion=1
+" Apply YCM FixIt
+map <F9> :YcmCompleter FixIt<CR>
 
 " let g:do_refresh_key
+"
+set runtimepath+=~/.fzf
 
 if filereadable(expand('~/.vimrc.local'))
     source ~/.vimrc.local

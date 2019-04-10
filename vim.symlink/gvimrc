@@ -4,6 +4,7 @@ set guifont=Hack\ 10
 set guioptions-=m  "menu bar 
 " is sometimes uselful for LaTeX -> put it in filetype
 set guioptions-=T  "toolbar
-set guioptions-=r  "scrollbar
+set guioptions-=r  "right scrollbar
+set guioptions-=L  "left scrollbar
 
 
