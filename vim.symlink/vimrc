@@ -74,8 +74,12 @@ set background=dark
 " colorscheme antares   
 " colorscheme gruvbox   
 
-" set t_Co=256
-set termguicolors
+if has('gui_running')  " in gvim do this
+    set termguicolors
+else         " On mac and Windows, use * register for copy-paste
+    set t_Co=256
+endif
+
 colorscheme kuroi
 
 " let g:solarized_termcolors=256  " needed for terminal use     
