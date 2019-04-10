@@ -1,9 +1,19 @@
 ## TODO
 256 color support, check for xterm-color and decide colorscheme accordingly
 
-## Vim tips and tricks
+## Useful tricks to learn
 
+* `''` jump back (to line in current buffer where jumped from) [more on marks](https://vim.fandom.com/wiki/Using_marks)
 * `g;` go to last place an edit was made
+
+#### Terminal use
+
+* `<C-w>N` terminal normal mode, use `i` or `a` to go back to insert
+* `<C-w>hjkl` move focus
+* `<C-w>HJKL` move window
+
+
+## Vim tips and tricks
 * `ab sht ShortHand` press `C-V`
 * tabs gt gT
 * marks and motion
@@ -17,6 +27,8 @@
 * run normal mode across a range, visually select then `:normal somecommand`, accepts `.`
 * `"ap` and `"add` to edit macros
 * `autocmd BufWritePost $MYVIMRC source $MYVIMRC` to constantly reload vimrc while editing it
+
+
 ### Commands
 
 [qua](https://github.com/VSCodeVim/Vim/blob/master/ROADMAP.md) ci sono comandi in lista
