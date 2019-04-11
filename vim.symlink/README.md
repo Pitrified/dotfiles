@@ -5,6 +5,7 @@
 
 * `''` jump back (to line in current buffer where jumped from) [more on marks](https://vim.fandom.com/wiki/Using_marks)
 * `g;` go to last place an edit was made
+* `zz` `zt` `zb` redraw at center, top, bottom; leave the cursor at current column
 
 #### Terminal use
 

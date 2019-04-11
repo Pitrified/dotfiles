@@ -174,9 +174,19 @@ nnoremap <leader>mm :update<CR>:Make<CR>
 " nnoremap <leader>mr :!./%:r.out<CR>
 nnoremap <leader>mr :Do ./%:r.out<CR>
 
+" make sessions and restore them
+" you can also start vim with a session 'vim -S ~/mysession.vim'
+let g:sessions_dir = '~/.vim/sessions'
+" exec 'nnoremap <Leader>ms :mksession! ' . g:sessions_dir . '/*.vim<C-D><BS><BS><BS><BS><BS>'
+" exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/*.vim<C-D><BS><BS><BS><BS><BS>'
+exec 'nnoremap <Leader>ms :mksession! ' . g:sessions_dir . '/<C-D>'
+exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
+
 " move properly when lines are wrapped
 nnoremap j gj
 nnoremap k gk
+nnoremap gj j
+nnoremap gk k
 
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
