@@ -20,7 +20,7 @@
 * go to last modified text/last change
 * in insert mode paste yanked text without leaving the insert mode `<C-r>0`
 * If yanked text contains new line characters, `<C-r><C-p>0` will take care of fixing indentation issues.
-* `<C-h>` " delete back one character (backspace)
+* `<C-h>` " delete back one character (backspace) TODO: make them undoable
 * `<C-w>` " delete back one word
 * `<C-u>` " delete back to start of line
 * `<C-k>` " delete forward to end of line
