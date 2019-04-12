@@ -1,1 +1,5 @@
-complete -W "$(tmux ls | awk -F ':' '{print $1}')" tmux attach -t
+complete -W "$(tmux ls | awk -F ':' '{print $1}')" "tmux attach -t"
+# complete -W "prova notes" "tmux attach -t"
+# complete -W "prova" "tmux attach -t"
+# complete -W "notes" "tmux attach -t"
+# complete -C "tmux ls" "tmux attach -t"
