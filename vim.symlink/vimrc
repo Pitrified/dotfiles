@@ -71,16 +71,17 @@ let g:tex_flavor = "latex"
 " optics
 set linespace=0
 set background=dark 
-" colorscheme antares   
-" colorscheme gruvbox   
 
 if has('gui_running')  " in gvim do this
     set termguicolors
-else         " On mac and Windows, use * register for copy-paste
+else
     set t_Co=256
 endif
 
-colorscheme kuroi
+" colorscheme kuroi
+" colorscheme antares   
+" colorscheme gruvbox   
+colorscheme gruvbox-bootleg
 
 " let g:solarized_termcolors=256  " needed for terminal use     
 " colorscheme solarized 
