@@ -112,6 +112,7 @@ if has('clipboard')
         set clipboard=unnamed
     endif
 endif
+
 " status line TODO
 if has('cmdline_info')
     set ruler                   " Show the ruler
@@ -119,6 +120,7 @@ if has('cmdline_info')
     set showcmd                 " Show partial commands in status line and
                                 " Selected characters/lines in visual mode
 endif
+
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
 " Restore cursor to file position in previous editing session
 function! ResCur()
@@ -131,7 +133,6 @@ augroup resCur
     autocmd!
     autocmd BufWinEnter * call ResCur()
 augroup END
-
 
 " mappings and shortcuts
 inoremap jk <ESC>
@@ -149,8 +150,8 @@ nnoremap <silent> <leader>nc :set cursorcolumn!<CR>
 nnoremap <silent> <leader>nw :set wrap!<CR>
 nnoremap <silent> <leader>nl :set list!<CR>
 nnoremap <leader>np :set paste!<CR>
-" nnoremap <f5> :set paste!<CR>
 nnoremap <leader>nr :RainbowToggle<CR>
+nnoremap <leader>ns :setlocal spell! spelllang=en_us<CR>
 
 " quick save and quit
 nnoremap <leader>w :update<CR>
@@ -169,6 +170,16 @@ nnoremap <leader>mh <C-w><S-h>
 nnoremap <leader>mj <C-w><S-j>
 nnoremap <leader>mk <C-w><S-k>
 nnoremap <leader>ml <C-w><S-l>
+" terminal navigation
+tnoremap <leader><leader>h <C-w>h
+tnoremap <leader><leader>j <C-w>j
+tnoremap <leader><leader>k <C-w>k
+tnoremap <leader><leader>l <C-w>l
+" move terminal around
+tnoremap <leader><leader>mh <C-w><S-h>
+tnoremap <leader><leader>mj <C-w><S-j>
+tnoremap <leader><leader>mk <C-w><S-k>
+tnoremap <leader><leader>ml <C-w><S-l>
 
 " this should be only for c/c++
 nnoremap <leader>mm :update<CR>:Make<CR>
@@ -186,6 +197,7 @@ exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
 " move properly when lines are wrapped
 nnoremap j gj
 nnoremap k gk
+" relative jump precise with count
 nnoremap gj j
 nnoremap gk k
 
@@ -206,7 +218,7 @@ let g:ycm_min_num_of_chars_for_completion=1
 map <F9> :YcmCompleter FixIt<CR>
 
 " let g:do_refresh_key
-"
+
 set runtimepath+=~/.fzf
 
 if filereadable(expand('~/.vimrc.local'))
