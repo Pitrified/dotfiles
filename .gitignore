@@ -1,1 +1,3 @@
-vim/bundle/*
+vim.symlink/bundle/*
+vim.symlink/sessions/*
+vim.symlink/.netrwhist
