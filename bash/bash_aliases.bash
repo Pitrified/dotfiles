@@ -4,7 +4,27 @@ mkcdir ()
     cd -P -- "$1"
 }
 
-alias le="exa -lh --git"
+lt ()
+{
+    if [[ $# -eq 0 ]]
+    then
+        exa --long --git --all --tree --level=2
+    fi
+
+    if [[ $# -eq 1 ]]
+    then
+        exa --long --git --all --tree --level="$1"
+    fi
+
+    if [[ $# -eq 2 ]]
+    then
+        exa --long --git --all --tree --level="$1" --ignore-glob=.git"|$2"
+    fi
+}
+
+# alias le="exa -lh --git"
+alias le="exa --long --git --all"
+# alias lt="exa --long --git --all --tree --level=2"
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
