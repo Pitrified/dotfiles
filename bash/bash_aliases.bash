@@ -20,6 +20,11 @@ lt ()
     then
         exa --long --git --all --tree --level="$1" --ignore-glob=.git"|$2"
     fi
+
+    if [[ $# -eq 3 ]]
+    then
+        exa --long --git --all --tree --level="$1" --ignore-glob=.git"|$2" "$3"
+    fi
 }
 
 # alias le="exa -lh --git"
