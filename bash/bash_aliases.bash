@@ -31,8 +31,8 @@ lt ()
 alias le="exa --long --git --all"
 # alias lt="exa --long --git --all --tree --level=2"
 
-# open file explorer in the folder you are in
-alias nahe="nautilus --browser `pwd`"
+# open file explorer in the folder you are in (Explorer HEre)
+alias ehe="gio open ."
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
