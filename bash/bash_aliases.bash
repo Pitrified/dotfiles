@@ -27,6 +27,11 @@ lt ()
     fi
 }
 
+gitid () {
+    git config user.email "$1"
+    git config user.name "$2"
+}
+
 # alias le="exa -lh --git"
 alias le="exa --long --git --all"
 # alias lt="exa --long --git --all --tree --level=2"
