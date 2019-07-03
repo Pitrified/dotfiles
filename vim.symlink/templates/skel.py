@@ -30,7 +30,7 @@ def parse_arguments():
 def setup_logger(logLevel='DEBUG'):
     '''Setup logger that outputs to console for the module
     '''
-    logmoduleconsole = logging.getLogger(f'{__name__.console}')
+    logmoduleconsole = logging.getLogger(f'{__name__}.console')
     logmoduleconsole.propagate = False
     logmoduleconsole.setLevel(logLevel)
 
