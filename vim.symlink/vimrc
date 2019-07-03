@@ -21,6 +21,7 @@ Plugin 'ldelossa/vimdark'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
 Plugin 'aonemd/kuroi.vim'
+Plugin 'noahfrederick/vim-skeleton'
 call vundle#end()            " required
 
 " basic miscellaneous
