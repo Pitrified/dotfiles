@@ -8,6 +8,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-dispatch'
 " Plugin 'tpope/fugitive'
+Plugin 'easymotion/vim-easymotion'
 " Plugin 'joonty/vim-do'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
@@ -15,12 +16,14 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'rdnetto/YCM-Generator'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'vim-latex/vim-latex'
-Plugin 'easymotion/vim-easymotion'
 Plugin 'luochen1990/rainbow'
+
 Plugin 'ldelossa/vimdark'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
 Plugin 'aonemd/kuroi.vim'
+
+Plugin 'python/black'
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -235,6 +238,8 @@ let g:ycm_min_num_of_chars_for_completion=1
 map <F9> :YcmCompleter FixIt<CR>
 
 " let g:do_refresh_key
+
+nnoremap <leader>bb :Black<CR>
 
 set runtimepath+=~/.fzf
 
