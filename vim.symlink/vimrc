@@ -24,6 +24,7 @@ Plugin 'morhetz/gruvbox'
 Plugin 'aonemd/kuroi.vim'
 
 Plugin 'python/black'
+Plugin 'noahfrederick/vim-skeleton'
 call vundle#end()            " required
 
 " basic miscellaneous
