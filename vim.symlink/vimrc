@@ -4,20 +4,24 @@ filetype off                  " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
+
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-dispatch'
+" Plugin 'tpope/vim-dispatch'
 " Plugin 'tpope/fugitive'
-Plugin 'easymotion/vim-easymotion'
 " Plugin 'joonty/vim-do'
+
+Plugin 'easymotion/vim-easymotion'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
-" suan/vim-instant-markdown
-Plugin 'rdnetto/YCM-Generator'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'vim-latex/vim-latex'
 Plugin 'luochen1990/rainbow'
 
+" suan/vim-instant-markdown
+
+Plugin 'rdnetto/YCM-Generator'
+Plugin 'Valloric/YouCompleteMe'
+
+Plugin 'lithammer/vim-eighties'
 Plugin 'ldelossa/vimdark'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
@@ -25,6 +29,7 @@ Plugin 'aonemd/kuroi.vim'
 
 Plugin 'python/black'
 Plugin 'noahfrederick/vim-skeleton'
+Plugin 'vim-latex/vim-latex'
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -83,10 +88,10 @@ else
     set t_Co=256
 endif
 
-" colorscheme kuroi
+colorscheme kuroi
 " colorscheme antares   
 " colorscheme gruvbox   
-colorscheme gruvbox-bootleg
+" colorscheme gruvbox-bootleg
 
 " let g:solarized_termcolors=256  " needed for terminal use     
 " colorscheme solarized 
@@ -158,7 +163,6 @@ endfunction
 
 " mappings and shortcuts
 inoremap jk <ESC>
-" nnoremap ; :
 
 let mapleader = "\<Space>"
 
@@ -177,6 +181,9 @@ nnoremap <leader>ns :setlocal spell! spelllang=en_us<CR>
 " quick save and quit
 nnoremap <leader>w :update<CR>
 nnoremap <leader>q :q<CR>
+" edit and source .vimrc
+nnoremap <leader>re :tabedit $MYVIMRC<CR>
+nnoremap <leader>rs :source $MYVIMRC<CR>
 
 " split screen
 nnoremap <leader>d <C-w>v
@@ -203,9 +210,9 @@ tnoremap <leader><leader>mk <C-w><S-k>
 tnoremap <leader><leader>ml <C-w><S-l>
 
 " this should be only for c/c++
-nnoremap <leader>mm :update<CR>:Make<CR>
+" nnoremap <leader>mm :update<CR>:Make<CR>
 " nnoremap <leader>mr :!./%:r.out<CR>
-nnoremap <leader>mr :Do ./%:r.out<CR>
+" nnoremap <leader>mr :Do ./%:r.out<CR>
 
 " make sessions and restore them
 " you can also start vim with a session 'vim -S ~/mysession.vim'
@@ -218,7 +225,7 @@ exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
 " move properly when lines are wrapped
 nnoremap j gj
 nnoremap k gk
-" relative jump precise with count
+" relative jump precise with count if there are wrapped lines
 nnoremap gj j
 nnoremap gk k
 
