@@ -88,10 +88,10 @@ else
     set t_Co=256
 endif
 
-colorscheme kuroi
+" colorscheme kuroi
 " colorscheme antares   
 " colorscheme gruvbox   
-" colorscheme gruvbox-bootleg
+colorscheme gruvbox-bootleg
 
 " let g:solarized_termcolors=256  " needed for terminal use     
 " colorscheme solarized 
