@@ -30,9 +30,9 @@ def parse_arguments():
 def setup_logger(logLevel="DEBUG"):
     """Setup logger that outputs to console for the module
     """
-    logmoduleconsole = logging.getLogger(f"{__name__}.console")
-    logmoduleconsole.propagate = False
-    logmoduleconsole.setLevel(logLevel)
+    logroot = logging.getLogger(f"{__name__}.console")
+    #  logroot.propagate = False
+    logroot.setLevel(logLevel)
 
     module_console_handler = logging.StreamHandler()
 
@@ -44,16 +44,16 @@ def setup_logger(logLevel="DEBUG"):
     formatter = logging.Formatter(log_format_module)
     module_console_handler.setFormatter(formatter)
 
-    logmoduleconsole.addHandler(module_console_handler)
+    logroot.addHandler(module_console_handler)
 
     logging.addLevelName(5, "TRACE")
     # use it like this
-    # logmoduleconsole.log(5, 'Exceedingly verbose debug')
-
-    return logmoduleconsole
+    # logroot.log(5, 'Exceedingly verbose debug')
 
 
 def main():
+    setup_logger()
+
     args = parse_arguments()
 
     # setup seed value
@@ -67,13 +67,12 @@ def main():
 
     path_input = args.path_input
 
-    logmoduleconsole = setup_logger()
-
     recap = f"python3 @BASENAME@.py"
     recap += f" --path_input {path_input}"
     recap += f" --seed {myseed}"
 
-    logmoduleconsole.info(recap)
+    logmain = logging.getLogger(f"{__name__}.main")
+    logmain.info(recap)
 
 
 if __name__ == "__main__":
