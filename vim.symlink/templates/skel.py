@@ -30,8 +30,7 @@ def parse_arguments():
 def setup_logger(logLevel="DEBUG"):
     """Setup logger that outputs to console for the module
     """
-    logroot = logging.getLogger(f"{__name__}.console")
-    #  logroot.propagate = False
+    logroot = logging.getLogger()
     logroot.setLevel(logLevel)
 
     module_console_handler = logging.StreamHandler()
