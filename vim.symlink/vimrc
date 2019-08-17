@@ -233,6 +233,10 @@ nnoremap gk k
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
 
+" when in visual mode, search for selected text
+vnoremap * ""y/<C-r>"<CR>
+vnoremap # ""y?<C-r>"<CR>
+
 
 " Plugins
 map <C-n> :NERDTreeToggle<CR>
