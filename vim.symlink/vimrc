@@ -237,6 +237,10 @@ nnoremap Y y$
 vnoremap * ""y/<C-r>"<CR>
 vnoremap # ""y?<C-r>"<CR>
 
+" when in visual mode, J is usually a typo from holding shift for line visual
+vnoremap J j
+vnoremap K k
+
 
 " Plugins
 map <C-n> :NERDTreeToggle<CR>
