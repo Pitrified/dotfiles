@@ -1,9 +1,14 @@
 # Local/private config goes in the include
 [include]
     path = ~/.gitconfig.local
+
 [core]
     editor = vim
 
 [merge]
-	tool = gvimdiff
-	conflictstyle = diff3
+    tool = gvimdiff
+    conflictstyle = diff3
+
+# show diff in commit message
+[commit]
+    verbose = true
