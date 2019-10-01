@@ -71,7 +71,7 @@ def main():
     recap += f" --path_input {path_input}"
     recap += f" --seed {myseed}"
 
-    logmain = logging.getLogger(f"{__name__}.main")
+    logmain = logging.getLogger(f"c.{__name__}.main")
     logmain.info(recap)
 
 
