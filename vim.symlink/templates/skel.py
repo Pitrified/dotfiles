@@ -51,6 +51,11 @@ def setup_logger(logLevel="DEBUG"):
     # logroot.log(5, 'Exceedingly verbose debug')
 
 
+def run_@BASENAME@(path_input):
+    """
+    """
+
+
 def main():
     setup_logger()
 
@@ -73,6 +78,8 @@ def main():
 
     logmain = logging.getLogger(f"c.{__name__}.main")
     logmain.info(recap)
+
+    run_@BASENAME@(path_input)
 
 
 if __name__ == "__main__":
