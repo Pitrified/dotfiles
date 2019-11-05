@@ -20,7 +20,9 @@ def parse_arguments():
         help="path to input image to use",
     )
 
-    parser.add_argument("-s", "--seed", type=int, default=-1, help="random seed to use")
+    parser.add_argument(
+        "-s", "--rand_seed", type=int, default=-1, help="random seed to use"
+    )
 
     # last line to parse the args
     args = parser.parse_args()
@@ -39,6 +41,7 @@ def setup_logger(logLevel="DEBUG"):
     #  log_format_module = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     #  log_format_module = "%(name)s - %(levelname)s: %(message)s"
     #  log_format_module = '%(levelname)s: %(message)s'
+    #  log_format_module = '%(name)s: %(message)s'
     log_format_module = "%(message)s"
 
     formatter = logging.Formatter(log_format_module)
@@ -55,36 +58,39 @@ def setup_logger(logLevel="DEBUG"):
     logg.debug(f"Done setting up logger")
 
 
-def run_@BASENAME@(path_input):
-    """
-    """
-
-
-def main():
+def setup_env():
     setup_logger()
 
     args = parse_arguments()
 
     # setup seed value
-    if args.seed == -1:
+    if args.rand_seed == -1:
         myseed = 1
         myseed = int(timer() * 1e9 % 2 ** 32)
     else:
-        myseed = args.seed
+        myseed = args.rand_seed
     seed(myseed)
     np.random.seed(myseed)
 
-    path_input = args.path_input
+    # build command string to repeat this run
+    recap = f"python3 lab03_main.py"
+    for a, v in args._get_kwargs():
+        if a == "rand_seed":
+            recap += f" --rand_seed {myseed}"
+        else:
+            recap += f" --{a} {v}"
 
-    recap = f"python3 @BASENAME@.py"
-    recap += f" --path_input {path_input}"
-    recap += f" --seed {myseed}"
-
-    logmain = logging.getLogger(f"c.{__name__}.main")
+    logmain = logging.getLogger(f"c.{__name__}.setup_env")
     logmain.info(recap)
 
-    run_@BASENAME@(path_input)
+    return args
+
+
+def run_@BASENAME@(args):
+    """
+    """
 
 
 if __name__ == "__main__":
-    main()
+    args = setup_env()
+    run_@BASENAME@(args)
