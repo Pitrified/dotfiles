@@ -52,3 +52,5 @@ alias ehe="gio open ."
 # do
 #   source $file
 # done
+
+# export PS1="\\w \$(__git_ps1 '(%s)')\$ "
