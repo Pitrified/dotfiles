@@ -1,0 +1,9 @@
+windows:
+  - name: ros_arena_sim
+    root: ~/ros_ws/src/hw1
+    layout: even-vertical
+    panes:
+      - roscore
+      - sleep 5 && roslaunch ar_arena ar_bringup.launch simulation:=true
+      - sleep 10 && roslaunch ar_arena apriltag.launch simulation:=true
+      - sleep 10 && rostopic echo /tag_detection
