@@ -1,1 +1,1 @@
-# complete -W "$(teamocil --list)" teamocil
+complete -W "$(teamocil --list)" teamocil
