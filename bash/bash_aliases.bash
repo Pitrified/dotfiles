@@ -53,4 +53,13 @@ alias ehe="gio open ."
 #   source $file
 # done
 
-# export PS1="\\w \$(__git_ps1 '(%s)')\$ "
+# put branch name in front of PS1
+# PS1="\$(__git_ps1 '(%s)')"$PS1
+
+# put branch name on end of PS1
+# this is the length of a string
+# echo ${#PS1}
+# remove the last characters
+PS1=${PS1:0:${#PS1}-3}
+# add info on branches
+PS1=$PS1" \$(__git_ps1 '(%s)')\$ "
