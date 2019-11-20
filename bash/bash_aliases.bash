@@ -39,6 +39,9 @@ alias le="exa --long --git --all"
 # open file explorer in the folder you are in (Explorer HEre)
 alias ehe="gio open ."
 
+# grep for TODOs and MAYBEs
+alias greptodo="grep -r -I 'TODO\|MAYBE'"
+
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
 # you'll have access to them in your scripts.

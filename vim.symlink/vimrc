@@ -164,6 +164,7 @@ endfunction
 
 " mappings and shortcuts
 inoremap jk <ESC>
+inoremap kj <ESC>
 
 let mapleader = "\<Space>"
 
