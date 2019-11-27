@@ -3,7 +3,7 @@ import logging
 
 import numpy as np
 
-from random import seed
+from random import seed as rseed
 from timeit import default_timer as timer
 
 
@@ -69,11 +69,12 @@ def setup_env():
         myseed = int(timer() * 1e9 % 2 ** 32)
     else:
         myseed = args.rand_seed
-    seed(myseed)
+    rseed(myseed)
     np.random.seed(myseed)
 
     # build command string to repeat this run
-    recap = f"python3 lab03_main.py"
+    # FIXME if an option is a flag this does not work, sorry
+    recap = f"python3 @BASENAME@.py"
     for a, v in args._get_kwargs():
         if a == "rand_seed":
             recap += f" --rand_seed {myseed}"
