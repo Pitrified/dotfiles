@@ -42,6 +42,15 @@ alias ehe="gio open ."
 # grep for TODOs and MAYBEs
 alias greptodo="grep -r -I 'TODO\|MAYBE'"
 
+# scale the text for HiDPI display
+# https://askubuntu.com/questions/1029436/enable-fractional-scaling-for-ubuntu-18-04
+settextzoom() {
+    gsettings set org.gnome.desktop.interface text-scaling-factor "$@";
+}
+# proper scaling might work like this
+# https://www.linuxuprising.com/2019/04/how-to-enable-hidpi-fractional-scaling.html
+# http://ubuntuhandbook.org/index.php/2019/10/how-to-enable-fractional-scaling-in-ubuntu-19-10-eoan/
+
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
 # you'll have access to them in your scripts.
