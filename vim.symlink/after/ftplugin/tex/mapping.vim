@@ -2,7 +2,7 @@ call IMAP (g:Tex_Leader.'R', "\\prod_{<++>}^{<++>}<++>", 'tex')
 call IMAP (g:Tex_Leader.'U', "\\sum_{<++>}^{<++>}<++>", 'tex')
 call IMAP (g:Tex_Leader.'N', "\\int_{<++>}^{<++>}<++>", 'tex')
 
-iab  lrb  \langle \rangle<LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT><LEFT>
+iab  lrb  \langle \rangle<C-O>8<Left>
 iab  odo  \odot
 iab  opl  \oplus
 iab  zzn  \zz{n}
