@@ -15,3 +15,5 @@ iab  gcdan gcd(a, n)
 iab  gcdbn gcd(b, n)
 iab  algo algoritmo
 iab  algi algoritmi
+
+iab  mlrb  \ldblbrace<CR>\rdblbrace<C-O>O   
