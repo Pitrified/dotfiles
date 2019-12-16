@@ -90,6 +90,8 @@ def setup_env():
 def run_@BASENAME@(args):
     """
     """
+    logg = logging.getLogger(f"c.{__name__}.run_@BASENAME@")
+    logg.debug(f"Starting run_@BASENAME@")
 
 
 if __name__ == "__main__":
