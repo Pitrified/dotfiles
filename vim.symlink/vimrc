@@ -255,8 +255,10 @@ let g:NERDSpaceDelims = 1
 let g:rainbow_active = 1 " toggle with :RainbowToggle
 
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
-let g:ycm_complete_in_comments=1
-let g:ycm_min_num_of_chars_for_completion=1
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_strings = 1
+let g:ycm_seed_identifiers_with_syntax = 1 " autocomplete with keywords for the language
+let g:ycm_min_num_of_chars_for_completion = 1
 " Apply YCM FixIt
 map <F9> :YcmCompleter FixIt<CR>
 
@@ -265,9 +267,11 @@ map <F9> :YcmCompleter FixIt<CR>
 nnoremap <leader>bb :Black<CR>
 
 " UltiSnips
-let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsExpandTrigger = "<c-j>"
+let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-p>"
 " open snippet file in separate window
-let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsEditSplit = "vertical"
 " edit snippets
 nmap <leader>ue :UltiSnipsEdit<cr>
 
