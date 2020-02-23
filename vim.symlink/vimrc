@@ -17,6 +17,9 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'luochen1990/rainbow'
 Plugin 'frioux/vim-regedit'
 
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+
 " suan/vim-instant-markdown
 
 Plugin 'rdnetto/YCM-Generator'
@@ -30,7 +33,9 @@ Plugin 'aonemd/kuroi.vim'
 
 Plugin 'python/black'
 Plugin 'noahfrederick/vim-skeleton'
+
 Plugin 'vim-latex/vim-latex'
+
 call vundle#end()            " required
 
 " basic miscellaneous
@@ -258,6 +263,13 @@ map <F9> :YcmCompleter FixIt<CR>
 " let g:do_refresh_key
 
 nnoremap <leader>bb :Black<CR>
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger="<c-j>"
+" open snippet file in separate window
+let g:UltiSnipsEditSplit="vertical"
+" edit snippets
+nmap <leader>ue :UltiSnipsEdit<cr>
 
 set runtimepath+=~/.fzf
 

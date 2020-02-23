@@ -1,0 +1,8 @@
+snippet deflog "function with logger" b
+def ${1:func_name}(${2:args}):
+    """
+    """
+    logg = logging.getLogger(f"c.{__name__}.$1")
+    logg.${3:debug}(f"Start $1")
+    $0
+endsnippet
