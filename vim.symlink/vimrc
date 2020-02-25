@@ -11,30 +11,37 @@ Plugin 'tpope/vim-repeat'
 " Plugin 'tpope/fugitive'
 " Plugin 'joonty/vim-do'
 
-Plugin 'easymotion/vim-easymotion'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
+
 Plugin 'luochen1990/rainbow'
+Plugin 'easymotion/vim-easymotion'
 Plugin 'frioux/vim-regedit'
 
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-
-" suan/vim-instant-markdown
-
+" autocomplete/linter/templates
 Plugin 'rdnetto/YCM-Generator'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'noahfrederick/vim-skeleton'
 
+" colorscheme
 Plugin 'lithammer/vim-eighties'
 Plugin 'ldelossa/vimdark'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
 Plugin 'aonemd/kuroi.vim'
 
+" python
 Plugin 'python/black'
-Plugin 'noahfrederick/vim-skeleton'
 
+" LaTeX
 Plugin 'vim-latex/vim-latex'
+
+" HTML/XML
+Plugin 'mattn/emmet-vim'
+
+" suan/vim-instant-markdown
 
 call vundle#end()            " required
 
@@ -274,6 +281,9 @@ let g:UltiSnipsJumpBackwardTrigger = "<c-p>"
 let g:UltiSnipsEditSplit = "vertical"
 " edit snippets
 nmap <leader>ue :UltiSnipsEdit<cr>
+
+" emmet
+let g:user_emmet_leader_key=','
 
 set runtimepath+=~/.fzf
 
