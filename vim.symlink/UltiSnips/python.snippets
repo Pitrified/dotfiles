@@ -6,3 +6,8 @@ def ${1:func_name}(${2:args}):
     logg.${3:debug}(f"Start $1")
     $0
 endsnippet
+
+snippet logg "Log line" b
+logg.${1:debug}(f"${2:arg}: {$2}")
+$0
+endsnippet
