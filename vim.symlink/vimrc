@@ -24,6 +24,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'noahfrederick/vim-skeleton'
+Plugin 'chiel92/vim-autoformat'
 
 " colorscheme
 Plugin 'lithammer/vim-eighties'
@@ -271,7 +272,8 @@ map <F9> :YcmCompleter FixIt<CR>
 
 " let g:do_refresh_key
 
-nnoremap <leader>bb :Black<CR>
+" nnoremap <leader>bb :Black<CR>
+nnoremap <leader>bb :Autoformat<CR>
 
 " UltiSnips
 let g:UltiSnipsExpandTrigger = "<c-j>"
