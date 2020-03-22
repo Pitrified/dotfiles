@@ -1,7 +1,7 @@
 " GVIM
 " set guifont=Menlo:h10   
 " set guifont=Hack\ 10   
-set guifont=Hack\ 9.5
+set guifont=Hack\ 12
 set guioptions-=m  "menu bar 
 " is sometimes uselful for LaTeX -> put it in filetype
 set guioptions-=T  "toolbar
