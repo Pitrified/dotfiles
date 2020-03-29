@@ -10,4 +10,4 @@ windows:
       - echo roscore
       - echo roslaunch ar_arena ar_bringup.launch simulation:=true
       - echo roslaunch ar_arena apriltag.launch simulation:=true
-      - echo rostopic echo /tag_detection
+      - echo rostopic echo /tag_detections
