@@ -1,2 +1,2 @@
-# pdf_previewer = 'start evince';
-$pdf_previewer = 'start okular';
+$pdf_previewer = 'start evince';
+# $pdf_previewer = 'start okular';

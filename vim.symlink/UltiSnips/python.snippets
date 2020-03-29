@@ -11,3 +11,22 @@ snippet logg "Log line" b
 logg.${1:debug}(f"${2:arg}: {$2}")
 $0
 endsnippet
+
+snippet newobscb "Templates for a new Observable" b
+# create the Observable in model
+        self.${1:obs_name} = Observable()
+# inside controller
+# register callbacks in __init__
+        self.model.$1.add_callback(self.updated_$1)
+# create the callback
+    def updated_$1(self, data):
+        logg = logging.getLogger(f"c.{__name__}.updated_$1")
+        logg.debug(f"{fmt_cn('Start', 'start')} updated_$1")
+        self.view.frame_image.update_$1(data)
+# react to change in view
+    def update_$1(self, start_pos):
+        """TODO: what are you changing when updating $1?
+        """
+        logg = logging.getLogger(f"c.{__name__}.update_$1")
+        logg.debug(f"{fmt_cn('Start', 'start')} update_$1 {start_pos}")
+endsnippet
