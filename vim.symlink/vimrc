@@ -179,6 +179,24 @@ endfunction
 inoremap jk <ESC>
 inoremap kj <ESC>
 
+" move properly when lines are wrapped
+nnoremap j gj
+nnoremap k gk
+" relative jump precise with count if there are wrapped lines
+nnoremap gj j
+nnoremap gk k
+
+" Yank from the cursor to the end of the line, to be consistent with C and D.
+nnoremap Y y$
+
+" when in visual mode, search for selected text
+vnoremap * ""y/<C-r>"<CR>
+vnoremap # ""y?<C-r>"<CR>
+
+" when in visual mode, J is usually a typo from holding shift for line visual
+vnoremap J j
+vnoremap K k
+
 let mapleader = "\<Space>"
 
 " leadermap
@@ -199,6 +217,8 @@ nnoremap <leader>q :q<CR>
 " edit and source .vimrc
 nnoremap <leader>re :tabedit $MYVIMRC<CR>
 nnoremap <leader>rs :source $MYVIMRC<CR>
+" yank whole file
+nnoremap <leader>ya myggyG`y
 
 " split screen
 nnoremap <leader>d <C-w>v
@@ -232,28 +252,8 @@ tnoremap <leader><leader>ml <C-w><S-l>
 " make sessions and restore them
 " you can also start vim with a session 'vim -S ~/mysession.vim'
 let g:sessions_dir = '~/.vim/sessions'
-" exec 'nnoremap <Leader>ms :mksession! ' . g:sessions_dir . '/*.vim<C-D><BS><BS><BS><BS><BS>'
-" exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/*.vim<C-D><BS><BS><BS><BS><BS>'
 exec 'nnoremap <Leader>ms :mksession! ' . g:sessions_dir . '/<C-D>'
 exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
-
-" move properly when lines are wrapped
-nnoremap j gj
-nnoremap k gk
-" relative jump precise with count if there are wrapped lines
-nnoremap gj j
-nnoremap gk k
-
-" Yank from the cursor to the end of the line, to be consistent with C and D.
-nnoremap Y y$
-
-" when in visual mode, search for selected text
-vnoremap * ""y/<C-r>"<CR>
-vnoremap # ""y?<C-r>"<CR>
-
-" when in visual mode, J is usually a typo from holding shift for line visual
-vnoremap J j
-vnoremap K k
 
 
 " Plugins
@@ -280,7 +280,7 @@ let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger = "<c-p>"
 " open snippet file in separate window
-let g:UltiSnipsEditSplit = "vertical"
+let g:UltiSnipsEditSplit = "horizontal"
 " edit snippets
 nmap <leader>ue :UltiSnipsEdit<cr>
 
