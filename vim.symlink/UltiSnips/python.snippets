@@ -1,10 +1,10 @@
-snippet deflog "function with logger" b
+snippet deflog "Function with logger" b
 def ${1:func_name}(${2:args}):
-    """
-    """
-    logg = logging.getLogger(f"c.{__name__}.$1")
-    logg.${3:debug}(f"Start $1")
-    $0
+	"""TODO: what is $1 doing?
+	"""
+	logg = logging.getLogger(f"c.{__name__}.$1")
+	logg.${3:debug}(f"Start $1")
+	$0
 endsnippet
 
 snippet logg "Log line" b
@@ -14,19 +14,29 @@ endsnippet
 
 snippet newobscb "Templates for a new Observable" b
 # create the Observable in model
-        self.${1:obs_name} = Observable()
+		self.${1:obs_name} = Observable()
 # inside controller
 # register callbacks in __init__
-        self.model.$1.add_callback(self.updated_$1)
+		self.model.$1.add_callback(self.updated_$1)
 # create the callback
-    def updated_$1(self, data):
-        logg = logging.getLogger(f"c.{__class__.__name__}.updated_$1")
-        logg.debug(f"Start {fmt_cn('updated_$1', 'start')}")
-        self.view.frame_${2:FRAME_NAME}.update_$1(data)
+	def updated_$1(self, data):
+		logg = logging.getLogger(f"c.{__class__.__name__}.updated_$1")
+		logg.debug(f"Start {fmt_cn('updated_$1', 'start')}")
+		self.view.frame_${2:FRAME_NAME}.update_$1(data)
 # react to change in view
-    def update_$1(self, data):
-        """TODO: what are you changing when updating $1?
-        """
-        logg = logging.getLogger(f"c.{__class__.__name__}.update_$1")
-        logg.debug(f"Start {fmt_cn('update_$1', 'start')} {data}")
+	def update_$1(self, data):
+		"""TODO: what are you changing when updating $1?
+		"""
+		logg = logging.getLogger(f"c.{__class__.__name__}.update_$1")
+		logg.debug(f"Start {fmt_cn('update_$1', 'start')} {data}")
+endsnippet
+
+snippet deflogfmtcn "Function with logger and color formatter" b
+def ${1:func_name}(self):
+	"""TODO: what is $1 doing?
+	"""
+	logg = logging.getLogger(f"c.{__class__.__name__}.$1")
+	logg.setLevel("TRACE")
+	logg.debug(f"${2:Start }{fmt_cn('${3:$1}', '${4:start}')}${5:}")
+	$0
 endsnippet
