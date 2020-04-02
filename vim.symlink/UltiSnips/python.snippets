@@ -32,11 +32,11 @@ snippet newobscb "Templates for a new Observable" b
 endsnippet
 
 snippet deflogfmtcn "Function with logger and color formatter" b
-def ${1:func_name}(self):
+def ${1:func_name}(self$2):
 	"""TODO: what is $1 doing?
 	"""
 	logg = logging.getLogger(f"c.{__class__.__name__}.$1")
 	logg.setLevel("TRACE")
-	logg.debug(f"${2:Start }{fmt_cn('${3:$1}', '${4:a2}')}${5:}")
+	logg.info(f"Start {fmt_cn('$1', 'a2')}$3")
 	$0
 endsnippet
