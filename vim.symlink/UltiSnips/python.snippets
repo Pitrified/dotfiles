@@ -21,14 +21,14 @@ snippet newobscb "Templates for a new Observable" b
 # create the callback
 	def updated_$1(self, data):
 		logg = logging.getLogger(f"c.{__class__.__name__}.updated_$1")
-		logg.debug(f"Start {fmt_cn('updated_$1', 'start')}")
+		logg.debug(f"Start {fmt_cn('updated_$1', 'a2')}")
 		self.view.frame_${2:FRAME_NAME}.update_$1(data)
 # react to change in view
 	def update_$1(self, data):
 		"""TODO: what are you changing when updating $1?
 		"""
 		logg = logging.getLogger(f"c.{__class__.__name__}.update_$1")
-		logg.debug(f"Start {fmt_cn('update_$1', 'start')} {data}")
+		logg.debug(f"Start {fmt_cn('update_$1', 'a2')} {data}")
 endsnippet
 
 snippet deflogfmtcn "Function with logger and color formatter" b
@@ -37,6 +37,6 @@ def ${1:func_name}(self):
 	"""
 	logg = logging.getLogger(f"c.{__class__.__name__}.$1")
 	logg.setLevel("TRACE")
-	logg.debug(f"${2:Start }{fmt_cn('${3:$1}', '${4:start}')}${5:}")
+	logg.debug(f"${2:Start }{fmt_cn('${3:$1}', '${4:a2}')}${5:}")
 	$0
 endsnippet
