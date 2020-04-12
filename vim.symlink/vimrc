@@ -9,10 +9,10 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 " Plugin 'tpope/vim-dispatch'
 " Plugin 'tpope/fugitive'
-" Plugin 'joonty/vim-do'
+Plugin 'tpope/vim-commentary'
 
 Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
+" Plugin 'scrooloose/nerdcommenter'
 
 Plugin 'luochen1990/rainbow'
 Plugin 'easymotion/vim-easymotion'
@@ -25,6 +25,7 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'noahfrederick/vim-skeleton'
 Plugin 'chiel92/vim-autoformat'
+Plugin 'vim-syntastic/syntastic'
 
 " colorscheme
 Plugin 'lithammer/vim-eighties'
@@ -257,6 +258,10 @@ exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
 
 
 " Plugins
+
+" yank and comment the current line with commentary
+nnoremap gcy :normal yygcc<CR>
+
 map <C-n> :NERDTreeToggle<CR>
 let g:NERDSpaceDelims = 1
 
@@ -269,6 +274,7 @@ let g:ycm_seed_identifiers_with_syntax = 1 " autocomplete with keywords for the 
 let g:ycm_min_num_of_chars_for_completion = 1
 " Apply YCM FixIt
 map <F9> :YcmCompleter FixIt<CR>
+" let g:ycm_autoclose_preview_window_after_completion=1
 
 " let g:do_refresh_key
 
@@ -284,8 +290,20 @@ let g:UltiSnipsEditSplit = "horizontal"
 " edit snippets
 nmap <leader>ue :UltiSnipsEdit<cr>
 
+
+" syntastic
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 " emmet
-let g:user_emmet_leader_key=','
+" use <c-y>, for now, put this in ftplugin if you really need it
+" let g:user_emmet_leader_key=','
 
 set runtimepath+=~/.fzf
 
