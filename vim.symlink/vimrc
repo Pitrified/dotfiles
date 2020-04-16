@@ -10,6 +10,7 @@ Plugin 'tpope/vim-repeat'
 " Plugin 'tpope/vim-dispatch'
 " Plugin 'tpope/fugitive'
 Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-unimpaired'
 
 Plugin 'scrooloose/nerdtree'
 " Plugin 'scrooloose/nerdcommenter'
@@ -300,6 +301,12 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+" ignore line length errors [E501]
+" ignore too many # at start of comment [E266]
+" ignore whitespace before ':' [E203]
+" ignore line break before binary operator [W503]
+let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,W503"
 
 " emmet
 " use <c-y>, for now, put this in ftplugin if you really need it
