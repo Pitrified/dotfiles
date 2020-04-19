@@ -35,7 +35,8 @@ Plug 'morhetz/gruvbox'
 Plug 'aonemd/kuroi.vim'
 
 " python
-Plug 'psf/black', { 'tag': '19.10b0' }
+" disable this for now, use hardcoded version in the dotfiles
+" Plug 'psf/black', { 'tag': '19.10b0' }
 
 " LaTeX
 Plug 'vim-latex/vim-latex'
