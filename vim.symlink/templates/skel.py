@@ -53,10 +53,6 @@ def setup_logger(logLevel="DEBUG"):
     # use it like this
     # logroot.log(5, 'Exceedingly verbose debug')
 
-    # example log line
-    logg = logging.getLogger(f"c.{__name__}.setup_logger")
-    logg.debug(f"Done setting up logger")
-
 
 def setup_env():
     setup_logger()

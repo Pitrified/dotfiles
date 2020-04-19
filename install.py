@@ -1,95 +1,218 @@
-#!/usr/bin/env python3
+import argparse
+import logging
 
-from os import listdir
-from os.path import expanduser
-from os.path import isdir
-from os.path import islink
-from os.path import isfile
-from os.path import join
-from os.path import splitext
-from os import makedirs
-from os import symlink
-from shutil import move
+from timeit import default_timer as timer
+from pathlib import Path
 
 
-def isConfDir(pathto, mydir):
-    excludeDir = [".git"]
-    if mydir not in excludeDir and isdir(join(pathto, mydir)):
+def parse_arguments():
+    """Setup CLI interface
+    """
+    parser = argparse.ArgumentParser(description="")
+
+    parser.add_argument(
+        "-bd",
+        "--backup_dir",
+        type=str,
+        default=".rcback",
+        help="Name of the backup folder",
+    )
+
+    parser.add_argument(
+        "-lld",
+        "--log_level_debug",
+        type=str,
+        default="INFO",
+        help="LogLevel for the debugging logger",
+        choices=["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"],
+    )
+
+    # last line to parse the args
+    args = parser.parse_args()
+    return args
+
+
+def setup_logger(logLevel="DEBUG"):
+    """Setup logger that outputs to console for the module
+    """
+    logroot = logging.getLogger("c")
+    logroot.propagate = False
+    logroot.setLevel(logLevel)
+
+    module_console_handler = logging.StreamHandler()
+
+    #  log_format_module = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    #  log_format_module = "%(name)s - %(levelname)s: %(message)s"
+    #  log_format_module = '%(levelname)s: %(message)s'
+    #  log_format_module = '%(name)s: %(message)s'
+    log_format_module = "%(message)s"
+
+    formatter = logging.Formatter(log_format_module)
+    module_console_handler.setFormatter(formatter)
+
+    logroot.addHandler(module_console_handler)
+
+    logging.addLevelName(5, "TRACE")
+    # use it like this
+    # logroot.log(5, 'Exceedingly verbose debug')
+
+
+def setup_env():
+    args = parse_arguments()
+
+    setup_logger(args.log_level_debug)
+
+    # build command string to repeat this run
+    # FIXME if an option is a flag this does not work, sorry
+    recap = f"python3 install.py"
+    for a, v in args._get_kwargs():
+        recap += f" --{a} {v}"
+
+    logmain = logging.getLogger(f"c.{__name__}.setup_env")
+    logmain.info(recap)
+
+    return args
+
+
+def find_free_dir(home_dir, dir_name_root):
+    """Finds a directory in home_dir with an unique name
+    """
+    # logg = logging.getLogger(f"c.{__name__}.find_free_dir")
+
+    for i in range(100):
+        new_dir = home_dir / f"{dir_name_root}{i:02d}"
+        if not new_dir.exists():
+            return new_dir
+
+    return None
+
+
+def is_conf_dir(conf_dir):
+    """Returns true if conf_dir is, indeed, a config folder
+    """
+    # logg = logging.getLogger(f"c.{__name__}.is_conf_dir")
+
+    exclude_dir = [".git"]
+
+    if conf_dir.is_dir() and conf_dir.name not in exclude_dir:
         return True
     else:
         return False
 
 
-def backup(dir_old, myfile, dir_back, newfile=None):
-    if newfile is None:
-        newfile = myfile
-    oldfull = join(dir_old, myfile)
-    newfull = join(dir_back, newfile)
-    print(f"Backing up: {oldfull}")
-    if not isfile(oldfull) and not isdir(oldfull) and not islink(oldfull):
-        print("       !!!! Not a file nor a folder nor a link")
-        return
-    print(f"      Into: {newfull}")
+def backup(src_at_home, backup_dir):
+    """Moves src_at_home into backup_dir, keeping the same name
+    """
+    logg = logging.getLogger(f"c.{__name__}.backup")
+    # logg.debug(f"Start backup")
 
-    if not isdir(dir_back):
-        makedirs(dir_back)
-    move(oldfull, newfull)
+    if src_at_home.exists():
+        src_at_back = backup_dir / src_at_home.name
+        logg.debug(f"   src_at_back:\t{src_at_back}")
+        src_at_home.rename(src_at_back)
+        logg.info(f"\tBacked up {src_at_home} to {src_at_back}")
 
 
-def createsymlink(dir_target, name_target, dir_link, name_link, dir_back):
-    #  symlink(target, link_name)
-    backup(dir_link, name_link, dir_back)
-    targetfull = join(dir_target, name_target)
-    linkfull = join(dir_link, name_link)
-    print(f"Symlinking: {targetfull}")
-    print(f"        To: {linkfull}")
-    symlink(targetfull, linkfull)
+def add_source(alias_at_home, config_at_dot):
+    """Sources config_at_dot in alias_at_home
+    """
+    logg = logging.getLogger(f"c.{__name__}.add_source")
+    # logg.debug(f"Start add_source")
 
-
-def addsource(filealias, newalias):
+    # the string to source a file from bash_aliases
     sourcestr = "if [ -f {0} ]; then\n    . {0}\nfi\n\n"
-    print(f"Adding to sourced files: {newalias}")
-    with open(filealias, "a") as fa:
-        fa.write(sourcestr.format(newalias))
+
+    with open(alias_at_home, "a") as fa:
+        fa.write(sourcestr.format(config_at_dot))
+        logg.info(f"\tSourced {config_at_dot} in ~/.bash_aliases")
 
 
-def main():
-    dir_home = expanduser("~")  # or os.getenv('HOME')
-    dir_dot = join(dir_home, "dotfiles")
-    dir_back = join(dir_home, ".rcback")
+def run_install(args):
+    """Sets up the environment
+    """
+    logg = logging.getLogger(f"c.{__name__}.run_install")
 
-    # NOTE put local aliases in ~/.bash_aliases.local
-    backup(dir_home, ".bash_aliases", dir_back)
-    bashalia = join(dir_home, ".bash_aliases")
-    addsource(bashalia, "~/.bash_aliases.local")
-    #  createsymlink(dir_dot, 'vim', dir_home, '.vim', dir_back)
+    install_start = timer()
 
-    dirs = [d for d in listdir(dir_dot) if isConfDir(dir_dot, d)]
-    for topic in dirs:
-        print()
-        topic_name, topic_ext = splitext(topic)
-        print(f"Topic: {topic_name} {topic_ext}")
-        if topic_ext == ".symlink":
-            createsymlink(dir_dot, topic, dir_home, f".{topic_name}", dir_back)
+    home_dir = Path.home()
+    logg.debug(f"      home_dir:\t{home_dir}")
 
-        dir_topic = join(dir_dot, topic)
-        configs = [c for c in listdir(dir_topic)]
-        print(f"{dir_topic}: {configs}")
-        for config in configs:
-            name, ext = splitext(config)
-            #  print(f'{config}: {name}  {ext}')
-            if ext == ".symlink":
-                createsymlink(dir_topic, config, dir_home, "." + name, dir_back)
-            elif ext == ".bash":
-                addsource(bashalia, join(dir_topic, config))
+    # find a new free backup folder
+    backup_dir = find_free_dir(home_dir, args.backup_dir)
+    if backup_dir is None:
+        logg.critical(f"No empty backup folder found, aborting.")
+        return False
+    logg.debug(f"    backup_dir:\t{backup_dir}")
+    backup_dir.mkdir()
+
+    # the repo folder
+    dotfiles_dir = home_dir / "dotfiles"
+    logg.debug(f"  dotfiles_dir:\t{dotfiles_dir}")
+
+    logg.info(f"\nSetup bash aliases")
+
+    # the bash_aliases file
+    alias_at_home = home_dir / ".bash_aliases"
+    logg.debug(f"\nalias_at_home:\t{alias_at_home}")
+    # backup it
+    backup(alias_at_home, backup_dir)
+
+    # source ~/.bash_aliases.local
+    alias_local = home_dir / ".bash_aliases.local"
+    add_source(alias_at_home, alias_local)
+
+    for topic_at_dot in dotfiles_dir.iterdir():
+        # check if the folder is a valid config dir
+        if not is_conf_dir(topic_at_dot):
+            # logg.debug(f"\tNot a config folder, skipping it")
+            continue
+
+        logg.info(f"\nTopic: {topic_at_dot.name}")
+        logg.debug(f"  topic_at_dot:\t{topic_at_dot}")
+
+        # check if we need to link the whole folder
+        if topic_at_dot.suffix == ".symlink":
+
+            # find the path of the topic_at_dot in the home directory
+            topic_at_home = home_dir / f".{topic_at_dot.stem}"
+            logg.debug(f" topic_at_home:\t{topic_at_home}")
+
+            # backup the current topic_at_home into rcback
+            backup(topic_at_home, backup_dir)
+
+            # link topic_at_home to topic_at_dot
+            topic_at_home.symlink_to(topic_at_dot, target_is_directory=True)
+            logg.info(f"\tSymlinked {topic_at_home} to {topic_at_dot}")
+
+        # go through all the items in the topic dir
+        for config_at_dot in topic_at_dot.iterdir():
+
+            # source the .bash files
+            if config_at_dot.suffix == ".bash":
+                logg.debug(f" config_at_dot:\t{config_at_dot}")
+
+                # add the formatted lines in ~/.bash_aliases
+                add_source(alias_at_home, config_at_dot)
+
+            # symlink the .symlink files
+            if config_at_dot.suffix == ".symlink":
+                logg.debug(f" config_at_dot:\t{config_at_dot}")
+
+                # find the path of the config_at_dot in the home directory
+                config_at_home = home_dir / f".{config_at_dot.stem}"
+                logg.debug(f"config_at_home:\t{config_at_home}")
+
+                # backup the current config_at_home into rcback
+                backup(config_at_home, backup_dir)
+
+                # link config_at_home to config_at_dot
+                config_at_home.symlink_to(config_at_dot, target_is_directory=True)
+                logg.info(f"\tSymlinked {config_at_home} to {config_at_dot}")
+
+    install_end = timer()
+    logg.info(f"\nDone installing, took {install_end-install_start:.3f} s")
 
 
 if __name__ == "__main__":
-    main()
-
-# esplora le cartelle
-# if file /**/*.bash source it in ~/bash_alias
-# if file /**/*.symlink it in ~/.\1
-#   if that existed, backup it in ~/.rcback/.\1
-# vim e` un bambino speciale, devi symlinkare tutta la cartella
-# se c'e' ~/.vimrc backup anche quello e toglilo
+    args = setup_env()
+    run_install(args)
