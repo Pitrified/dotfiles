@@ -48,8 +48,6 @@ Plug 'mattn/emmet-vim'
 call plug#end()            " required
 
 " basic miscellaneous
-" filetype plugin indent on
-" syntax enable
 set encoding=utf-8
 
 set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
@@ -64,7 +62,7 @@ set matchtime=3                 " for 3 ms
 set incsearch                   " Find as you type search
 set hlsearch                    " Highlight search terms
 set ignorecase                  " Case insensitive search
-set smartcase                   " Case sensitive when uc present
+set smartcase                   " Case sensitive when uppercase present
 set wildmenu                    " Show list instead of just completing
 set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
 set wildignore=*.pyc,*.class
@@ -95,7 +93,7 @@ let g:tex_flavor = "latex"
 
 " optics
 set linespace=0
-set background=dark 
+set background=dark
 
 if has('gui_running')  " in gvim do this
     set termguicolors
@@ -104,21 +102,14 @@ else
 endif
 
 " colorscheme kuroi
-" colorscheme antares   
-" colorscheme gruvbox   
+" colorscheme antares
+" colorscheme gruvbox
 colorscheme gruvbox-bootleg
 
-" let g:solarized_termcolors=256  " needed for terminal use     
-" colorscheme solarized 
+" let g:solarized_termcolors=256  " needed for terminal use
+" colorscheme solarized
 
-" GVIM
-" set guifont=Menlo:h10   
-" set guifont=Hack\ 10   
-" set guioptions-=m  "menu bar
-" set guioptions-=T  "toolbar
-" set guioptions-=r  "scrollbar
-
-" Setting up the directories 
+" Setting up the directories
 set directory=~/.myvim/swap
 set backup                      " Backups are nice ...
 set backupdir=~/.myvim/backup
@@ -138,10 +129,26 @@ if has('clipboard')
     endif
 endif
 
-" status line TODO
 if has('cmdline_info')
-    set ruler                   " Show the ruler
-    set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
+    set laststatus=2            " always show statusline
+
+    set statusline=             " reset upon vimrc reload
+    set statusline+=%<          " cut at start if the line is too long
+    set statusline+=%f          " path relative to current directory
+    set statusline+=\           " space
+    set statusline+=%h          " help buffer flag
+    set statusline+=%m          " modified flag
+    set statusline+=%r          " readonly flag
+    set statusline+=%=          " start right align
+    set statusline+=\:b%n       " buffer number with :b in front
+    set statusline+=%y          " filetype
+    set statusline+=%w          " preview window flag
+    set statusline+=\           " space
+    set statusline+=%l,%c       " current line and column
+    set statusline+=%V          " Virtual column number as -{num}. Not displayed if equal to 'c'
+    set statusline+=\           " space
+    set statusline+=%P          " percentage through file
+
     set showcmd                 " Show partial commands in status line and
                                 " Selected characters/lines in visual mode
 endif
@@ -149,32 +156,6 @@ endif
 " Instead of reverting the cursor to the last position in the buffer, we
 " set it to the first line when editing a git commit message
 au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
-
-" http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
-" Restore cursor to file position in previous editing session
-function! ResCur()
-    if line("'\"") <= line("$")
-        silent! normal! g`"
-        return 1
-    endif
-endfunction
-augroup resCur
-    autocmd!
-    autocmd BufWinEnter * call ResCur()
-augroup END
-
-nnoremap <F5> :call StripTrailingWhitespace()<CR>
-function! StripTrailingWhitespace()
-    " Preparation: save last search, and cursor position.
-    let _s=@/
-    let l = line(".")
-    let c = col(".")
-    " do the business:
-    %s/\s\+$//e
-    " clean up: restore previous search history, and cursor position
-    let @/=_s
-    call cursor(l, c)
-endfunction
 
 " mappings and shortcuts
 inoremap jk <ESC>
@@ -200,7 +181,9 @@ vnoremap K k
 
 let mapleader = "\<Space>"
 
-" leadermap
+"   #########   "
+"   Leadermap
+"   #########   "
 
 " toggle things
 " clear highlight
@@ -245,19 +228,15 @@ tnoremap <leader><leader>mj <C-w><S-j>
 tnoremap <leader><leader>mk <C-w><S-k>
 tnoremap <leader><leader>ml <C-w><S-l>
 
-" this should be only for c/c++
-" nnoremap <leader>mm :update<CR>:Make<CR>
-" nnoremap <leader>mr :!./%:r.out<CR>
-" nnoremap <leader>mr :Do ./%:r.out<CR>
-
 " make sessions and restore them
 " you can also start vim with a session 'vim -S ~/mysession.vim'
 let g:sessions_dir = '~/.vim/sessions'
 exec 'nnoremap <Leader>ms :mksession! ' . g:sessions_dir . '/<C-D>'
 exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
 
-
-" Plugins
+"   #######   "
+"   Plugins   "
+"   #######   "
 
 " black virtualenv outside the dotfiles
 let g:black_virtualenv = '~/.myvim/black'
@@ -265,11 +244,9 @@ let g:black_virtualenv = '~/.myvim/black'
 " yank and comment the current line with commentary
 nnoremap gcy :normal yygcc<CR>
 
-map <C-n> :NERDTreeToggle<CR>
-let g:NERDSpaceDelims = 1
-
 let g:rainbow_active = 1 " toggle with :RainbowToggle
 
+" YouCompleteMe
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
@@ -277,11 +254,8 @@ let g:ycm_seed_identifiers_with_syntax = 1 " autocomplete with keywords for the 
 let g:ycm_min_num_of_chars_for_completion = 1
 " Apply YCM FixIt
 map <F9> :YcmCompleter FixIt<CR>
-" let g:ycm_autoclose_preview_window_after_completion=1
 
-" let g:do_refresh_key
-
-" nnoremap <leader>bb :Black<CR>
+" Autoformat, override this in after/ftplugin for type specific formatter
 nnoremap <leader>bb :Autoformat<CR>
 
 " UltiSnips
@@ -293,27 +267,79 @@ let g:UltiSnipsEditSplit = "horizontal"
 " edit snippets
 nmap <leader>ue :UltiSnipsEdit<cr>
 
-
 " syntastic
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
+set statusline+=\           " space
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+" TODO toggle this https://developer.ibm.com/articles/l-vim-script-1/
+" flake8 args
 " line length errors [E501]
 " too many # at start of comment [E266]
 " whitespace before ':' [E203]
 " line break before binary operator [W503]
 " local variable 'var_name' is assigned to but never used [F841]
-let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,F841,W503"
+let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,W503"
 
 " emmet
 " use <c-y>, for now, put this in ftplugin if you really need it
 " let g:user_emmet_leader_key=','
+
+" https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
+" wrap :cnext/:cprevious and :lnext/:lprevious
+function! <SID>WrapCommand(direction, prefix)
+    if a:direction == "up"
+        try
+            execute a:prefix . "previous"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            execute a:prefix . "last"
+        catch /^Vim\%((\a\+)\)\=:E\%(776\|42\):/
+        endtry
+    elseif a:direction == "down"
+        try
+            execute a:prefix . "next"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            execute a:prefix . "first"
+        catch /^Vim\%((\a\+)\)\=:E\%(776\|42\):/
+        endtry
+    endif
+endfunction
+
+nnoremap <silent> <Plug>LocationPrevious    :<C-u> call <SID>WrapCommand("up", "l")<CR>
+nnoremap <silent> <Plug>LocationNext        :<C-u> call <SID>WrapCommand("down", "l")<CR>
+nmap <silent> [l  <Plug>LocationPrevious
+nmap <silent> ]l  <Plug>LocationNext
+
+" http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
+" Restore cursor to file position in previous editing session
+function! ResCur()
+    if line("'\"") <= line("$")
+        silent! normal! g`"
+        return 1
+    endif
+endfunction
+augroup resCur
+    autocmd!
+    autocmd BufWinEnter * call ResCur()
+augroup END
+
+function! StripTrailingWhitespace()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " do the business:
+    %s/\s\+$//e
+    " clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
+nnoremap <F5> :call StripTrailingWhitespace()<CR>
 
 set runtimepath+=~/.fzf
 
