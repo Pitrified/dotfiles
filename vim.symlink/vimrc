@@ -1,56 +1,55 @@
-filetype off                  " required
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
+Plug 'VundleVim/Vundle.vim'
 
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-" Plugin 'tpope/vim-dispatch'
-" Plugin 'tpope/fugitive'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-unimpaired'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+" Plug 'tpope/vim-dispatch'
+" Plug 'tpope/fugitive'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-unimpaired'
 
-Plugin 'scrooloose/nerdtree'
-" Plugin 'scrooloose/nerdcommenter'
-
-Plugin 'luochen1990/rainbow'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'frioux/vim-regedit'
+Plug 'luochen1990/rainbow'
+Plug 'easymotion/vim-easymotion'
+Plug 'frioux/vim-regedit'
 
 " autocomplete/linter/templates
-Plugin 'rdnetto/YCM-Generator'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'noahfrederick/vim-skeleton'
-Plugin 'chiel92/vim-autoformat'
-Plugin 'vim-syntastic/syntastic'
+Plug 'Valloric/YouCompleteMe'
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'noahfrederick/vim-skeleton'
+Plug 'chiel92/vim-autoformat'
+Plug 'vim-syntastic/syntastic'
 
 " colorscheme
-Plugin 'lithammer/vim-eighties'
-Plugin 'ldelossa/vimdark'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'morhetz/gruvbox'
-Plugin 'aonemd/kuroi.vim'
+Plug 'lithammer/vim-eighties'
+Plug 'ldelossa/vimdark'
+Plug 'altercation/vim-colors-solarized'
+Plug 'morhetz/gruvbox'
+Plug 'aonemd/kuroi.vim'
 
 " python
-" Plugin 'python/black'
+" Plug 'python/black'
 
 " LaTeX
-Plugin 'vim-latex/vim-latex'
+Plug 'vim-latex/vim-latex'
 
 " HTML/XML
-Plugin 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim'
 
 " suan/vim-instant-markdown
 
-call vundle#end()            " required
+call plug#end()            " required
 
 " basic miscellaneous
-filetype plugin indent on
-syntax enable
+" filetype plugin indent on
+" syntax enable
 set encoding=utf-8
 
 set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
