@@ -1,7 +1,14 @@
+# override hist sizes
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+# https://www.shellhacks.com/tune-command-line-history-bash/
+# use history -a to append immediately a command, in case of crash
+PROMPT_COMMAND='history -a'
+
 mkcdir ()
 {
-    mkdir -p -- "$1" &&
-    cd -P -- "$1"
+    mkdir -p -- "$1" && cd -P -- "$1"
 }
 
 lt ()
@@ -28,8 +35,18 @@ lt ()
 }
 
 gitid () {
-    git config user.email "$1"
-    git config user.name "$2"
+    if [[ $# -eq 2 ]]; then
+        # magic to check for a substring in a string
+        if [[ "$1" == *"@"* ]]; then
+            git config user.email "$1"
+            git config user.name "$2"
+        else
+            echo "There is no @ in the email, did you type it correctly?"
+            echo "Usage: gitid email username"
+        fi
+    else
+        echo "Usage: gitid email username"
+    fi
 }
 
 # alias le="exa -lh --git"
@@ -41,6 +58,8 @@ alias ehe="gio open ."
 
 # grep for TODOs and MAYBEs
 alias greptodo="grep -r -I 'TODO\|MAYBE'"
+
+alias gca="git commit -a"
 
 # scale the text for HiDPI display
 # https://askubuntu.com/questions/1029436/enable-fractional-scaling-for-ubuntu-18-04
@@ -67,6 +86,10 @@ settextzoom() {
 
 # put branch name in front of PS1
 # PS1="\$(__git_ps1 '(%s)')"$PS1
+
+# here might be a better way TODO
+# https://stackoverflow.com/a/3058390/2237151
+# https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
 # put branch name on end of PS1
 # this is the length of a string
