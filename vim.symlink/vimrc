@@ -36,7 +36,7 @@ Plugin 'morhetz/gruvbox'
 Plugin 'aonemd/kuroi.vim'
 
 " python
-Plugin 'python/black'
+" Plugin 'python/black'
 
 " LaTeX
 Plugin 'vim-latex/vim-latex'
@@ -302,11 +302,12 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-" ignore line length errors [E501]
-" ignore too many # at start of comment [E266]
-" ignore whitespace before ':' [E203]
-" ignore line break before binary operator [W503]
-let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,W503"
+" line length errors [E501]
+" too many # at start of comment [E266]
+" whitespace before ':' [E203]
+" line break before binary operator [W503]
+" local variable 'var_name' is assigned to but never used [F841]
+let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,F841,W503"
 
 " emmet
 " use <c-y>, for now, put this in ftplugin if you really need it
