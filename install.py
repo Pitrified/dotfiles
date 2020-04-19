@@ -209,6 +209,11 @@ def run_install(args):
                 config_at_home.symlink_to(config_at_dot, target_is_directory=True)
                 logg.info(f"\tSymlinked {config_at_home} to {config_at_dot}")
 
+    logg.info(f"\nSetup bash aliases after")
+    # source ~/.bash_aliases.after.local
+    alias_local_after = home_dir / ".bash_aliases.after.local"
+    add_source(alias_at_home, alias_local_after)
+
     install_end = timer()
     logg.info(f"\nDone installing, took {install_end-install_start:.3f} s")
 
