@@ -35,7 +35,7 @@ Plug 'morhetz/gruvbox'
 Plug 'aonemd/kuroi.vim'
 
 " python
-" Plug 'python/black'
+Plug 'psf/black', { 'tag': '19.10b0' }
 
 " LaTeX
 Plug 'vim-latex/vim-latex'
@@ -258,6 +258,9 @@ exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
 
 
 " Plugins
+
+" black virtualenv outside the dotfiles
+let g:black_virtualenv = '~/.myvim/black'
 
 " yank and comment the current line with commentary
 nnoremap gcy :normal yygcc<CR>
