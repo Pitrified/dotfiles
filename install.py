@@ -149,6 +149,8 @@ def run_install(args):
     dotfiles_dir = home_dir / "dotfiles"
     logg.debug(f"  dotfiles_dir:\t{dotfiles_dir}")
 
+    logg.info(f"\nUsing backup folder {backup_dir}")
+
     logg.info(f"\nSetup bash aliases")
 
     # the bash_aliases file
@@ -216,6 +218,7 @@ def run_install(args):
 
     install_end = timer()
     logg.info(f"\nDone installing, took {install_end-install_start:.3f} s")
+    logg.info(f"Remember to do 'source ~/.bashrc'")
 
 
 if __name__ == "__main__":
