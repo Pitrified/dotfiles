@@ -40,6 +40,7 @@ gitid () {
         if [[ "$1" == *"@"* ]]; then
             git config user.email "$1"
             git config user.name "$2"
+            git config credential.https://github.com.username "$2"
         else
             echo "There is no @ in the email, did you type it correctly?"
             echo "Usage: gitid email username"
@@ -60,6 +61,7 @@ alias ehe="gio open ."
 alias greptodo="grep -r -I 'TODO\|MAYBE'"
 
 alias gca="git commit -a"
+alias gs="git status"
 
 # scale the text for HiDPI display
 # https://askubuntu.com/questions/1029436/enable-fractional-scaling-for-ubuntu-18-04
