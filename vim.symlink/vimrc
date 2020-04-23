@@ -311,7 +311,9 @@ augroup END
 " the function is in autoload/strip_trailing_whitespace.vim
 nnoremap <F5> :call strip_trailing_whitespace#StripTrailingWhitespace()<CR>
 
+" FZF
 set runtimepath+=~/.fzf
+nnoremap <leader>fs :FZF ~/snippet/<CR>
 
 if filereadable(expand('~/.vimrc.local'))
     source ~/.vimrc.local

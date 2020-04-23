@@ -3,13 +3,11 @@ def ${1:func_name}(${2:args}):
 	"""TODO: what is $1 doing?
 	"""
 	logg = logging.getLogger(f"c.{__name__}.$1")
-	logg.${3:debug}(f"Start $1")
-	$0
+	logg.${3:debug}(f"Start $1")$0
 endsnippet
 
 snippet logg "Log line" b
-logg.${1:debug}(f"${2:arg}: {$2}")
-$0
+logg.${1:debug}(f"${2:arg}: {$2}$3")$0
 endsnippet
 
 snippet newobscb "Templates for a new Observable" b
@@ -37,8 +35,7 @@ def ${1:func_name}(self$2):
 	"""
 	logg = logging.getLogger(f"c.{__class__.__name__}.$1")
 	logg.setLevel("TRACE")
-	logg.info(f"Start {fmt_cn('$1', 'a2')}$3")
-	$0
+	logg.info(f"Start {fmt_cn('$1', 'a2')}$3")$0
 endsnippet
 
 snippet varflog "Log a value to f-string"
