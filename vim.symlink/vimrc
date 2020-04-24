@@ -244,6 +244,7 @@ let g:black_virtualenv = '~/.myvim/black'
 
 " yank and comment the current line with commentary
 nnoremap gcy :normal yygcc<CR>
+nnoremap gcp :normal yygccp<CR>
 
 let g:rainbow_active = 1 " toggle with :RainbowToggle
 
