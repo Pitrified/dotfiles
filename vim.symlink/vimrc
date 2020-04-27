@@ -290,7 +290,7 @@ let g:syntastic_check_on_wq = 0
 " line break before binary operator [W503]
 " local variable 'var_name' is assigned to but never used [F841]
 let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,W503"
-let g:syntastic_python_mypy_args = "--ignore-missing-imports"
+" let g:syntastic_python_mypy_args = "--ignore-missing-imports"
 
 " emmet
 " use <c-y>, for now, put this in ftplugin if you really need it
@@ -302,6 +302,20 @@ nmap <silent> ]l  <Plug>LocationNext
 " if there is only one element in quickfix list call :cfirst instead of :cnext
 nmap <silent> [q  <Plug>QuickFixPrevious
 nmap <silent> ]q  <Plug>QuickFixNext
+
+" FZF
+set runtimepath+=~/.fzf
+nnoremap <leader>fs :FZF ~/snippet/<CR>
+nnoremap <leader>fd :FZF ~/dotfiles/<CR>
+
+" ack.vim
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+nnoremap <Leader>a :LAckAdd!<Space>
+
+" the function is in autoload/strip_trailing_whitespace.vim
+nnoremap <F5> :call strip_trailing_whitespace#StripTrailingWhitespace()<CR>
 
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
 " Restore cursor to file position in previous editing session
@@ -316,18 +330,24 @@ augroup resCur
     autocmd BufWinEnter * call ResCur()
 augroup END
 
-" the function is in autoload/strip_trailing_whitespace.vim
-nnoremap <F5> :call strip_trailing_whitespace#StripTrailingWhitespace()<CR>
+" https://github.com/vim/vim/issues/2490#issuecomment-393973253
+" scroll inside terminal
+function! ExitNormalMode()
+    unmap <buffer> <silent> <RightMouse>
+    vertical resize -5
+    call feedkeys("a")
+endfunction
 
-" FZF
-set runtimepath+=~/.fzf
-nnoremap <leader>fs :FZF ~/snippet/<CR>
+function! EnterNormalMode()
+    if &buftype == 'terminal' && mode('') == 't'
+        call feedkeys("\<c-w>N")
+        call feedkeys("\<c-y>")
+        map <buffer> <silent> <RightMouse> :call ExitNormalMode()<CR>
+    endif
+    vertical resize +5
+endfunction
 
-" ack.vim
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-nnoremap <Leader>a :LAckAdd!<Space>
+tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
 
 if filereadable(expand('~/.vimrc.local'))
     source ~/.vimrc.local
