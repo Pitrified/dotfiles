@@ -291,6 +291,7 @@ let g:syntastic_check_on_wq = 0
 " local variable 'var_name' is assigned to but never used [F841]
 let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,W503"
 " let g:syntastic_python_mypy_args = "--ignore-missing-imports"
+let g:syntastic_mode_map = { 'passive_filetypes': ['tex'] }
 
 " emmet
 " use <c-y>, for now, put this in ftplugin if you really need it
