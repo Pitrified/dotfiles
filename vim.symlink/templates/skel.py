@@ -1,15 +1,13 @@
 import argparse
 import logging
-
-import numpy as np
-
 from random import seed as rseed
 from timeit import default_timer as timer
 
+import numpy as np  # type: ignore
 
-def parse_arguments():
-    """Setup CLI interface
-    """
+
+def parse_arguments() -> argparse.Namespace:
+    """Setup CLI interface"""
     parser = argparse.ArgumentParser(description="@CURSOR@")
 
     parser.add_argument(
@@ -29,9 +27,8 @@ def parse_arguments():
     return args
 
 
-def setup_logger(logLevel="DEBUG"):
-    """Setup logger that outputs to console for the module
-    """
+def setup_logger(logLevel: str = "DEBUG") -> None:
+    """Setup logger that outputs to console for the module"""
     logroot = logging.getLogger("c")
     logroot.propagate = False
     logroot.setLevel(logLevel)
@@ -54,8 +51,8 @@ def setup_logger(logLevel="DEBUG"):
     # logroot.log(5, 'Exceedingly verbose debug')
 
 
-def setup_env():
-    setup_logger()
+def setup_env() -> argparse.Namespace:
+    setup_logger("DEBUG")
 
     args = parse_arguments()
 
@@ -70,7 +67,7 @@ def setup_env():
 
     # build command string to repeat this run
     # FIXME if an option is a flag this does not work, sorry
-    recap = f"python3 @BASENAME@.py"
+    recap = "python3 @BASENAME@.py"
     for a, v in args._get_kwargs():
         if a == "rand_seed":
             recap += f" --rand_seed {myseed}"
@@ -83,11 +80,10 @@ def setup_env():
     return args
 
 
-def run_@BASENAME@(args):
-    """TODO: What is @BASENAME@ doing?
-    """
+def run_@BASENAME@(args: argparse.Namespace) -> None:
+    """TODO: What is @BASENAME@ doing?"""
     logg = logging.getLogger(f"c.{__name__}.run_@BASENAME@")
-    logg.debug(f"Starting run_@BASENAME@")
+    logg.debug("Starting run_@BASENAME@")
 
 
 if __name__ == "__main__":
