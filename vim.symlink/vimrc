@@ -5,7 +5,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'VundleVim/Vundle.vim'
+" Plug 'VundleVim/Vundle.vim'
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -17,7 +17,10 @@ Plug 'tpope/vim-unimpaired'
 Plug 'luochen1990/rainbow'
 Plug 'easymotion/vim-easymotion'
 Plug 'frioux/vim-regedit'
-Plug 'mileszs/ack.vim'
+" Plug 'mileszs/ack.vim' " Use :Ag from fzf
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " autocomplete/linter/templates
 Plug 'Valloric/YouCompleteMe'
@@ -170,7 +173,7 @@ nnoremap k gk
 nnoremap gj j
 nnoremap gk k
 
-" Yank from the cursor to the end of the line, to be consistent with C and D.
+" yank from the cursor to the end of the line, to be consistent with C and D
 nnoremap Y y$
 
 " when in visual mode, search for selected text
@@ -308,12 +311,16 @@ nmap <silent> ]q  <Plug>QuickFixNext
 set runtimepath+=~/.fzf
 nnoremap <leader>fs :FZF ~/snippet/<CR>
 nnoremap <leader>fd :FZF ~/dotfiles/<CR>
+nnoremap <Leader>fa :Ag<CR>
+nnoremap <Leader>ff :Files<CR>
+nnoremap <Leader>fb :Buffers<CR>
+nnoremap <Leader>fl :Lines<CR>
 
 " ack.vim
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-nnoremap <Leader>a :LAckAdd!<Space>
+" if executable('ag')
+"   let g:ackprg = 'ag --vimgrep'
+" endif
+" nnoremap <Leader>a :LAckAdd!<Space>
 
 " the function is in autoload/strip_trailing_whitespace.vim
 nnoremap <F5> :call strip_trailing_whitespace#StripTrailingWhitespace()<CR>
