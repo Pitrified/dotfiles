@@ -35,10 +35,10 @@ def setup_logger(logLevel: str = "DEBUG") -> None:
 
     module_console_handler = logging.StreamHandler()
 
-    #  log_format_module = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    #  log_format_module = "%(name)s - %(levelname)s: %(message)s"
-    #  log_format_module = '%(levelname)s: %(message)s'
-    #  log_format_module = '%(name)s: %(message)s'
+    # log_format_module = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    # log_format_module = "%(name)s - %(levelname)s: %(message)s"
+    # log_format_module = '%(levelname)s: %(message)s'
+    # log_format_module = '%(name)s: %(message)s'
     log_format_module = "%(message)s"
 
     formatter = logging.Formatter(log_format_module)
