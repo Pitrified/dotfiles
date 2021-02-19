@@ -1,6 +1,6 @@
 snippet deflog "Function with logger" b
 def ${1:func_name}(${2:args}) -> ${3:None}:
-	"""MAKEDOC: what is $1 doing?"""
+	r"""MAKEDOC: what is $1 doing?"""
 	logg = logging.getLogger(f"c.{__name__}.$1")
 	# logg.setLevel("INFO")
 	logg.debug("Start $1")$0
@@ -31,8 +31,7 @@ endsnippet
 
 snippet deflogfmtcn "Function with logger and color formatter" b
 def ${1:func_name}(self$2):
-	"""TODO: what is $1 doing?
-	"""
+	r"""TODO: what is $1 doing?"""
 	logg = logging.getLogger(f"c.{__class__.__name__}.$1")
 	logg.setLevel("TRACE")
 	logg.info(f"Start {fmt_cn('$1', 'a2')}$3")$0
@@ -42,10 +41,10 @@ snippet varflog "Log a value to f-string"
 ${1:var_name} {$1}$0
 endsnippet
 
-snippet tyd "Type hint for a dict"
+snippet tyD "Type hint for a dict"
 ty.Dict[${1:str}, ${2:str}]$0
 endsnippet
 
-snippet tyl "Type hint for a list"
+snippet tyL "Type hint for a list"
 ty.List[${1:str}]$0
 endsnippet

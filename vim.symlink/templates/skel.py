@@ -7,7 +7,7 @@ import numpy as np  # type: ignore
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Setup CLI interface"""
+    r"""Setup CLI interface"""
     parser = argparse.ArgumentParser(description="@CURSOR@")
 
     parser.add_argument(
@@ -28,7 +28,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def setup_logger(logLevel: str = "DEBUG") -> None:
-    """Setup logger that outputs to console for the module"""
+    r"""Setup logger that outputs to console for the module"""
     logroot = logging.getLogger("c")
     logroot.propagate = False
     logroot.setLevel(logLevel)
@@ -52,6 +52,7 @@ def setup_logger(logLevel: str = "DEBUG") -> None:
 
 
 def setup_env() -> argparse.Namespace:
+    r"""Setup the logger and parse the args"""
     setup_logger("DEBUG")
 
     args = parse_arguments()
@@ -81,7 +82,7 @@ def setup_env() -> argparse.Namespace:
 
 
 def run_@BASENAME@(args: argparse.Namespace) -> None:
-    """TODO: What is @BASENAME@ doing?"""
+    r"""TODO: What is @BASENAME@ doing?"""
     logg = logging.getLogger(f"c.{__name__}.run_@BASENAME@")
     logg.debug("Starting run_@BASENAME@")
 
