@@ -8,18 +8,24 @@ import numpy as np  # type: ignore
 
 def parse_arguments() -> argparse.Namespace:
     r"""Setup CLI interface"""
-    parser = argparse.ArgumentParser(description="@CURSOR@")
+    parser = argparse.ArgumentParser(description="")
 
     parser.add_argument(
-        "-i",
-        "--path_input",
+        "-lld",
+        "--log_level_debug",
         type=str,
-        default="hp.jpg",
-        help="path to input image to use",
+        default="INFO",
+        help="Level for the debugging logger",
+        choices=["DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"],
     )
 
     parser.add_argument(
-        "-s", "--rand_seed", type=int, default=-1, help="random seed to use"
+        "-llt",
+        "--log_level_type",
+        type=str,
+        default="m",
+        help="Message format for the debugging logger",
+        choices=["anlm", "nlm", "lm", "nm", "m"],
     )
 
     # last line to parse the args
@@ -27,7 +33,7 @@ def parse_arguments() -> argparse.Namespace:
     return args
 
 
-def setup_logger(logLevel: str = "DEBUG") -> None:
+def setup_logger(logLevel: str = "DEBUG", msg_type: str = "m") -> None:
     r"""Setup logger that outputs to console for the module"""
     logroot = logging.getLogger("c")
     logroot.propagate = False
@@ -35,45 +41,33 @@ def setup_logger(logLevel: str = "DEBUG") -> None:
 
     module_console_handler = logging.StreamHandler()
 
-    # log_format_module = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    # log_format_module = "%(name)s - %(levelname)s: %(message)s"
-    # log_format_module = '%(levelname)s: %(message)s'
-    # log_format_module = '%(name)s: %(message)s'
-    log_format_module = "%(message)s"
+    if msg_type == "anlm":
+        log_format_module = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    elif msg_type == "nlm":
+        log_format_module = "%(name)s - %(levelname)s: %(message)s"
+    elif msg_type == "lm":
+        log_format_module = "%(levelname)s: %(message)s"
+    elif msg_type == "nm":
+        log_format_module = "%(name)s: %(message)s"
+    else:
+        log_format_module = "%(message)s"
 
     formatter = logging.Formatter(log_format_module)
     module_console_handler.setFormatter(formatter)
 
     logroot.addHandler(module_console_handler)
 
-    logging.addLevelName(5, "TRACE")
-    # use it like this
-    # logroot.log(5, 'Exceedingly verbose debug')
-
 
 def setup_env() -> argparse.Namespace:
     r"""Setup the logger and parse the args"""
-    setup_logger("DEBUG")
-
     args = parse_arguments()
-
-    # setup seed value
-    if args.rand_seed == -1:
-        myseed = 1
-        myseed = int(timer() * 1e9 % 2 ** 32)
-    else:
-        myseed = args.rand_seed
-    rseed(myseed)
-    np.random.seed(myseed)
+    setup_logger(args.log_level_debug, args.log_level_type)
 
     # build command string to repeat this run
     # FIXME if an option is a flag this does not work, sorry
-    recap = "python3 @BASENAME@.py"
+    recap = "python3 imagenet_preprocess.py"
     for a, v in args._get_kwargs():
-        if a == "rand_seed":
-            recap += f" --rand_seed {myseed}"
-        else:
-            recap += f" --{a} {v}"
+        recap += f" --{a} {v}"
 
     logmain = logging.getLogger(f"c.{__name__}.setup_env")
     logmain.info(recap)
