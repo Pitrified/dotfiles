@@ -1,9 +1,8 @@
 import argparse
 import logging
-from random import seed as rseed
-from timeit import default_timer as timer
 
-import numpy as np  # type: ignore
+# from timeit import default_timer as timer
+# import numpy as np  # type: ignore
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -14,7 +13,7 @@ def parse_arguments() -> argparse.Namespace:
         "-lld",
         "--log_level_debug",
         type=str,
-        default="INFO",
+        default="DEBUG",
         help="Level for the debugging logger",
         choices=["DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"],
     )
@@ -63,8 +62,8 @@ def setup_env() -> argparse.Namespace:
     args = parse_arguments()
     setup_logger(args.log_level_debug, args.log_level_type)
 
-    # build command string to repeat this run
-    # FIXME if an option is a flag this does not work, sorry
+    # build command string to repeat this run, useful to remember default values
+    # FIXME if an option is a flag this does not work (can't just copy/paste), sorry
     recap = "python3 imagenet_preprocess.py"
     for a, v in args._get_kwargs():
         recap += f" --{a} {v}"
@@ -76,7 +75,7 @@ def setup_env() -> argparse.Namespace:
 
 
 def run_@BASENAME@(args: argparse.Namespace) -> None:
-    r"""TODO: What is @BASENAME@ doing?"""
+    r"""MAKEDOC: What is @BASENAME@ doing?"""
     logg = logging.getLogger(f"c.{__name__}.run_@BASENAME@")
     logg.debug("Starting run_@BASENAME@")
 
