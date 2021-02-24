@@ -1,3 +1,7 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"   Plug setup {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -5,20 +9,14 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-" Plug 'VundleVim/Vundle.vim'
 
+" the pope
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-" Plug 'tpope/vim-dispatch'
-" Plug 'tpope/fugitive'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-unimpaired'
 
-Plug 'luochen1990/rainbow'
-Plug 'easymotion/vim-easymotion'
-Plug 'frioux/vim-regedit'
-" Plug 'mileszs/ack.vim' " Use :Ag from fzf
-
+" P U R E _ M A G I C
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
@@ -38,6 +36,11 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'morhetz/gruvbox'
 Plug 'aonemd/kuroi.vim'
 
+" misc
+Plug 'luochen1990/rainbow'
+Plug 'easymotion/vim-easymotion'
+Plug 'frioux/vim-regedit'
+
 " python
 " disable this for now, use hardcoded version in the dotfiles
 " Plug 'psf/black', { 'tag': '19.10b0' }
@@ -48,71 +51,61 @@ Plug 'vim-latex/vim-latex'
 " HTML/XML
 Plug 'mattn/emmet-vim'
 
+" markdown
 " suan/vim-instant-markdown
 
 call plug#end()            " required
 
-" basic miscellaneous
+" }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"   Set miscellaneous options {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 set encoding=utf-8
 
 set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
-set virtualedit=onemore             " Allow for cursor beyond last character
-set history=1000                    " Store a ton of history (default is 20)
-" set spell                           " Spell checking on
-set hidden                          " Allow buffer switching without saving
+set virtualedit=onemore         " Allow for cursor beyond last character
+set history=1000                " Store a ton of history (default is 20)
+set hidden                      " Allow buffer switching without saving
 
 set gdefault                    " Substitute all words on a line, :s///g gets only the first
 set showmatch                   " Show matching brackets/parenthesis
-set matchtime=3                 " for 3 ms
+set matchtime=3                 " for 3 tenths of a second
 set incsearch                   " Find as you type search
 set hlsearch                    " Highlight search terms
 set ignorecase                  " Case insensitive search
 set smartcase                   " Case sensitive when uppercase present
+
 set wildmenu                    " Show list instead of just completing
 set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
-set wildignore=*.pyc,*.class
+" A file that matches with one of these patterns is ignored when expanding |wildcards|,
+" completing file or directory names, and influences the result of |expand()|, |glob()|
+" and |globpath()| unless a flag is passed to disable this.
+set wildignore+=*.pyc
+set wildignore+=*.class
 
 set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
 set splitright                  " Puts new vsplit windows to the right of the current
 set splitbelow                  " Puts new split windows to the bottom of the current
 
-set scrolloff=8
+set scrolloff=8                 " Number of lines to keep above and below the cursor
 set listchars=tab:>-,trail:~,extends:>,precedes:<,space:·,eol:¬
-set number
-set relativenumber
-set numberwidth=3
-set cursorline				" highlight current line
-" set cursorcolumn
-set showmode
+set number                      " Print the line number in front of each line
+set relativenumber              " Show the line number relative to the line with the cursor
+set numberwidth=3               " Minimal number of columns to use for the line number
+set cursorline				    " Highlight current line
+set showmode                    " If in Insert, Replace or Visual mode put a message on the last line
+set backspace=indent,eol,start  " More sanity in what backspace can do
 
-set backspace=indent,eol,start
+" tabs
 set shiftwidth=4                " Use indents of 4 spaces
 set expandtab                   " Tabs are spaces, not tabs
 set tabstop=4                   " An indentation every four columns
 set softtabstop=4               " Let backspace delete indent
 
-set mouse=a
-
-" proper highlight for .tex
-let g:tex_flavor = "latex"
-
-" optics
-set linespace=0
-set background=dark
-
-if has('gui_running')  " in gvim do this
-    set termguicolors
-else
-    set t_Co=256
-endif
-
-" colorscheme kuroi
-" colorscheme antares
-" colorscheme gruvbox
-colorscheme gruvbox-bootleg
-
-" let g:solarized_termcolors=256  " needed for terminal use
-" colorscheme solarized
+" mouse
+set mouse=a                     " Enable the use of the mouse
 
 " Setting up the directories
 set directory=~/.myvim/swap
@@ -125,7 +118,7 @@ if has('persistent_undo')
     set undodir=~/.myvim/undo
 endif
 
-
+" setup clipboard behaviour
 if has('clipboard')
     if has('unnamedplus')  " When possible use + register for copy-paste
         set clipboard=unnamed,unnamedplus
@@ -134,6 +127,7 @@ if has('clipboard')
     endif
 endif
 
+" setup statusline
 if has('cmdline_info')
     set laststatus=2            " always show statusline
 
@@ -158,11 +152,38 @@ if has('cmdline_info')
                                 " Selected characters/lines in visual mode
 endif
 
-" Instead of reverting the cursor to the last position in the buffer, we
-" set it to the first line when editing a git commit message
-au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+" }}}
 
-" mappings and shortcuts
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Optics {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+set linespace=0                 " Number of pixel lines inserted between characters
+set background=dark             " Protect your eyes
+
+if has('gui_running')  " in gvim do this
+    set termguicolors
+else
+    set t_Co=256
+endif
+
+" colorscheme kuroi
+" colorscheme antares
+" colorscheme gruvbox
+colorscheme gruvbox-bootleg
+
+" let g:solarized_termcolors=256  " needed for terminal use
+" colorscheme solarized
+
+" proper highlight for .tex
+let g:tex_flavor = "latex"
+
+" }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Mappings and shortcuts {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 inoremap jk <ESC>
 inoremap kj <ESC>
 
@@ -184,11 +205,20 @@ vnoremap # ""y?<C-r>"<CR>
 vnoremap J j
 vnoremap K k
 
-let mapleader = "\<Space>"
+" if there is only one element in location list call :lfirst instead of :lnext
+nmap <silent> [l  <Plug>LocationPrevious
+nmap <silent> ]l  <Plug>LocationNext
+" if there is only one element in quickfix list call :cfirst instead of :cnext
+nmap <silent> [q  <Plug>QuickFixPrevious
+nmap <silent> ]q  <Plug>QuickFixNext
 
-"   #########   "
-"   Leadermap
-"   #########   "
+" }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"   Leadermap {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let mapleader = "\<Space>"
 
 " toggle things
 " clear highlight
@@ -239,32 +269,42 @@ let g:sessions_dir = '~/.vim/sessions'
 exec 'nnoremap <Leader>ms :mksession! ' . g:sessions_dir . '/<C-D>'
 exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
 
-"   #######   "
-"   Plugins   "
-"   #######   "
+" }}}
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"   Plugins {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""" psf/black
 " black virtualenv outside the dotfiles
 let g:black_virtualenv = '~/.myvim/black'
 
+"""""" tpope/vim-commentary
 " yank and comment the current line with commentary
 nnoremap gcy :normal yygcc<CR>
 nnoremap gcp :normal yygccp<CR>
 
+"""""" luochen1990/rainbow
 let g:rainbow_active = 1 " toggle with :RainbowToggle
 
-" YouCompleteMe
+"""""" Valloric/YouCompleteMe
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
-let g:ycm_seed_identifiers_with_syntax = 1 " autocomplete with keywords for the language
+" autocomplete with keywords for the language
+let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_min_num_of_chars_for_completion = 1
-" Apply YCM FixIt
+" apply YCM FixIt
 map <F9> :YcmCompleter FixIt<CR>
+" stop popup window from automatically appearing
+let g:ycm_auto_hover=''
 
-" Autoformat, override this in after/ftplugin for type specific formatter
+"""""" chiel92/vim-autoformat
+" run Autoformat, override this in after/ftplugin for type specific formatter
 nnoremap <leader>bb :Autoformat<CR>
 
-" UltiSnips
+
+"""""" SirVer/ultisnips'
 let g:UltiSnipsExpandTrigger = "<c-j>"
 let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
 let g:UltiSnipsJumpBackwardTrigger = "<c-p>"
@@ -273,18 +313,19 @@ let g:UltiSnipsEditSplit = "horizontal"
 " edit snippets
 nmap <leader>ue :UltiSnipsEdit<cr>
 
-" syntastic
-let g:syntastic_python_checkers = ['mypy', 'flake8']
-
-set statusline+=\           " space
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"""""" vim-syntastic/syntastic'
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = { 'passive_filetypes': ['tex'] }
+set statusline+=\           " space
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
+""" python setup
+let g:syntastic_python_checkers = ['mypy', 'flake8']
 " TODO toggle this https://developer.ibm.com/articles/l-vim-script-1/
 " flake8 args
 " line length errors [E501]
@@ -294,20 +335,8 @@ let g:syntastic_check_on_wq = 0
 " local variable 'var_name' is assigned to but never used [F841]
 let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,W503"
 " let g:syntastic_python_mypy_args = "--ignore-missing-imports"
-let g:syntastic_mode_map = { 'passive_filetypes': ['tex'] }
 
-" emmet
-" use <c-y>, for now, put this in ftplugin if you really need it
-" let g:user_emmet_leader_key=','
-
-" if there is only one element in location list call :lfirst instead of :lnext
-nmap <silent> [l  <Plug>LocationPrevious
-nmap <silent> ]l  <Plug>LocationNext
-" if there is only one element in quickfix list call :cfirst instead of :cnext
-nmap <silent> [q  <Plug>QuickFixPrevious
-nmap <silent> ]q  <Plug>QuickFixNext
-
-" FZF
+"""""" junegunn/fzf
 set runtimepath+=~/.fzf
 nnoremap <leader>fs :FZF ~/snippet/<CR>
 nnoremap <leader>fd :FZF ~/dotfiles/<CR>
@@ -316,11 +345,23 @@ nnoremap <Leader>ff :Files<CR>
 nnoremap <Leader>fb :Buffers<CR>
 nnoremap <Leader>fl :Lines<CR>
 
-" ack.vim
-" if executable('ag')
-"   let g:ackprg = 'ag --vimgrep'
-" endif
-" nnoremap <Leader>a :LAckAdd!<Space>
+" }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" FileType autocmd {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+autocmd FileType vim setlocal foldmethod=marker
+
+" Instead of reverting the cursor to the last position in the buffer, we
+" set it to the first line when editing a git commit message
+au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+
+" }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Fancy Functions {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " the function is in autoload/strip_trailing_whitespace.vim
 nnoremap <F5> :call strip_trailing_whitespace#StripTrailingWhitespace()<CR>
@@ -357,6 +398,30 @@ endfunction
 
 tmap <silent> <ScrollWheelUp> <c-w>:call EnterNormalMode()<CR>
 
+" Add keywords to all highlight groups
+" https://vi.stackexchange.com/a/19043
+function! UpdateTodoKeywords(...)
+    let newKeywords = join(a:000, " ")
+    let synTodo = map(filter(split(execute("syntax list"), '\n') , { i,v -> match(v, '^\w*Todo\>') == 0}), {i,v -> substitute(v, ' .*$', '', '')})
+    for synGrp in synTodo
+        execute "syntax keyword " . synGrp . " contained " . newKeywords
+    endfor
+endfunction
+
+" NOTE MAYBE
+augroup now
+    autocmd!
+    autocmd Syntax * call UpdateTodoKeywords("NOTE", "MAYBE")
+augroup END
+
+" }}}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Load local settings {{{
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 if filereadable(expand('~/.vimrc.local'))
     source ~/.vimrc.local
 endif
+
+" }}}
