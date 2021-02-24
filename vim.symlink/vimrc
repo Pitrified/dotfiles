@@ -175,9 +175,6 @@ colorscheme gruvbox-bootleg
 " let g:solarized_termcolors=256  " needed for terminal use
 " colorscheme solarized
 
-" proper highlight for .tex
-let g:tex_flavor = "latex"
-
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
