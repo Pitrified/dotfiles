@@ -9,21 +9,23 @@ def parse_arguments() -> argparse.Namespace:
     r"""Setup CLI interface"""
     parser = argparse.ArgumentParser(description="")
 
+    default = "DEBUG"
     parser.add_argument(
         "-lld",
         "--log_level_debug",
         type=str,
-        default="DEBUG",
-        help="Level for the debugging logger",
+        default=default,
+        help=f"Level for the debugging logger, default {default}",
         choices=["DEBUG", "INFO", "WARN", "ERROR", "CRITICAL"],
     )
 
+    default = "m"
     parser.add_argument(
         "-llt",
         "--log_level_type",
         type=str,
-        default="m",
-        help="Message format for the debugging logger",
+        default=default,
+        help=f"Message format for the debugging logger, default {default}",
         choices=["anlm", "nlm", "lm", "nm", "m"],
     )
 
