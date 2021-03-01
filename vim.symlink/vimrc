@@ -40,10 +40,11 @@ Plug 'aonemd/kuroi.vim'
 Plug 'luochen1990/rainbow'
 Plug 'easymotion/vim-easymotion'
 Plug 'frioux/vim-regedit'
+Plug 'jiangmiao/auto-pairs'
+Plug 'sheerun/vim-polyglot'
 
 " python
-" disable this for now, use hardcoded version in the dotfiles
-" Plug 'psf/black', { 'tag': '19.10b0' }
+" Plug 'mgedmin/coverage-highlight.vim'
 
 " LaTeX
 Plug 'vim-latex/vim-latex'
@@ -259,6 +260,9 @@ tnoremap <leader><leader>mh <C-w><S-h>
 tnoremap <leader><leader>mj <C-w><S-j>
 tnoremap <leader><leader>mk <C-w><S-k>
 tnoremap <leader><leader>ml <C-w><S-l>
+" change tabs from terminal
+tnoremap <leader><leader>gt <C-w>gt
+tnoremap <leader><leader>gT <C-w>gT
 
 " make sessions and restore them
 " you can also start vim with a session 'vim -S ~/mysession.vim'
@@ -323,6 +327,8 @@ set statusline+=%*
 
 """ python setup
 let g:syntastic_python_checkers = ['mypy', 'flake8']
+" let g:syntastic_python_checkers = ['mypy', 'flake8', 'flake8-annotations', 'flake8-bandit', 'flake8-black', 'flake8-bugbear', 'flake8-import-order', 'flake8-polyfill']
+
 " TODO toggle this https://developer.ibm.com/articles/l-vim-script-1/
 " flake8 args
 " line length errors [E501]
@@ -330,8 +336,11 @@ let g:syntastic_python_checkers = ['mypy', 'flake8']
 " whitespace before ':' [E203]
 " line break before binary operator [W503]
 " local variable 'var_name' is assigned to but never used [F841]
+" this maybe is better done in .flake8 file
 let g:syntastic_python_flake8_args = "--ignore=E501,E266,E203,W503"
+" this maybe is better done in mypy.ini file
 " let g:syntastic_python_mypy_args = "--ignore-missing-imports"
+nnoremap <Leader>bs :SyntasticCheck<CR>
 
 """""" junegunn/fzf
 set runtimepath+=~/.fzf
@@ -341,6 +350,14 @@ nnoremap <Leader>fa :Ag<CR>
 nnoremap <Leader>ff :Files<CR>
 nnoremap <Leader>fb :Buffers<CR>
 nnoremap <Leader>fl :Lines<CR>
+
+"""""" python-syntax
+let g:pythoh_highlight_all = 1
+
+"""""" coverage
+" let g:coverage_script = 'python3 -m coverage'
+" set statusline+=\           " space
+" set statusline+=%{coverage_highlight#get_current()}
 
 " }}}
 

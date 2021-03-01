@@ -2,7 +2,7 @@ snippet deflog "Function with logger" b
 def ${1:func_name}(${2:args}) -> ${3:None}:
 	r"""MAKEDOC: what is $1 doing?"""
 	logg = logging.getLogger(f"c.{__name__}.$1")
-	# logg.setLevel("INFO")
+	logg.setLevel("DEBUG")
 	logg.debug("Start $1")$0
 endsnippet
 

@@ -9,7 +9,7 @@ def parse_arguments() -> argparse.Namespace:
     r"""Setup CLI interface"""
     parser = argparse.ArgumentParser(description="")
 
-    default = "DEBUG"
+    default = "WARN"
     parser.add_argument(
         "-lld",
         "--log_level_debug",
@@ -34,7 +34,7 @@ def parse_arguments() -> argparse.Namespace:
     return args
 
 
-def setup_logger(logLevel: str = "DEBUG", msg_type: str = "m") -> None:
+def setup_logger(logLevel: str = "WARN", msg_type: str = "m") -> None:
     r"""Setup logger that outputs to console for the module"""
     logroot = logging.getLogger("c")
     logroot.propagate = False
