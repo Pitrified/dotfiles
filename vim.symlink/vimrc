@@ -365,11 +365,15 @@ let g:pythoh_highlight_all = 1
 " FileType autocmd {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Fold using { { { } } }
 autocmd FileType vim setlocal foldmethod=marker
 
 " Instead of reverting the cursor to the last position in the buffer, we
 " set it to the first line when editing a git commit message
 au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+
+" Stop files with {% %} syntax to be set as htmldjango
+au BufRead,BufNewFile,BufReadPost,BufEnter,BufWrite *.html set filetype=html
 
 " }}}
 
