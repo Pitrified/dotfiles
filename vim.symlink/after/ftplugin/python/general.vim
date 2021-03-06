@@ -10,7 +10,7 @@ let @r = "0f(lcibrecapjkOrecap = jk\"-porecap += f\" \"jki"
 " line after it
 let @t = "i\<CR>jkmy:s/, /\\r\<CR>V`y:sort\<CR>gv:s/\\n/, \<CR>kJA\<BS>\<BS>jk] "
 
-# sort lines in a paragraph based on what comes after from/import
+" sort lines in a paragraph based on what comes after from/import
 let @s = "vip:sort '\\(from\\|import\\) '\<CR>"
 
 setlocal textwidth=88
