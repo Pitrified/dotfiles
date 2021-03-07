@@ -79,6 +79,7 @@ def setup_env() -> argparse.Namespace:
 def run_@BASENAME@(args: argparse.Namespace) -> None:
     r"""MAKEDOC: What is @BASENAME@ doing?"""
     logg = logging.getLogger(f"c.{__name__}.run_@BASENAME@")
+    logroot.setLevel("DEBUG")
     logg.debug("Starting run_@BASENAME@")
 
 
