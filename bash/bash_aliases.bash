@@ -42,3 +42,10 @@ settextzoom() {
 PS1=${PS1:0:${#PS1}-3}
 # add info on branches
 PS1=$PS1" \$(__git_ps1 '(%s)')\$ "
+
+# diff files in separate folders
+# $1 is the folder of the different file, with trailing slash
+# $2 is the name of the file
+gd() {
+    gvimdiff "$1""$2" "$2"
+}
