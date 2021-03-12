@@ -85,6 +85,7 @@ set wildmode=list:longest,full  " Command <Tab> completion, list matches, then l
 " and |globpath()| unless a flag is passed to disable this.
 set wildignore+=*.pyc
 set wildignore+=*.class
+set wildignorecase              " Case is ignored when completing file names and directories.
 
 set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
 set splitright                  " Puts new vsplit windows to the right of the current
