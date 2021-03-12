@@ -1,13 +1,13 @@
 snippet deflog "Function with logger" b
 def ${1:func_name}(${2:args}) -> ${3:None}:
 	r"""MAKEDOC: what is $1 doing?"""
-	logc = logging.getLogger(f"c.{__name__}.$1")
-	logc.setLevel("DEBUG")
-	logc.debug("Start $1")$0
+	logg = logging.getLogger(f"c.{__name__}.$1")
+	logg.setLevel("DEBUG")
+	logg.debug("Start $1")$0
 endsnippet
 
-snippet logc "Log line" b
-logc.${1:debug}(f"${2:arg}: {$2}$3")$0
+snippet logg "Log line" b
+logg.${1:debug}(f"${2:arg}: {$2}$3")$0
 endsnippet
 
 snippet newobscb "Templates for a new Observable" b
@@ -18,23 +18,23 @@ snippet newobscb "Templates for a new Observable" b
 		self.model.$1.add_callback(self.updated_$1)
 # create the callback
 	def updated_$1(self, data):
-		logc = logging.getLogger(f"c.{__class__.__name__}.updated_$1")
-		logc.debug(f"Start {fmt_cn('updated_$1', 'a2')}")
+		logg = logging.getLogger(f"c.{__class__.__name__}.updated_$1")
+		logg.debug(f"Start {fmt_cn('updated_$1', 'a2')}")
 		self.view.frame_${2:FRAME_NAME}.update_$1(data)
 # react to change in view
 	def update_$1(self, data):
 		"""TODO: what are you changing when updating $1?
 		"""
-		logc = logging.getLogger(f"c.{__class__.__name__}.update_$1")
-		logc.debug(f"Start {fmt_cn('update_$1', 'a2')} {data}")
+		logg = logging.getLogger(f"c.{__class__.__name__}.update_$1")
+		logg.debug(f"Start {fmt_cn('update_$1', 'a2')} {data}")
 endsnippet
 
 snippet deflogfmtcn "Function with logger and color formatter" b
 def ${1:func_name}(self$2):
 	r"""TODO: what is $1 doing?"""
-	logc = logging.getLogger(f"c.{__class__.__name__}.$1")
-	logc.setLevel("TRACE")
-	logc.info(f"Start {fmt_cn('$1', 'a2')}$3")$0
+	logg = logging.getLogger(f"c.{__class__.__name__}.$1")
+	logg.setLevel("TRACE")
+	logg.info(f"Start {fmt_cn('$1', 'a2')}$3")$0
 endsnippet
 
 snippet varflog "Log a value to f-string"
