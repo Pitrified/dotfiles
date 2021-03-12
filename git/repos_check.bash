@@ -36,14 +36,14 @@ repo_status() {
     # echo `echo "$git_status" | grep modified -c`
 
     # # Check for modified files
-    if [ $(echo "$git_status" | grep modified -c) -ne 0 ]
+    if [ $(echo "$git_status" | grep 'modified' -c) -ne 0 ]
     then
         mod=1
         echo_color "    Modified files!" red
     fi
 
     # # Check for untracked files
-    if [ $(echo "$git_status" | grep Untracked -c) -ne 0 ]
+    if [ $(echo "$git_status" | grep 'Untracked' -c) -ne 0 ]
     then
         mod=1
         echo_color "    Untracked files!" red
@@ -56,10 +56,23 @@ repo_status() {
         echo_color "    Unpushed commit!" red
     fi
 
-    # Check if everything is peachy keen
-    if [ $mod -eq 0 ]
-    then
+    # If nothing to commit, pull remote
+    if [ $mod -eq 0 ]; then
         echo_color "    Nothing to commit" green
+
+        # pull the repo
+        # magic to deal with the password is setup in GIT_PASSWORD and GIT_ASKPASS
+        if [ $do_pull -eq 1 ]; then
+
+            git_pull=`GIT_ASKPASS=$GIT_ASKPASS GIT_PASSWORD=$GIT_PASSWORD git --git-dir=$1/.git --work-tree=$1 -c color.ui=always pull`
+            if [ $(echo "$git_pull" | grep 'Already up to date.' -c) -ne 0 ]
+            then
+                echo_color "    No files pulled" green
+            else
+                echo "$git_pull"
+            fi
+
+        fi
     fi
 
 }
@@ -72,7 +85,7 @@ repo_file_folder_check () {
 
     if [ ! -f "$1" ]; then
         echo_color "$1 does not exist." yellow
-        return
+        return 1
     fi
 
     while read -r repo_folder_name
@@ -110,7 +123,7 @@ repo_file_single_check() {
 
     if [ ! -f "$1" ]; then
         echo_color "$1 does not exist." yellow
-        return
+        return 1
     fi
 
     while read -r repo_name
@@ -135,6 +148,18 @@ repo_file_single_check() {
 
 # the main command that will be called (mnemonic repos check)
 rc() {
+
+    # decide if we also want to pull: for now the command can accept
+    # only a single parameter and it must be --pull
+    do_pull=0
+    if [ $# -eq 1 ]; then
+        if [ "$1" = "--pull" ]; then
+            do_pull=1
+            echo_color "Input your git password:" cyan
+            read -s GIT_PASSWORD
+            GIT_ASKPASS=$HOME/dotfiles/git/git_askpass_helper.sh
+        fi
+    fi
 
     # in this files there are lists of specific repos to check
     input_single_repos=(
@@ -167,6 +192,7 @@ rc() {
 # move echo_color in ~/dotfiles/bash/echo_color.bash
 # use # to skip lines in the list file
 # add local file to check
+# a verbose flag that prints git status output
 
 ### INFO ###
 
@@ -199,3 +225,9 @@ rc() {
 # command options
 # https://stackoverflow.com/a/29754866/2237151
 # https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
+
+# pull with password
+# https://serverfault.com/a/912788
+
+# color in git output
+# https://stackoverflow.com/a/27430972/2237151
