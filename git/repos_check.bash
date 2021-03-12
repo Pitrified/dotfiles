@@ -231,3 +231,24 @@ rc() {
 
 # color in git output
 # https://stackoverflow.com/a/27430972/2237151
+
+# open hyperlink from terminal
+# https://unix.stackexchange.com/a/437585
+# https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
+# https://purpleidea.com/blog/2018/06/29/hyperlinks-in-gnome-terminal/
+
+# open gnome in different folder
+# https://stackoverflow.com/a/1098096/2237151
+
+# URI for terminal
+# https://github.com/neovim/neovim/issues/3278
+
+# open custom uri scheme
+# https://stackoverflow.com/questions/42119708/call-custom-uri-scheme-eg-lightroom-myplugin-from-shell-terminal-app
+
+# app uri
+# https://unix.stackexchange.com/questions/38563/what-are-the-uris-starting-with-file-or-application
+# https://unix.stackexchange.com/a/170368
+
+# Uri use
+# https://www.blackhat.com/presentations/bh-dc-08/McFeters-Rios-Carter/Presentation/bh-dc-08-mcfeters-rios-carter.pdf
