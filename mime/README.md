@@ -8,6 +8,7 @@ Not a problem:
 
 ```bash
 /bin/gnome-terminal --working-directory /home/pmn/dotfiles/
+gnome-terminal --working-directory ~/dotfiles
 ```
 
 A terminal pops up right where I want.
@@ -66,6 +67,12 @@ This **does** work: if I right-click on a folder in the file explorer and select
 ### URI for terminal
 
 * https://github.com/neovim/neovim/issues/3278
+
+### Open hyperlink from terminal
+
+* https://unix.stackexchange.com/a/437585
+* https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
+* https://purpleidea.com/blog/2018/06/29/hyperlinks-in-gnome-terminal/
 
 ### Open custom uri scheme
 

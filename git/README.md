@@ -64,9 +64,3 @@ for t in "${filecontent[@]}"; do echo "$t"; done
 ### Color in git output
 
 * https://stackoverflow.com/a/27430972/2237151
-
-### Open hyperlink from terminal
-
-* https://unix.stackexchange.com/a/437585
-* https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
-* https://purpleidea.com/blog/2018/06/29/hyperlinks-in-gnome-terminal/
