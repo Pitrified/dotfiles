@@ -90,6 +90,7 @@ set wildignorecase              " Case is ignored when completing file names and
 set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
 set splitright                  " Puts new vsplit windows to the right of the current
 set splitbelow                  " Puts new split windows to the bottom of the current
+set nowrap                      " Lines longer than the width of the window will not wrap
 
 set scrolloff=8                 " Number of lines to keep above and below the cursor
 set listchars=tab:>-,trail:~,extends:>,precedes:<,space:·,eol:¬
