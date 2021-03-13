@@ -64,7 +64,7 @@ repo_status() {
         # magic to deal with the password is setup in GIT_PASSWORD and GIT_ASKPASS
         if [ $do_pull -eq 1 ]; then
 
-            git_pull=`GIT_ASKPASS=$GIT_ASKPASS GIT_PASSWORD=$GIT_PASSWORD git --git-dir=$1/.git --work-tree=$1 -c color.ui=always pull`
+            git_pull=`GIT_ASKPASS=$GIT_ASKPASS GIT_PASSWORD=$GIT_PASSWORD git --git-dir=$1/.git --work-tree=$1 -c color.ui=always pull --ff-only`
             if [ $(echo "$git_pull" | grep 'Already up to date.' -c) -ne 0 ]
             then
                 echo_color "    No files pulled" green
