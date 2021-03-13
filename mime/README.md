@@ -72,6 +72,7 @@ This **does** work: if I right-click on a folder in the file explorer and select
 
 * https://unix.stackexchange.com/a/437585
 * https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
+* https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda#gistcomment-2784276
 * https://purpleidea.com/blog/2018/06/29/hyperlinks-in-gnome-terminal/
 
 ### Open custom uri scheme
