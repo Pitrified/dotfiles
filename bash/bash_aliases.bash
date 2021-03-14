@@ -16,7 +16,7 @@ mkcdir ()
 alias ehe="gio open ."
 
 # grep for TODOs and MAYBEs and IDEAs and QUESTIONs
-alias greptodo="grep -r -I 'TODO\|MAYBE\|IDEA\|QUESTION'"
+alias greptodo="grep -r -I --exclude-dir=.nox 'TODO\|MAYBE\|IDEA\|QUESTION'"
 
 # scale the text for HiDPI display
 # https://askubuntu.com/questions/1029436/enable-fractional-scaling-for-ubuntu-18-04
