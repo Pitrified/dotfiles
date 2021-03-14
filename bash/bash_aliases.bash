@@ -35,6 +35,23 @@ settextzoom() {
 # https://stackoverflow.com/a/3058390/2237151
 # https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
+# poetry virtualenvs
+# echo '(env-name-A5Y8HpgU-py3.88) $ prompt fake-ABC098ab-py3.0' |
+# perl -pe 's/^(.*?)-[A-Za-z0-9]{8}-(py[0-9].[0-9]{1,2})/\1-\2/'
+#             | |     |               |                   |> print the useful parts
+#             | |     |               |> py3.12
+#             | |     |> 8 alphanumeric chars
+#             | |> the env name, with greedy quantifier
+#             |> start of string, don't match this in the middle of the prompt
+# prints (env-name-py3.88) $ prompt fake-ABC098ab-py3.0  
+# echo before
+# echo $PS1
+# PS1=`echo $PS1 | perl -pe 's/^(.*?)-[A-Za-z0-9]{8}-(py[0-9].[0-9]{1,2})/\1-\2/'`
+# echo after
+# echo $PS1
+# the problem is that poetry shell is called after the new shell is opened
+# the command does work if called again from terminal
+
 # put branch name on end of PS1
 # this is the length of a string
 # echo ${#PS1}
