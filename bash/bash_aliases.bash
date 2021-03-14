@@ -15,8 +15,8 @@ mkcdir ()
 # open file explorer in the folder you are in (Explorer HEre)
 alias ehe="gio open ."
 
-# grep for TODOs and MAYBEs
-alias greptodo="grep -r -I 'TODO\|MAYBE'"
+# grep for TODOs and MAYBEs and IDEAs and QUESTIONs
+alias greptodo="grep -r -I 'TODO\|MAYBE\|IDEA\|QUESTION'"
 
 # scale the text for HiDPI display
 # https://askubuntu.com/questions/1029436/enable-fractional-scaling-for-ubuntu-18-04
@@ -48,4 +48,10 @@ PS1=$PS1" \$(__git_ps1 '(%s)')\$ "
 # $2 is the name of the file
 gd() {
     gvimdiff "$1""$2" "$2"
+}
+
+# Ctrl+r history commands often do not have the leading ~/
+# press home to get to the start of line and add an h :D
+hcd() {
+    cd $HOME/$1
 }
