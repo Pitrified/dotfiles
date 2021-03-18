@@ -430,10 +430,10 @@ function! UpdateTodoKeywords(...)
     endfor
 endfunction
 
-" NOTE MAYBE
+" Add custom highlighted keywords
 augroup now
     autocmd!
-    autocmd Syntax * call UpdateTodoKeywords("NOTE", "MAYBE")
+    autocmd Syntax * call UpdateTodoKeywords("NOTE", "MAYBE", "YES", "NO", "QUESTION")
 augroup END
 
 " }}}
