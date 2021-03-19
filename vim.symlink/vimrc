@@ -221,8 +221,15 @@ nmap <silent> ]q  <Plug>QuickFixNext
 
 let mapleader = "\<Space>"
 
+" quick save and quit
+nnoremap <leader>w :update<CR>
+nnoremap <leader>q :q<CR>
+
+" .vimRc Edit and Source
+nnoremap <leader>re :tabedit $MYVIMRC<CR>
+nnoremap <leader>rs :source $MYVIMRC<CR>
+
 " toggle things
-" clear highlight
 nnoremap <silent> <leader>nh :set hlsearch!<CR>
 nnoremap <silent> <leader>nc :set cursorcolumn!<CR>
 nnoremap <silent> <leader>nw :set wrap!<CR>
@@ -231,14 +238,14 @@ nnoremap <leader>np :set paste!<CR>
 nnoremap <leader>nr :RainbowToggle<CR>
 nnoremap <leader>ns :setlocal spell! spelllang=en_us<CR>
 
-" quick save and quit
-nnoremap <leader>w :update<CR>
-nnoremap <leader>q :q<CR>
-" edit and source .vimrc
-nnoremap <leader>re :tabedit $MYVIMRC<CR>
-nnoremap <leader>rs :source $MYVIMRC<CR>
-" yank whole file
-nnoremap <leader>ya myggyG`y
+" yank whole file into system clipboard
+nnoremap <leader>ya :%y+<CR>
+
+" Close all Folds and go to the file bottom, but show as much as you can by
+" going to the top first
+nnoremap <leader>cf :normal zMggG<CR>
+" same but Close folds and open one lever for when you are in a Class
+nnoremap <leader>cc :normal zMzrggG<CR>
 
 " split screen
 nnoremap <leader>d <C-w>v
