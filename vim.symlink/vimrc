@@ -97,6 +97,7 @@ set listchars=tab:>-,trail:~,extends:>,precedes:<,space:·,eol:¬
 set number                      " Print the line number in front of each line
 set relativenumber              " Show the line number relative to the line with the cursor
 set numberwidth=3               " Minimal number of columns to use for the line number
+set signcolumn=number           " Display signs in the 'number' column
 set cursorline				    " Highlight current line
 set showmode                    " If in Insert, Replace or Visual mode put a message on the last line
 set backspace=indent,eol,start  " More sanity in what backspace can do
