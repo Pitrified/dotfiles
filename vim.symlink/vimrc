@@ -160,6 +160,10 @@ if has('cmdline_info')
                                 " Selected characters/lines in visual mode
 endif
 
+" minimal netrw customization
+let g:netrw_liststyle=1         " One file per line, file size, time stamp (toggle with i)
+let g:netrw_banner = 0          " Hide the netrw banner (show with I)
+
 " }}}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -283,6 +287,9 @@ tnoremap <leader><leader>gT <C-w>gT
 let g:sessions_dir = '~/.vim/sessions'
 exec 'nnoremap <Leader>ms :mksession! ' . g:sessions_dir . '/<C-D>'
 exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
+
+" open in Separate window a file Explorer
+nnoremap <leader>se :Sexplore<CR>
 
 " }}}
 
