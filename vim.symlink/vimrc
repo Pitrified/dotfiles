@@ -288,8 +288,8 @@ let g:sessions_dir = '~/.vim/sessions'
 exec 'nnoremap <Leader>ms :mksession! ' . g:sessions_dir . '/<C-D>'
 exec 'nnoremap <Leader>mr :source ' . g:sessions_dir. '/<C-D>'
 
-" open in Separate window a file Explorer
-nnoremap <leader>se :Sexplore<CR>
+" open a file Explorer in Separate window
+nnoremap <leader>es :Sexplore<CR>
 
 " }}}
 
