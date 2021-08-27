@@ -43,6 +43,7 @@ Plug 'frioux/vim-regedit'
 Plug 'jiangmiao/auto-pairs'
 Plug 'sheerun/vim-polyglot'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 
 " python
 " Plug 'mgedmin/coverage-highlight.vim'
@@ -397,6 +398,9 @@ let g:go_highlight_operators = 1
 let g:go_highlight_types = 1
 let g:go_metalinter_autosave = 1
 let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+
+"""""" liuchengxu/vim-which-key
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
 
 " }}}
 
