@@ -373,6 +373,7 @@ nnoremap <leader>fe :FZF ~/ephem/<CR>
 nnoremap <leader>fr :FZF ~/repos/<CR>
 nnoremap <Leader>fa :Ag<CR>
 nnoremap <Leader>ff :Files<CR>
+nnoremap <Leader>fp :Files ..<CR>
 nnoremap <Leader>fb :Buffers<CR>
 nnoremap <Leader>fl :Lines<CR>
 
