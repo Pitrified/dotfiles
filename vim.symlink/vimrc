@@ -196,6 +196,7 @@ colorscheme gruvbox-bootleg
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 inoremap jk <ESC>
+inoremap jK <ESC>
 inoremap kj <ESC>
 
 " move properly when lines are wrapped
