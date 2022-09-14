@@ -1,6 +1,6 @@
 # override hist sizes
-HISTSIZE=10000
-HISTFILESIZE=20000
+HISTSIZE=100000
+HISTFILESIZE=200000
 
 # https://www.shellhacks.com/tune-command-line-history-bash/
 # use history -a to append immediately a command, in case of crash
