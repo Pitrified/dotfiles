@@ -15,6 +15,8 @@ mkcdir ()
 # open file explorer in the folder you are in (Explorer HEre)
 alias ehe="gio open ."
 
+alias wehe='explorer.exe `wslpath -w "$PWD"`'
+
 # grep for TODOs and MAYBEs and IDEAs and QUESTIONs
 alias greptodo="grep -r -I --exclude-dir=.nox 'TODO\|MAYBE\|IDEA\|QUESTION'"
 
