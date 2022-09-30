@@ -181,4 +181,6 @@ rc() {
         repo_file_folder_check $file_name_folder_repo
     done
 
+    # TODO: should also check for repos_*_list.local.txt
+
 }
