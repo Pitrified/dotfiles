@@ -74,3 +74,7 @@ gd() {
 hcd() {
     cd $HOME/$1
 }
+
+alias c="code ."
+alias p8="ping 8.8.8.8 -c 4"
+
