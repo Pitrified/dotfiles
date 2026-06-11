@@ -12,14 +12,21 @@
 # show diff in commit message
 [commit]
     verbose = true
+	
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
 [credential]
 	credentialStore = secretservice
 [credential "https://dev.azure.com"]
 	useHttpPath = true
+
 [init]
 	defaultBranch = main
+
+[merge "unityyamlmerge"]
+	name = Unity SmartMerge
+	driver = /home/pmn/Unity/Hub/Editor/6000.4.4f1/Editor/Data/Tools/UnityYAMLMerge merge -p %O %B %A %A
