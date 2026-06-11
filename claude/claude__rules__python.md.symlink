@@ -1,0 +1,30 @@
+---
+paths:
+  - "**/*.py"
+  - "**/pyproject.toml"
+  - "**/*.ipynb"
+---
+# Python conventions
+
+These load only when working with Python files.
+
+## Tooling
+
+- Projects are managed with **uv**. Run tools through the environment: `uv run ...`.
+- Verify before considering a task done:
+
+      uv run pytest && uv run ruff check . && uv run pyright
+
+## Code style
+
+- Logging: `from loguru import logger as lg`.
+- Raise descriptive custom exceptions (e.g. `UnknownEnvLocationError`), not bare
+  `ValueError` / `RuntimeError`.
+- Tests live in `tests/` mirroring the `src/` package structure.
+
+## Docstrings
+
+- Use **Google style** throughout (mkdocstrings is configured for it).
+- Section labels always end with a colon: `Args:`, `Returns:`, `Raises:`,
+  `Attributes:`, `Note:`, `Example:`.
+- Never use NumPy / Sphinx RST underline-style headers (`Args\n----`).

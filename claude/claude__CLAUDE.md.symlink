@@ -1,0 +1,26 @@
+# User instructions (all projects)
+
+These are language-agnostic, project-agnostic rules. Language-specific rules
+live in `~/.claude/rules/<lang>.md` and load only when relevant files are touched.
+
+## Style
+
+- Never use em dashes (`--`, `---`, or Unicode `—`). Use a hyphen `-` or rewrite the sentence.
+- Prefer clear, specific writing over filler.
+
+## Working conventions
+
+- Match the surrounding code: naming, comment density, and idioms of the file being edited.
+- Raise descriptive, named exceptions rather than bare/generic ones, in any language.
+- Keep changes minimal and scoped to the task; do not refactor unrelated code.
+- Do not commit, push, or perform other outward-facing actions unless asked.
+
+## Per-repo instructions
+
+Most repos keep their canonical instructions in `.github/copilot-instructions.md`
+(and sometimes `AGENTS.md`). Claude only auto-loads `CLAUDE.md`, so each repo
+should have a `CLAUDE.md` that imports the existing file:
+
+    @.github/copilot-instructions.md
+
+That keeps a single source of truth shared with other tools.

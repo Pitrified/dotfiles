@@ -19,6 +19,15 @@ The actual `bash_aliases` file is in `bash/bash_aliases.bash`
 * `topic/*.symlink`: symlink the file (e.g. `tmux/tmux.conf.symlink` to `~/.tmux.conf`)
 * `topic/*.bash`: source the file in the auto-generated  `~/.bash_aliases`
 
+A `__` in a `*.symlink` filename expands to a `/`, so the target can be nested
+inside a dotfolder instead of landing directly in `~`. Missing parent folders are
+created automatically. This is used to track individual files inside `~/.claude/`
+without symlinking the whole folder (which holds credentials and session state):
+
+* `claude/claude__CLAUDE.md.symlink` -> `~/.claude/CLAUDE.md`
+* `claude/claude__rules__python.md.symlink` -> `~/.claude/rules/python.md`
+* `claude/claude__settings.json.symlink` -> `~/.claude/settings.json`
+
 ### Local personalizations
 
 Aliases that are private or machine specific can be put in `~/.bash_aliases.local`, that is sourced automatically.
@@ -40,3 +49,6 @@ python3 install.py
 ```
 
 The backup directory name can be set with the option `--backup_dir`, the default is `.rcback`, so the old configuration will be backed up in `~/.rcbackNN`, and `NN` is automatically chosen to produce an unique dirname.
+
+Pass `--dry-run` (`-n`) to print every move, write, and symlink the script would
+make without touching the filesystem. Handy to check correctness before a real run.
