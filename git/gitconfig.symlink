@@ -3,7 +3,7 @@
     path = ~/.gitconfig.local
 
 [core]
-    editor = vim
+	editor = code --wait
 
 [merge]
     tool = gvimdiff
