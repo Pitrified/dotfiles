@@ -1,7 +1,8 @@
 {
   "effortLevel": "medium",
-  "theme": "dark",
-  "model": "opus",
+  "theme": "auto",
+  "model": "opus[1m]",
+  "autoCompactEnabled": true,
   "permissions": {
     "allow": [
       "Bash(ls:*)",
