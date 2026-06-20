@@ -1,14 +1,17 @@
 # User instructions (all projects)
 
-These are language-agnostic, project-agnostic rules. Language-specific rules
-live in `~/.claude/rules/<lang>.md` and load only when relevant files are touched.
+These are language-agnostic, project-agnostic rules.
+Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when relevant files are touched.
 
 ## Style
 
 - Never use em dashes (`--`, `---`, or Unicode `—`). Use a hyphen `-` or rewrite the sentence.
-- Prefer clear, specific writing over filler. Avoid hype adjectives/adverbs (bold,
-  brutal, honest, quietly, seamless, ...) that add tone but no information; cut them or
-  state the concrete fact instead. Headers are plain labels, no parentheticals.
+- Prefer clear, specific writing over filler.
+  Avoid hype adjectives/adverbs (bold, brutal, honest, quietly, seamless, ...) that add tone but no information;
+  cut them or state the concrete fact instead. Headers are plain labels, no parentheticals.
+- Do not format md files by wrapping text to a certain line length;
+  add newlines on logical breaks, even within paragraphs or bullet points, eg after a period/semicolon or between clauses.
+  This file is a sample of this style.
 
 ## Working conventions
 
@@ -19,9 +22,8 @@ live in `~/.claude/rules/<lang>.md` and load only when relevant files are touche
 
 ## Per-repo instructions
 
-Most repos keep their canonical instructions in `.github/copilot-instructions.md`
-(and sometimes `AGENTS.md`). Claude only auto-loads `CLAUDE.md`, so each repo
-should have a `CLAUDE.md` that imports the existing file:
+Most repos keep their canonical instructions in `.github/copilot-instructions.md` (and sometimes `AGENTS.md`).
+Claude only auto-loads `CLAUDE.md`, so each repo should have a `CLAUDE.md` that imports the existing file:
 
     @.github/copilot-instructions.md
 
