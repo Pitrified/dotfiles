@@ -6,7 +6,9 @@ live in `~/.claude/rules/<lang>.md` and load only when relevant files are touche
 ## Style
 
 - Never use em dashes (`--`, `---`, or Unicode `—`). Use a hyphen `-` or rewrite the sentence.
-- Prefer clear, specific writing over filler.
+- Prefer clear, specific writing over filler. Avoid hype adjectives/adverbs (bold,
+  brutal, honest, quietly, seamless, ...) that add tone but no information; cut them or
+  state the concrete fact instead. Headers are plain labels, no parentheticals.
 
 ## Working conventions
 
