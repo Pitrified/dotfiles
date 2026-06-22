@@ -1,8 +1,4 @@
 {
-  "effortLevel": "medium",
-  "theme": "auto",
-  "model": "opus[1m]",
-  "autoCompactEnabled": true,
   "permissions": {
     "allow": [
       "Bash(ls:*)",
@@ -31,8 +27,25 @@
     "deny": [
       "Bash(find:* -delete:*)",
       "Bash(find:* -exec:*)",
-      "Read(./**/.env)",
-      "Read(./**/.env.*)"
+      "Read(**/.env)"
+    ]
+  },
+  "model": "opus[1m]",
+  "effortLevel": "medium",
+  "theme": "auto",
+  "autoCompactEnabled": true,
+  "agentPushNotifEnabled": true,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      }
     ]
   }
 }

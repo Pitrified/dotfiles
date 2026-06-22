@@ -28,3 +28,5 @@ Claude only auto-loads `CLAUDE.md`, so each repo should have a `CLAUDE.md` that 
     @.github/copilot-instructions.md
 
 That keeps a single source of truth shared with other tools.
+
+@RTK.md
