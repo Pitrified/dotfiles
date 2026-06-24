@@ -20,6 +20,18 @@ Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when r
 - Keep changes minimal and scoped to the task; do not refactor unrelated code.
 - Do not commit, push, or perform other outward-facing actions unless asked.
 
+## Rigor
+
+Depth over speed - the skipped steps below are what turn a quick change into a bug.
+
+- Read before you act: open the actual file before answering about it or editing it; never speculate about code you have not read.
+- Fix the cause, not the symptom: trace a bug to its root before patching; if you must apply a workaround, say so and name what the real fix would be.
+- Search before adding: look for the existing pattern, helper, or file first, and edit the real one rather than creating a parallel/ghost version - duplication is the common failure.
+- Verify before you call it done: run the relevant test/build/lint and report the result; "looks done" is not done.
+- When unsure, research before you guess: check the codebase, the docs, and the web to resolve the question rather than inventing an interpretation.
+- When research cannot resolve it, say so and state the assumption you are proceeding on; "I don't know" is a valid answer.
+- For non-trivial changes, review your own diff in a fresh pass before declaring completion, judging the result not the reasoning that produced it.
+
 ## Per-repo instructions
 
 Most repos keep their canonical instructions in `.github/copilot-instructions.md` (and sometimes `AGENTS.md`).
