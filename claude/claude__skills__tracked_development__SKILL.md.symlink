@@ -29,7 +29,7 @@ One folder per initiative. Each file is one concern.
 
 ```
 <plan-folder>/
-  00-start.md            # bootstrap: the idea, analysis, decisions, open questions
+  00_start.md            # bootstrap: the idea, analysis, decisions, open questions
   tracking.md            # the index: phases table + append-only log (read this first)
   01_feat_name.md        # sub-plan for phase 1
   02_feat_name.md        # sub-plan for phase 2
@@ -38,13 +38,14 @@ One folder per initiative. Each file is one concern.
 
 Naming:
 
-- `00-start.md` uses a hyphen and sorts first (it is prose, not a phase).
+- All files use `snake_case`.
+- `00_start.md` sorts first, ahead of any phase (it is prose, not a phase).
 - Phase sub-plans use `NN_feat_name.md` with a zero-padded number and
   `snake_case` name, so they sort in execution order.
 
 ## The three file roles
 
-### `00-start.md` - bootstrap / brainstorm
+### `00_start.md` - bootstrap / brainstorm
 
 The origin document. Free-form prose, not a checklist. It captures:
 
@@ -63,7 +64,7 @@ the phases were derived from.
 
 The first file to read in any session - the map of the whole effort. It holds:
 
-1. A one-paragraph summary and a link to `00-start.md`.
+1. A one-paragraph summary and a link to `00_start.md`.
 2. Any cross-cutting decisions that span phases (short bullets, with phase notes
    as they accrue).
 3. A **phases table**: number, phase, link to the sub-plan, status.
@@ -75,7 +76,7 @@ Template:
 # implementation tracking
 
 <one paragraph: what this effort is>. Analysis and decisions in
-[`00-start.md`](00-start.md).
+[`00_start.md`](00_start.md).
 
 ## Key decisions
 
@@ -118,7 +119,7 @@ status: planned
 ## Overview
 
 <what this phase does and why it is sequenced here. Link context.>
-Context: [`00-start.md`](00-start.md)[, depends on [`0M_...md`](0M_....md)].
+Context: [`00_start.md`](00_start.md)[, depends on [`0M_...md`](0M_....md)].
 
 ## Goals
 
@@ -157,7 +158,7 @@ is part of the history. Note the reason at the top of the body.
 When asked to start tracked work, or partway through work that has grown into
 this shape:
 
-1. **Bootstrap.** Create the folder and `00-start.md`. Capture the idea,
+1. **Bootstrap.** Create the folder and `00_start.md`. Capture the idea,
    analysis, decisions, and open questions. Surface real open questions to the
    user rather than guessing.
 2. **Derive phases.** Break the work into sequential, bounded phases - each with
@@ -172,7 +173,7 @@ this shape:
    places, and **append a dated line to the Log** describing what was actually
    done (including experiments tried, even ones that failed - they are findings).
 6. **Recover a session.** On a new session or after `/clear`, read `tracking.md`
-   first, then `00-start.md`, then the sub-plan of the first non-`done` phase.
+   first, then `00_start.md`, then the sub-plan of the first non-`done` phase.
    The files, not the prior context, are the source of truth.
 
 ## Log conventions
@@ -192,5 +193,5 @@ this shape:
   drift, fix the files before continuing.
 - Update the files as part of the work, not as an afterthought - they are how
   the next session (or the user) understands where things stand.
-- These are living documents. Refine `00-start.md` and split or merge phases
+- These are living documents. Refine `00_start.md` and split or merge phases
   when reality diverges from the original plan; record the change in the Log.
