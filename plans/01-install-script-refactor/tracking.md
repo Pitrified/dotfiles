@@ -44,7 +44,7 @@ clear the fix isn't a vim-specific concern. Background in
 | -- | ------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------- |
 | 1  | Extend `install.py` for nested folder symlinks            | [`01_extend_installpy_nesting.md`](01_extend_installpy_nesting.md)             | done    |
 | 2  | Migrate Claude skill symlinks to folder-based ones         | [`02_migrate_claude_skill_symlinks.md`](02_migrate_claude_skill_symlinks.md)   | done    |
-| 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | planned |
+| 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | done    |
 | 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | planned |
 | 5  | Test coverage for target-path/nesting logic                | [`05_add_tests.md`](05_add_tests.md)                                          | planned |
 
@@ -140,3 +140,17 @@ Status values: draft / planned / in progress / done / superseded / discarded.
   `Path.home()` inline. Wrote out the concrete test-case list against
   the real function signatures instead. No code changed in this pass -
   planning only; all three phases remain unimplemented.
+- 2026-07-02 : implemented phase 3, in the `bootstrap` repo (not this
+  one). Moved the `uv` install one-liner (from `install_python.sh`)
+  into `install_basics.sh`, right after `python3-pip` and before the
+  `dotfiles` clone, followed by `export PATH="$HOME/.local/bin:$PATH"`
+  per the plan's finding that the installer's rc-file sourcing doesn't
+  reach the already-running script. Left the `python3
+  ~/dotfiles/install.py` invocation line untouched - switching it to
+  `uv run` is phase 4's change, since it depends on the `install/`
+  move. `install_python.sh` left as-is (standalone reinstall path, per
+  plan). Added `uv` to `bootstrap/README.md`'s `install_basics` bullet
+  list. Verified with `bash -n install_basics.sh` (syntax only - not
+  run for real, since it does system-wide `apt`/`sudo` work on a real
+  box). Nothing committed in `bootstrap` - that repo's changes are
+  uncommitted, left for the user to review/commit.

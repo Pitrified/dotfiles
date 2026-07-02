@@ -1,5 +1,5 @@
 ---
-status: planned
+status: done
 ---
 
 # Phase 3 - Reorder `bootstrap` to install `uv` before cloning dotfiles
