@@ -46,7 +46,7 @@ clear the fix isn't a vim-specific concern. Background in
 | 2  | Migrate Claude skill symlinks to folder-based ones         | [`02_migrate_claude_skill_symlinks.md`](02_migrate_claude_skill_symlinks.md)   | done    |
 | 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | done    |
 | 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | done    |
-| 5  | Test coverage for target-path/nesting logic                | [`05_add_tests.md`](05_add_tests.md)                                          | planned |
+| 5  | Test coverage for target-path/nesting logic                | [`05_add_tests.md`](05_add_tests.md)                                          | done    |
 
 Status values: draft / planned / in progress / done / superseded / discarded.
 
@@ -184,3 +184,26 @@ Status values: draft / planned / in progress / done / superseded / discarded.
   intentionally not written yet - `pytest` currently collects 0 items,
   as expected. Nothing committed - left staged/unstaged for the user to
   review.
+- 2026-07-02 : implemented phase 5. Added `install/tests/test_install.py`
+  (17 tests) covering every bullet in the plan's Plan section:
+  `link_config()` (flat/one-level/multi-level nesting, directory
+  sources, the already-linked skip with an empty-backup-dir assertion,
+  the divergence warning both firing on differing content and staying
+  silent on identical content while still relinking either way, and
+  `dry_run` making zero filesystem changes), `backup()` (file, dir,
+  dangling symlink, no-op, `dry_run`), and `find_free_dir()`/
+  `is_conf_dir()` as the low-cost additions the plan allowed. Needed
+  one addition beyond the plan text: `[tool.pytest.ini_options]
+  pythonpath = ["."]` in `pyproject.toml`, so `import install` resolves
+  in `install/tests/` without a `src/` layout or `conftest.py` path
+  hack. Confirmed the suite actually catches regressions, per the
+  phase's Done-when: temporarily reverted the `__` → `/` replace in
+  `link_config()`, reran - exactly the two nesting tests failed, the
+  rest stayed green - then restored the file and reran clean (17
+  passed). `uv run --group dev ruff check .` passes on the new test
+  file too. Also added a repo-root `.gitignore` (was empty) with just
+  `__pycache__/` - pytest/uv's own cache dirs (`.pytest_cache/`,
+  `install/.venv/`) already self-exclude via a `.gitignore` written
+  inside themselves, but `__pycache__/` doesn't get that treatment and
+  showed up untracked after running pytest. Nothing committed - left
+  for the user to review. This closes out all 5 phases of the plan.

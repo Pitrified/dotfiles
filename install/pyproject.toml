@@ -19,3 +19,8 @@ test = [
 lint = [
     "ruff>=0.9.6",
 ]
+
+[tool.pytest.ini_options]
+# install.py has no src/ layout or package to install; put the rootdir
+# (this folder) on sys.path so `import install` resolves in tests.
+pythonpath = ["."]
