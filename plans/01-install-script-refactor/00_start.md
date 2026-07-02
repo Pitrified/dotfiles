@@ -132,7 +132,7 @@ item-level `.symlink` path already supports directories, so migrating
 `claude/claude__skills__<name>__SKILL.md.symlink` (a file) to
 `claude/claude__skills__<name>.symlink/SKILL.md` (a directory) needs
 **zero `install.py` changes** - it's independent of phase 1, not gated
-on it. Only two skills exist today (`caveman`, `tracked_development`),
+on it. Only two skills exist today (`caveman`, `tracked-development`),
 both single-file, so the migration itself is small. Doing it now, while
 this folder is already being restructured, sets the folder-per-skill
 pattern before a multi-file skill (with a `references/` dir, scripts,

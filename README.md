@@ -19,14 +19,16 @@ The actual `bash_aliases` file is in `bash/bash_aliases.bash`
 * `topic/*.symlink`: symlink the file (e.g. `tmux/tmux.conf.symlink` to `~/.tmux.conf`)
 * `topic/*.bash`: source the file in the auto-generated  `~/.bash_aliases`
 
-A `__` in a `*.symlink` filename expands to a `/`, so the target can be nested
+A `__` in a `*.symlink` name expands to a `/`, so the target can be nested
 inside a dotfolder instead of landing directly in `~`. Missing parent folders are
-created automatically. This is used to track individual files inside `~/.claude/`
-without symlinking the whole folder (which holds credentials and session state):
+created automatically, and this works for both files and folders. This is used to
+track individual files and skill folders inside `~/.claude/` without symlinking
+the whole folder (which holds credentials and session state):
 
 * `claude/claude__CLAUDE.md.symlink` -> `~/.claude/CLAUDE.md`
 * `claude/claude__rules__python.md.symlink` -> `~/.claude/rules/python.md`
 * `claude/claude__settings.json.symlink` -> `~/.claude/settings.json`
+* `claude/claude__skills__tracked-development.symlink/` -> `~/.claude/skills/tracked-development` (a folder, holding `SKILL.md` and any other skill assets)
 
 ### Local personalizations
 

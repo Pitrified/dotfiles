@@ -43,7 +43,7 @@ clear the fix isn't a vim-specific concern. Background in
 | #  | Phase                                                     | Plan                                                                          | Status  |
 | -- | ------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------- |
 | 1  | Extend `install.py` for nested folder symlinks            | [`01_extend_installpy_nesting.md`](01_extend_installpy_nesting.md)             | done    |
-| 2  | Migrate Claude skill symlinks to folder-based ones         | [`02_migrate_claude_skill_symlinks.md`](02_migrate_claude_skill_symlinks.md)   | draft   |
+| 2  | Migrate Claude skill symlinks to folder-based ones         | [`02_migrate_claude_skill_symlinks.md`](02_migrate_claude_skill_symlinks.md)   | done    |
 | 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | draft   |
 | 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | draft   |
 | 5  | Test coverage for target-path/nesting logic                | [`05_add_tests.md`](05_add_tests.md)                                          | draft   |
@@ -89,3 +89,23 @@ Status values: draft / planned / in progress / done / superseded / discarded.
   `--dry-run` pass against the real dotfiles tree showing no regressions.
   No test suite added yet - that's phase 5, sequenced after the `install/`
   move.
+- 2026-07-02 : implemented phase 2. `git mv`'d both skills'
+  `claude__skills__<name>__SKILL.md.symlink` into
+  `claude__skills__<name>.symlink/SKILL.md`; confirmed with `--dry-run`
+  then a real `install.py` run that `~/.claude/skills/{caveman,
+  tracked_development}` are now directory symlinks straight to the repo
+  folder (old file-symlink layout backed up, content unchanged, verified
+  by `cat`). No `install.py` changes needed, as expected. Updated
+  `README.md`'s nesting example to show the new folder-symlink form.
+- 2026-07-02 : follow-up to phase 2, at the user's request. The IDE's
+  skill linter flagged `tracked_development`'s frontmatter `name` for
+  using an underscore (Agent Skills spec: lowercase/numbers/hyphens
+  only, must match the resolved directory name) - a pre-existing issue,
+  unrelated to phase 2, surfaced by editing the file through its new
+  folder-symlink path. Renamed end-to-end to `tracked-development`:
+  dotfiles folder/symlink, frontmatter `name`, `README.md`, this plan's
+  phase 2 file, `00_start.md`, and the one reference in
+  `linux-box-cloudflare/configs/claude/rules/local-box.md`. Installed
+  command changes from `/tracked_development` to `/tracked-development`.
+  Verified via `install.py`. `caveman`'s `name` field was already spec-
+  compliant, left unchanged.

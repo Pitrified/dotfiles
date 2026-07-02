@@ -1,5 +1,5 @@
 ---
-name: tracked_development
+name: tracked-development
 description: >-
   Plan and execute multi-phase work using a persistent folder of markdown files
   that survives context loss: a bootstrap/brainstorm file, a tracking index with
