@@ -44,9 +44,9 @@ clear the fix isn't a vim-specific concern. Background in
 | -- | ------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------- |
 | 1  | Extend `install.py` for nested folder symlinks            | [`01_extend_installpy_nesting.md`](01_extend_installpy_nesting.md)             | done    |
 | 2  | Migrate Claude skill symlinks to folder-based ones         | [`02_migrate_claude_skill_symlinks.md`](02_migrate_claude_skill_symlinks.md)   | done    |
-| 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | draft   |
-| 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | draft   |
-| 5  | Test coverage for target-path/nesting logic                | [`05_add_tests.md`](05_add_tests.md)                                          | draft   |
+| 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | planned |
+| 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | planned |
+| 5  | Test coverage for target-path/nesting logic                | [`05_add_tests.md`](05_add_tests.md)                                          | planned |
 
 Status values: draft / planned / in progress / done / superseded / discarded.
 
@@ -109,3 +109,34 @@ Status values: draft / planned / in progress / done / superseded / discarded.
   command changes from `/tracked_development` to `/tracked-development`.
   Verified via `install.py`. `caveman`'s `name` field was already spec-
   compliant, left unchanged.
+- 2026-07-02 : fleshed out phases 3-5 from draft to planned, at the
+  user's request, by resolving the placeholders each had deferred.
+  Read `~/bootstrap/install_basics.sh`/`install_python.sh` for real
+  (phase 3 was written from memory before). Fetched the live `uv`
+  installer script and confirmed by reading it that it only persists
+  PATH via shell-rc sourcing for *future* shells, never the running
+  script - so `install_basics.sh` needs an explicit `export PATH=...`
+  right after the `uv` install line, not just reordering. Ran a real
+  scratch `uv` project locally (`uv 0.11.24`) and confirmed
+  `[tool.uv] package = false` lets a `pyproject.toml` skip
+  `[build-system]`/`hatchling`/`src/` entirely while `uv run
+  <script>.py` and `uv run --group dev pytest` both still work -
+  concretized phase 4's `pyproject.toml` around that instead of the
+  vague "minimal" placeholder, and matched `requires-python =
+  "==3.14.*"` to `tg-central-hub-bot`/`repomgr`'s existing convention.
+  Also found, by testing directly, that `uv run <absolute-script-path>`
+  does not discover a project's `pyproject.toml` unless invoked from
+  within (or under) that project's directory - it silently falls back
+  to an ad hoc environment instead. Harmless for `install.py` itself
+  (no runtime deps either way) but means the planned bootstrap
+  invocation needed `uv run --project ~/dotfiles/install
+  ~/dotfiles/install/install.py`, not a bare path - updated phase 4's
+  Goals/Plan/Done-when accordingly. For phase 5, corrected the earlier
+  draft's assumption that `home_dir`/`dotfiles_dir` needed to become
+  parameters before tests were possible: phase 1's `link_config()` and
+  `backup()` already take `home_dir`/`backup_dir` as explicit
+  arguments, so no further testability refactor is needed for either
+  Goal - only `run_install()` itself (out of scope) still reads
+  `Path.home()` inline. Wrote out the concrete test-case list against
+  the real function signatures instead. No code changed in this pass -
+  planning only; all three phases remain unimplemented.

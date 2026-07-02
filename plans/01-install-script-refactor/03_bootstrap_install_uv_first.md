@@ -1,5 +1,5 @@
 ---
-status: draft
+status: planned
 ---
 
 # Phase 3 - Reorder `bootstrap` to install `uv` before cloning dotfiles
@@ -41,9 +41,53 @@ cross-repo shape as
 
 ## Plan
 
-- (Detail exact placement and the PATH/env-sourcing mechanics once this
-  phase starts - depends on what the `uv` installer actually does on
-  this box's Ubuntu version.)
+Read the current `install_basics.sh` (`~/bootstrap/install_basics.sh`,
+not in this repo) top to bottom and fetched the live installer
+(`curl -LsSf https://astral.sh/uv/install.sh`) to confirm the PATH
+mechanics rather than assuming them:
+
+- Current script, relevant excerpt:
+  ```bash
+  sudo apt -y install python3-pip
+  git clone https://github.com/Pitrified/dotfiles.git ~/dotfiles
+  python3 ~/dotfiles/install.py
+  mkdir ~/.local
+  mkdir ~/.local/bin
+  echo "export PATH=\$PATH:~/.local/bin" >> ~/.bash_aliases.local
+  ```
+  No `set -e` anywhere in the script, confirmed by reading it end to
+  end - a failing `mkdir` (e.g. dir already exists) just prints an
+  error to stderr and the script continues, so ordering changes here
+  can't newly abort the run.
+- The installer writes a `~/.local/bin/env` (POSIX) and `env.fish`
+  script and appends a line sourcing it to shell rc files, to persist
+  PATH for *future* shells - it cannot and does not modify the PATH of
+  the already-running `install_basics.sh` process. Confirmed on this
+  box: `uv` has been installed for a while, yet `~/.local/bin/env`
+  doesn't exist here - whether that file even gets written depends on
+  how the installer infers the install layout (XDG vars, forced
+  install dir, etc.) at run time, so sourcing it isn't reliable to
+  depend on in a portable bootstrap script. A direct `export` is
+  simpler and always correct.
+- New ordering:
+  ```bash
+  sudo apt -y install python3-pip
+
+  # install uv, and make it usable for the rest of *this* script run
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  export PATH="$HOME/.local/bin:$PATH"
+
+  git clone https://github.com/Pitrified/dotfiles.git ~/dotfiles
+  # (invocation line changes to `uv run ...` in phase 4)
+  ```
+- Leave the later `mkdir ~/.local && mkdir ~/.local/bin` +
+  `.bash_aliases.local` PATH-export block untouched: it's a different
+  concern (persisting PATH into dotfiles' own bash startup for the
+  *next* login shell), not the current-script PATH problem being fixed
+  here. `mkdir` on an already-existing dir just warns, as established
+  above.
+- Update `bootstrap/README.md`'s `install_basics` bullet list to add
+  `uv`.
 
 ## Out of scope
 

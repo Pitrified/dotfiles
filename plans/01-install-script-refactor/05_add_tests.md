@@ -1,5 +1,5 @@
 ---
-status: draft
+status: planned
 ---
 
 # Phase 5 - Test coverage for target-path/nesting logic
@@ -35,19 +35,72 @@ change).
 
 ## Plan
 
-- (Detail once phase 1's refactor lands and the shared target-path helper
-  has a concrete signature to test against.)
-- Likely needs `run_install`'s `home_dir` and `dotfiles_dir` to become
-  parameters (or the relevant logic extracted into functions that take
-  them as arguments) rather than reading `Path.home()` / the
-  `__file__`-relative computation from phase 4 inline - a small
-  testability refactor, not a restructuring.
+Phase 1 landed, so this is written against `link_config()`'s actual
+signature rather than a hypothetical one:
+`link_config(config_at_dot, home_dir, backup_dir, dry_run=False)` and
+`backup(src_at_home, backup_dir, dry_run=False)` already take
+`home_dir`/`backup_dir` as explicit arguments - neither reads
+`Path.home()` internally. **Correction from the earlier draft:** no
+testability refactor is needed for these two goals; only `run_install()`
+itself (untested, out of scope - see below) still reads `Path.home()`
+and the phase-4 `__file__`-relative `dotfiles_dir` inline.
+
+- One test module, `install/tests/test_install.py` - mirrors the
+  single-script decision in `00_start.md`; split later only if it
+  actually grows unwieldy.
+- Fixtures: `tmp_path` standing in for `home_dir`, a `backup_dir =
+  tmp_path / ".rcback"` (created per-test, not shared), and small
+  helper fixtures that write a fake dotfiles source file/dir under
+  `tmp_path` to act as `config_at_dot` - never anything under the real
+  `$HOME` or this checkout's actual `dotfiles/`.
+- `link_config()` cases (Goal 1 + the already-linked/divergence-guard
+  parts of Goal 3):
+  - flat name (no `__`) → `~/.foo`.
+  - one level of `__` nesting → `~/.a/b`, parent dir auto-created.
+  - multiple levels (`a__b__c`) → `~/.a/b/c`.
+  - source is a directory → `target_is_directory=True` is honored
+    (assert the resulting symlink resolves to a directory).
+  - already a correct symlink to `config_at_dot` → early return, *no*
+    backup happens (assert `backup_dir` stays empty) - this is the
+    idempotent-rerun behavior phase 1 added as a side effect.
+  - real (non-symlink) file at the target with **different** content
+    than the source → the divergence warning is logged (`caplog`) *and*
+    the file still gets backed up and replaced - pin down that this
+    warns but does not abort or skip.
+  - real (non-symlink) file at the target with **identical** content →
+    no warning, but it still gets backed up and replaced by a symlink
+    (there is no "matches, leave alone" shortcut in the current code -
+    worth a test precisely because that's non-obvious from reading
+    `link_config()` alone).
+  - `dry_run=True` → no filesystem change at all in any of the above
+    (no symlink created, no backup dir entry, target untouched).
+- `backup()` cases (Goal 2):
+  - existing real file/dir at `src_at_home` → moved into `backup_dir`
+    under the same name.
+  - dangling symlink at `src_at_home` (target doesn't exist) → still
+    backed up - `exists()` follows symlinks and would miss this, which
+    is exactly why the current code also checks `is_symlink()`;
+    regressing that check back to `exists()` alone should fail this
+    test.
+  - nothing at `src_at_home` → no-op, `backup_dir` stays empty.
+  - `dry_run=True` → no move happens.
+- `find_free_dir()` and `is_conf_dir()` are small enough to cover
+  incidentally (free-dir picks an unused suffix; `is_conf_dir` rejects
+  `.git` and non-directories) but aren't separate Goals - low-cost
+  additions alongside the above, not a reason to expand scope.
 
 ## Out of scope
 
-- Testing `add_source` / `~/.bash_aliases` generation end-to-end (lower
-  value, more filesystem/state to fake) unless it falls out naturally
-  from the `home_dir` parameterization above.
+- Testing `add_source` / `~/.bash_aliases` generation end-to-end - lower
+  value (string-append to a file), more filesystem/state to fake, and
+  not one of the stated Goals.
+- Testing `run_install()` itself end-to-end - it still reads
+  `Path.home()` and (post phase 4) the `__file__`-relative
+  `dotfiles_dir` directly rather than taking them as parameters, so
+  exercising it would mean monkeypatching `Path.home`/`__file__` or a
+  real subprocess run; `link_config()`/`backup()` already carry the
+  actual logic worth pinning down, so this isn't worth the added
+  complexity unless a real bug shows up there later.
 - Any change to `install.py`'s actual behavior - this phase adds tests
   for existing behavior (plus phases 1-4's changes), it doesn't change
   what the script does.
