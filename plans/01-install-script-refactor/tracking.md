@@ -42,7 +42,7 @@ clear the fix isn't a vim-specific concern. Background in
 
 | #  | Phase                                                     | Plan                                                                          | Status  |
 | -- | ------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------- |
-| 1  | Extend `install.py` for nested folder symlinks            | [`01_extend_installpy_nesting.md`](01_extend_installpy_nesting.md)             | planned |
+| 1  | Extend `install.py` for nested folder symlinks            | [`01_extend_installpy_nesting.md`](01_extend_installpy_nesting.md)             | done    |
 | 2  | Migrate Claude skill symlinks to folder-based ones         | [`02_migrate_claude_skill_symlinks.md`](02_migrate_claude_skill_symlinks.md)   | draft   |
 | 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | draft   |
 | 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | draft   |
@@ -78,3 +78,14 @@ Status values: draft / planned / in progress / done / superseded / discarded.
   phases 2-3 (dev-only tooling, tests-in-place) with the current phases
   2-5: skill-symlink migration, `bootstrap` reorder, the `install/` move,
   then tests against the new layout.
+- 2026-07-02 : implemented phase 1. Factored the topic-level and
+  item-level `.symlink` handling in `install.py` into one shared
+  `link_config()` (nesting, parent-mkdir, backup, already-linked skip,
+  divergence guard) - topic-level folders now support `__` nesting and,
+  as a side effect, are no longer needlessly re-backed-up/relinked on
+  every run (the old topic-level code had no already-linked skip).
+  Verified with a fake-`$HOME` fixture (flat topic, nested topic, nested
+  item) covering dry-run, real run, and idempotent second run, plus a
+  `--dry-run` pass against the real dotfiles tree showing no regressions.
+  No test suite added yet - that's phase 5, sequenced after the `install/`
+  move.

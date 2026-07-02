@@ -120,6 +120,64 @@ def backup(src_at_home, backup_dir, dry_run=False):
         logg.info(f"\tBacked up {src_at_home} to {src_at_back}")
 
 
+def link_config(config_at_dot, home_dir, backup_dir, dry_run=False):
+    """Symlinks config_at_dot to its target in home_dir.
+
+    A "__" in the stem expands to "/", so nested targets like
+    claude__rules__python.md.symlink -> ~/.claude/rules/python.md
+    (a topic with no "__" resolves flat, e.g. bash.symlink -> ~/.bash).
+    Shared by both the topic-level (whole folder) and item-level symlinks.
+    """
+    logg = logging.getLogger(f"c.{__name__}.link_config")
+
+    # find the path of config_at_dot in the home directory
+    rel_at_home = config_at_dot.stem.replace("__", "/")
+    config_at_home = home_dir / f".{rel_at_home}"
+    logg.debug(f"config_at_home:\t{config_at_home}")
+
+    # already correctly linked: skip, so re-running is a no-op and we
+    # do not churn the backup folder with the existing symlink
+    if (
+        config_at_home.is_symlink()
+        and config_at_home.resolve() == config_at_dot.resolve()
+    ):
+        logg.info(f"\tAlready linked {config_at_home}")
+        return
+
+    # divergence guard: a real (non-symlink) file means an external
+    # writer (e.g. an app rewriting its own config) replaced our
+    # symlink. Warn loudly so we never silently revert newer content
+    # to the stale repo copy. The file is still backed up below, so
+    # the newer content is recoverable from the backup folder.
+    if (
+        config_at_home.is_file()
+        and not config_at_home.is_symlink()
+        and not filecmp.cmp(config_at_home, config_at_dot, shallow=False)
+    ):
+        logg.warning(
+            f"\t!! {config_at_home} is a real file that DIFFERS from the repo source.\n"
+            f"\t   Something replaced the symlink and wrote newer content.\n"
+            f"\t   It will be backed up to {backup_dir}, but the relink points at the\n"
+            f"\t   stale repo copy. Reconcile before trusting it (the backup has the newer file)."
+        )
+
+    # make sure the parent dir exists for nested targets
+    if not dry_run:
+        config_at_home.parent.mkdir(parents=True, exist_ok=True)
+
+    # backup the current config_at_home into rcback
+    backup(config_at_home, backup_dir, dry_run)
+
+    # link config_at_home to config_at_dot
+    if dry_run:
+        logg.info(f"\t[dry-run] Would symlink {config_at_home} to {config_at_dot}")
+    else:
+        config_at_home.symlink_to(
+            config_at_dot, target_is_directory=config_at_dot.is_dir()
+        )
+        logg.info(f"\tSymlinked {config_at_home} to {config_at_dot}")
+
+
 def add_source(alias_at_home, config_at_dot, dry_run=False):
     """Sources config_at_dot in alias_at_home"""
     logg = logging.getLogger(f"c.{__name__}.add_source")
@@ -201,21 +259,7 @@ def run_install(args):
 
         # check if we need to link the whole folder
         if topic_at_dot.suffix == ".symlink":
-            # find the path of the topic_at_dot in the home directory
-            topic_at_home = home_dir / f".{topic_at_dot.stem}"
-            logg.debug(f" topic_at_home:\t{topic_at_home}")
-
-            # backup the current topic_at_home into rcback
-            backup(topic_at_home, backup_dir, dry_run)
-
-            # link topic_at_home to topic_at_dot
-            if dry_run:
-                logg.info(
-                    f"\t[dry-run] Would symlink {topic_at_home} to {topic_at_dot}"
-                )
-            else:
-                topic_at_home.symlink_to(topic_at_dot, target_is_directory=True)
-                logg.info(f"\tSymlinked {topic_at_home} to {topic_at_dot}")
+            link_config(topic_at_dot, home_dir, backup_dir, dry_run)
 
         # go through all the items in the topic dir
         for config_at_dot in topic_at_dot.iterdir():
@@ -229,57 +273,7 @@ def run_install(args):
             # symlink the .symlink files
             if config_at_dot.suffix == ".symlink":
                 logg.debug(f" config_at_dot:\t{config_at_dot}")
-
-                # find the path of the config_at_dot in the home directory.
-                # a "__" in the stem expands to "/", so nested targets like
-                # claude__rules__python.md.symlink -> ~/.claude/rules/python.md
-                rel_at_home = config_at_dot.stem.replace("__", "/")
-                config_at_home = home_dir / f".{rel_at_home}"
-                logg.debug(f"config_at_home:\t{config_at_home}")
-
-                # already correctly linked: skip, so re-running is a no-op and we
-                # do not churn the backup folder with the existing symlink
-                if (
-                    config_at_home.is_symlink()
-                    and config_at_home.resolve() == config_at_dot.resolve()
-                ):
-                    logg.info(f"\tAlready linked {config_at_home}")
-                    continue
-
-                # divergence guard: a real (non-symlink) file means an external
-                # writer (e.g. an app rewriting its own config) replaced our
-                # symlink. Warn loudly so we never silently revert newer content
-                # to the stale repo copy. The file is still backed up below, so
-                # the newer content is recoverable from the backup folder.
-                if (
-                    config_at_home.is_file()
-                    and not config_at_home.is_symlink()
-                    and not filecmp.cmp(config_at_home, config_at_dot, shallow=False)
-                ):
-                    logg.warning(
-                        f"\t!! {config_at_home} is a real file that DIFFERS from the repo source.\n"
-                        f"\t   Something replaced the symlink and wrote newer content.\n"
-                        f"\t   It will be backed up to {backup_dir}, but the relink points at the\n"
-                        f"\t   stale repo copy. Reconcile before trusting it (the backup has the newer file)."
-                    )
-
-                # make sure the parent dir exists for nested targets
-                if not dry_run:
-                    config_at_home.parent.mkdir(parents=True, exist_ok=True)
-
-                # backup the current config_at_home into rcback
-                backup(config_at_home, backup_dir, dry_run)
-
-                # link config_at_home to config_at_dot
-                if dry_run:
-                    logg.info(
-                        f"\t[dry-run] Would symlink {config_at_home} to {config_at_dot}"
-                    )
-                else:
-                    config_at_home.symlink_to(
-                        config_at_dot, target_is_directory=config_at_dot.is_dir()
-                    )
-                    logg.info(f"\tSymlinked {config_at_home} to {config_at_dot}")
+                link_config(config_at_dot, home_dir, backup_dir, dry_run)
 
     logg.info("\nSetup bash aliases after")
     # source ~/.bash_aliases.after.local
