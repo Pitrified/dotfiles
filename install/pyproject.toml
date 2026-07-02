@@ -1,0 +1,21 @@
+[project]
+name = "dotfiles-install"
+version = "0.1.0"
+description = "Symlinks dotfiles topics into $HOME"
+requires-python = "==3.14.*"
+dependencies = []
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    { include-group = "lint" },
+    { include-group = "test" },
+]
+test = [
+    "pytest>=8.3.4",
+]
+lint = [
+    "ruff>=0.9.6",
+]

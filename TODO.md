@@ -4,7 +4,5 @@
 
 * Add locate command
 * Create ephem folder
+* Add zellij
 
-## Python
-
-* Poetry / pyenv

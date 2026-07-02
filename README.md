@@ -42,12 +42,22 @@ Additional vim settings can be saved in `~/.vimrc.local`, that is sourced at the
 
 ### install.py
 
-Runs with python, version `>=3.6`.
+Lives at `install/install.py`, with its own `pyproject.toml` (`uv`-managed,
+pinned to Python 3.14; no runtime dependencies, still stdlib-only). This is
+unrelated to how the topic-folder symlinking itself works - it's just how
+`install.py` runs and gets a `pytest`/`ruff` dev environment.
 
 Install everything with
 
 ```bash
-python3 install.py
+cd install
+uv run install.py
+```
+
+or from anywhere, without changing directory first:
+
+```bash
+uv run --project ~/dotfiles/install ~/dotfiles/install/install.py
 ```
 
 The backup directory name can be set with the option `--backup_dir`, the default is `.rcback`, so the old configuration will be backed up in `~/.rcbackNN`, and `NN` is automatically chosen to produce an unique dirname.

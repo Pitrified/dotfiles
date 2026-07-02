@@ -45,7 +45,7 @@ clear the fix isn't a vim-specific concern. Background in
 | 1  | Extend `install.py` for nested folder symlinks            | [`01_extend_installpy_nesting.md`](01_extend_installpy_nesting.md)             | done    |
 | 2  | Migrate Claude skill symlinks to folder-based ones         | [`02_migrate_claude_skill_symlinks.md`](02_migrate_claude_skill_symlinks.md)   | done    |
 | 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | done    |
-| 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | planned |
+| 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | done    |
 | 5  | Test coverage for target-path/nesting logic                | [`05_add_tests.md`](05_add_tests.md)                                          | planned |
 
 Status values: draft / planned / in progress / done / superseded / discarded.
@@ -154,3 +154,33 @@ Status values: draft / planned / in progress / done / superseded / discarded.
   run for real, since it does system-wide `apt`/`sudo` work on a real
   box). Nothing committed in `bootstrap` - that repo's changes are
   uncommitted, left for the user to review/commit.
+- 2026-07-02 : implemented phase 4. `git mv install.py
+  install/install.py`; `dotfiles_dir` now
+  `Path(__file__).resolve().parent.parent`, closing the old `# MAYBE`
+  comment. Added `install/pyproject.toml` exactly as planned
+  (`[tool.uv] package = false`, `requires-python = "==3.14.*"`, `dev`
+  group with `pytest`/`ruff`) - `uv run install.py` and `uv run --group
+  dev pytest`/`ruff check` all resolve and run cleanly from within
+  `install/`. Also updated `setup_env()`'s cosmetic `recap` string
+  (`python3 install.py` → `uv run install.py`) - not in the original
+  plan text, but it's a display-only string that would otherwise lie
+  about how to repeat the run; small enough to fold in here rather than
+  opening a new phase for it. Updated `bootstrap/install_basics.sh`'s
+  invocation line to `uv run --project ~/dotfiles/install
+  ~/dotfiles/install/install.py`, and confirmed by running it directly
+  from `/tmp` that `--project` makes the project resolve correctly
+  regardless of cwd (without it, per phase 3/4 planning, `uv` silently
+  ignores the project). Updated `README.md`'s install.py section (new
+  path, both invocation forms) and removed `TODO.md`'s stale "Poetry /
+  pyenv" line (with the now-empty `## Python` heading, since nothing
+  else was under it). Verified via `--dry-run` against the real
+  dotfiles tree - matches phase-1/2's already-linked output, no
+  regressions; the new `install/` folder itself shows up as an inert
+  "Topic: install" with no `.symlink`/`.bash` children, as expected.
+  `uv`'s own `.venv/.gitignore` (written by `uv` itself, containing
+  `*`) already keeps `install/.venv/` out of git with no changes needed
+  to the repo's own `.gitignore`; `install/uv.lock` is new and
+  untracked, meant to be committed alongside the rest. Tests (phase 5)
+  intentionally not written yet - `pytest` currently collects 0 items,
+  as expected. Nothing committed - left staged/unstaged for the user to
+  review.

@@ -1,5 +1,5 @@
 ---
-status: planned
+status: done
 ---
 
 # Phase 4 - Move `install.py` into `install/` with a minimal `pyproject.toml`

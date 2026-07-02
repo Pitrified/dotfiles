@@ -69,7 +69,7 @@ def setup_env():
 
     # build command string to repeat this run
     # FIXME if an option is a flag this does not work, sorry
-    recap = "python3 install.py"
+    recap = "uv run install.py"
     for a, v in args._get_kwargs():
         recap += f" --{a} {v}"
 
@@ -217,9 +217,8 @@ def run_install(args):
     if not dry_run:
         backup_dir.mkdir()
 
-    # MAYBE get the folder as parent of the current file
-    # the repo folder
-    dotfiles_dir = home_dir / "dotfiles"
+    # the repo folder: install.py lives at <dotfiles_dir>/install/install.py
+    dotfiles_dir = Path(__file__).resolve().parent.parent
     logg.debug(f"  dotfiles_dir:\t{dotfiles_dir}")
 
     logg.info(f"\nUsing backup folder {backup_dir}")
