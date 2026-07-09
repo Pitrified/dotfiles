@@ -53,12 +53,34 @@ The origin document. Free-form prose, not a checklist. It captures:
 - the analysis (current state, inventory, the proposed approach),
 - decisions made and **why** (record rejected alternatives - they explain the
   shape of everything downstream),
-- open questions, and their answers inline once resolved (users will mark them,
-  e.g. `ANS: ...`, while iterating on the plans, reread md files and incorporate
-  user comments in the overarching plans).
+- open questions, following the convention below.
 
 This file is append-and-refine, not status-tracked. It is the reasoning record
 the phases were derived from.
+
+#### Open questions convention
+
+Questions are numbered `Q1`, `Q2`, ... and numbering never resets - a later
+batch continues where the previous one stopped. Each question ships with an
+`ANS: ...` placeholder line so the user can answer by editing the file directly:
+
+```markdown
+- Q1: <the question, with enough context to answer it cold>
+  ANS: ...
+- Q2: <question>
+  ANS: ...
+```
+
+The loop: the user fills in `ANS:` lines (in the file or in chat), then the
+answers get **folded in** - update the decisions, phases, and sub-plans that the
+answer affects. Do not delete the answered questions: the Q + ANS pairs stay in
+the file as the decision record (ADR); they explain why the plan has its shape.
+Only fold in, never rewrite an existing answer.
+
+New questions that surface while folding in (or later in the work) are appended
+as a new batch *after* the answered ones, continuing the numbering (`Q5`,
+`Q6`, ...), each with a fresh `ANS: ...` placeholder. Whenever iterating on the
+plans, reread the md files and incorporate any user edits found there.
 
 ### `tracking.md` - the index
 
@@ -139,6 +161,21 @@ Context: [`00_start.md`](00_start.md)[, depends on [`0M_...md`](0M_....md)].
 - <e.g. the project's verification suite passes>
 ```
 
+## Spin-off features
+
+Work that surfaces mid-effort but does not belong to the current feature's
+scope (a side-finding, a "while we are at it", a deferred capability) becomes a
+**new sibling feature folder**, not an extra phase. Create the next-numbered
+folder with a minimal `00_start.md` at `status: draft` frontmatter: a short
+note on what it is and where it came from, linking back to the originating
+feature's `00_start.md` for reference.
+
+Keep the scopes independent: the spin-off must be executable on its own later,
+and the originating feature must not depend on it. The originating feature
+notes the spin-off in its decisions (and tracking key decisions) with a link,
+then stops mentioning it. A draft spin-off needs no `tracking.md` or phases
+until it is actually picked up.
+
 ## Status values (frontmatter `status:`)
 
 | Status        | Meaning                                                         |
@@ -160,7 +197,8 @@ this shape:
 
 1. **Bootstrap.** Create the folder and `00_start.md`. Capture the idea,
    analysis, decisions, and open questions. Surface real open questions to the
-   user rather than guessing.
+   user rather than guessing, as numbered `Qn` items with `ANS: ...`
+   placeholders; fold answers in per the open questions convention.
 2. **Derive phases.** Break the work into sequential, bounded phases - each with
    clear goals, an out-of-scope boundary, and a verifiable "Done when". Prefer
    the cheapest/lowest-risk phase first. Write `tracking.md` with the phases
