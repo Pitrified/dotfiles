@@ -1,0 +1,96 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #767676;
+  --accent: #0a7d33;
+  --en-fg: #6b5d00;
+  --rule: #e4e4e4;
+  --chorus: #a23575;
+  --energy: #c2410c;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --fg: #e6e6e6;
+    --muted: #9a9a9a;
+    --accent: #58c07f;
+    --en-fg: #cdbb55;
+    --rule: #2c2f35;
+    --chorus: #e38bc4;
+    --energy: #ffa94d;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0 auto;
+  padding: 1rem 1.2rem 4rem;
+  max-width: 44rem;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.5 system-ui, sans-serif;
+}
+a { color: var(--accent); }
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  padding: 0.5rem 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+nav .crumbs a { margin-right: 0.5rem; }
+nav .btns { display: flex; gap: 0.4rem; }
+nav button {
+  font: inherit;
+  font-size: 0.9em;
+  padding: 0.25rem 0.8rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: none;
+  color: var(--accent);
+  cursor: pointer;
+}
+html.show-en #toggle-en,
+html.vibe-edit #vibe-toggle {
+  background: var(--accent);
+  color: var(--bg);
+}
+#vibe-toggle, #vibe-export { border-color: var(--energy); color: var(--energy); }
+html.vibe-edit #vibe-toggle { background: var(--energy); }
+html.vibe-edit section[data-sel] { cursor: pointer; }
+html.vibe-edit section[data-sel]:hover {
+  outline: 1px dashed var(--muted);
+  outline-offset: 5px;
+}
+header h1 { margin: 1rem 0 0.2rem; font-size: 1.4rem; }
+.meta { margin: 0.1rem 0; color: var(--muted); font-size: 0.9rem; }
+section { margin: 1.4rem 0; }
+h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: none;
+}
+.line { margin: 0; }
+.line .orig { display: block; }
+.line .en {
+  display: none;
+  color: var(--en-fg);
+  font-size: 0.9em;
+  padding-left: 1.2rem;
+}
+html.show-en .line .en { display: block; }
+html.show-en .line { margin-bottom: 0.35rem; }
+.gap { height: 1rem; }
+section.chorus { border-left: 3px solid var(--chorus); padding-left: 0.7rem; }
+section.chorus .orig, section.chorus h3 { color: var(--chorus); }
+section.energy { border-left: 3px solid var(--energy); padding-left: 0.7rem; }
+section.energy .orig, section.energy h3 { color: var(--energy); }
+.legend .sw-chorus { color: var(--chorus); }
+.legend .sw-energy { color: var(--energy); }
+.setlist li { margin: 0.3rem 0; }
+.setlist .album { color: var(--muted); font-size: 0.85em; }
+.setlist .placeholder { color: var(--muted); }

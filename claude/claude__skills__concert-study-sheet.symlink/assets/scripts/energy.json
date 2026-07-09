@@ -1,0 +1,5 @@
+{
+  "_comment": "Manual pass: high-energy (stadium) sections, per song slug. Each selector is a section header exactly as on the Genius page; add @n to target only the nth occurrence (1-based, e.g. \"[Coro: Bad Bunny]@2\"), otherwise all occurrences match. Rendered with the energy accent, winning over the chorus accent. The entries below are real examples from badbunny2026; entries whose slug is not in songs.py are ignored, so replace them at will.",
+  "nuevayol": ["[Coro: Andy Montañez & Bad Bunny]"],
+  "yo_perreo_sola": ["[Coro: Nesi & Bad Bunny]", "[Coro: Bad Bunny]", "[Coro: Nesi]"]
+}

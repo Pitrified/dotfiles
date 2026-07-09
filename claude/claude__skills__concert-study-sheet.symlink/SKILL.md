@@ -18,16 +18,31 @@ The key insight: Genius hosts both the original and a "Genius English Translatio
 for popular songs, both server-rendered and scrapeable with plain curl;
 the two transcriptions almost align, and the residue is small enough for a manual pass.
 
-A complete reference implementation lives in `~/ephem/concerti/badbunny2026/`
-(`scripts/` uv project, `raw/` cache, `site/` output, top-level README).
-If it still exists, copy `scripts/` and adapt `songs.py`; if not, rebuild from this file.
+The pipeline ships in this skill's `assets/` folder, already generalized:
+copy it into the new project and fill in the data.
+It is a head start, not a turnkey run: every new artist/language needs the manual passes
+below (URL verification, translation overrides, header vocabulary, per-page quirks).
+A complete built example may still exist at `~/ephem/concerti/`.
+
+Runtime: the scripts are a [uv](https://docs.astral.sh/uv/) project;
+`uv run <script>.py` resolves the `pyproject.toml` deps (beautifulsoup4, rapidfuzz)
+with no venv management. `site/app.js` is plain browser JS; to syntax-check it without
+node, `gjs` works on GNOME boxes (see gotchas).
 
 ### Process
+
+0. [deterministic] Set up the project from `assets/`.
+   Create `<project>/`, copy `assets/scripts/` and `assets/site/` into it,
+   adapt `assets/README.template.md` into the project README.
+   Fill `scripts/songs.py`: the `PROJECT` dict (slug, title, heading, meta, note,
+   source `lang`, placeholder slots) and the `SONGS` list; `NOTES` for per-song remarks.
+   Everything project-specific lives in `songs.py` + the two json files;
+   `build_site.py`, `download_raw.py`, `style.css`, `app.js` should need no edits.
 
 1. [judgment] Research the setlist.
    Use the most recent setlist.fm show of the same tour leg, cross-checked against the
    setlist.fm "average setlist" for the tour and the Wikipedia tour page.
-   Note structural quirks as placeholders, e.g. a rotating one-night-only slot.
+   Note structural quirks as `PROJECT["placeholders"]`, e.g. a rotating one-night-only slot.
    Write an overview markdown (refs/) with one table row per song: number, title, album,
    original lyrics link, translation link.
 
@@ -40,65 +55,69 @@ If it still exists, copy `scripts/` and adapt `songs.py`; if not, rebuild from t
    unauthenticated JSON search endpoint with a browser User-Agent:
    `https://genius.com/api/search/multi?q=<artist>%20<title>%20English%20Translation`
    and take `response.sections[].hits[] | select(.index=="song") | .result.url`.
-   Not every song has a translation page; record the gap instead of inventing a URL.
+   Not every song has a translation page; `en_slug = None` records the gap,
+   never invent a URL.
 
-3. [deterministic] Download raw pages into `raw/` as `NN_slug.es.html` / `NN_slug.en.html`.
-   Sequential curl with a browser UA and ~0.5 s sleep; write to a `.part` temp file and
-   rename on HTTP 200; skip existing files unless forced.
+3. [deterministic] Download raw pages: `uv run download_raw.py`
+   (assets/scripts/download_raw.py) fetches into `raw/` as
+   `NN_slug.<lang>.html` / `NN_slug.en.html`: sequential curl with a browser UA and
+   0.5 s sleep, `.part` temp file renamed on HTTP 200, skips existing unless `--force`.
 
-4. [deterministic] Parse lyrics from a page.
-   BeautifulSoup over `[data-lyrics-container="true"]` (a page has several, split around
-   ad slots). Before reading text, `decompose()` every
-   `[data-exclude-from-selection="true"]` child (inline "You might also like" widgets),
-   replace `<br>` with newlines, then split lines. Section headers are lines matching
-   `^\[[^\]]{1,80}\]$`.
+4. [deterministic] Parse lyrics from a page: `extract_lines()` in
+   assets/scripts/build_site.py. BeautifulSoup over `[data-lyrics-container="true"]`
+   (a page has several, split around ad slots); `decompose()` every
+   `[data-exclude-from-selection="true"]` child, `<br>` -> newline, split lines.
+   Section headers are lines matching `^\[[^\]]{1,80}\]$`.
 
-5. [deterministic] Merge original and translation.
-   Split both into sections on header lines and drop all-blank sections.
-   Normalize headers to a language-neutral key: strip brackets and the performer part
-   after ":", then map vocabulary (coro=chorus, pre-coro=pre-chorus, post-coro=post-chorus,
-   verso=verse, puente=bridge, interludio=interlude, estribillo=chorus, refrán=refrain);
-   keep numbers so "verso 2" matches "verse 2".
-   Align the two section-key sequences with `difflib.SequenceMatcher`;
-   inside matched sections pair lines by position;
-   for divergent stretches, feed the translation lines of the stretch to its original
-   sections in order, appending leftovers rather than dropping them.
+5. [deterministic] Merge original and translation: `merge()` + `section_key()` in
+   assets/scripts/build_site.py. Split into sections on header lines, drop all-blank
+   sections, normalize headers to a language-neutral key via `HEADER_WORDS[lang]`
+   (es verified; pt/it best effort, verify on first use; unmapped languages fall back
+   to exact-key matching), align the key sequences with `difflib.SequenceMatcher`,
+   pair lines by position inside matched sections, and consume translation lines in
+   order across divergent stretches, appending leftovers rather than dropping them.
+   New language? Add its header vocabulary to `HEADER_WORDS` in the assets copy too,
+   so the next project inherits it.
 
 6. [judgment] Manual translation pass.
-   After building, list every original line without a translation.
+   After building, list every original line without a translation
+   (grep the generated pages for `class="orig"` spans without a following `class="en"`).
    Translate them yourself into `overrides.json` (`slug -> {exact original line: translation}`),
    applied at render time; an override also beats a bad automatic pairing.
    Rebuild and assert 0 uncovered lines programmatically.
 
-7. [deterministic] Emit the site.
-   Per-song pages plus index sharing one hand-written `style.css` / `app.js`
-   (toggle button flips a class on `<html>`, choice kept in localStorage), and a
-   single-file version with CSS/JS inlined, a TOC of anchors, and `#top` links,
-   generated by the same build so content never diverges.
+7. [deterministic] Emit the site: `uv run build_site.py`.
+   Per-song pages plus index sharing `site/style.css` / `site/app.js`
+   (toggle button flips a class on `<html>`, choice kept in localStorage under keys
+   derived from the `data-project` attribute the build stamps), and
+   `site/<project slug>.html`, the one-file version with CSS/JS inlined,
+   a TOC of anchors and `#top` links, generated by the same build so content never diverges.
 
-8. [mixed] Section accents.
+8. [mixed] Section accents: `section_classes()` in assets/scripts/build_site.py.
    Auto chorus: header key starts with chorus/post-chorus/refrain, plus
    `rapidfuzz.fuzz.token_set_ratio >= 90` against a labeled chorus of the same song for
    unlabeled reprises (min ~40 chars to avoid short-text false positives).
    Manual "energy" pass: `energy.json` with `slug -> ["[Header]", "[Header]@n"]`
-   selectors (`@n` = nth occurrence, absent = all). Stamp sections with
-   `data-sel="[Header]@n"` and songs with `data-slug` so an in-page tagging mode can
-   toggle classes, persist to localStorage, and export build-ready `energy.json`.
+   selectors (`@n` = nth occurrence, absent = all). Sections carry
+   `data-sel="[Header]@n"` and songs `data-slug`, so the page's "tag vibes" mode can
+   toggle classes by click, persist to localStorage, and export build-ready `energy.json`.
 
 Project shape: `refs/` overview, `raw/` cache, `scripts/` uv project
-(`pyproject.toml` with beautifulsoup4 + rapidfuzz, `songs.py` data,
-`download_raw.py`, `build_site.py`, `overrides.json`, `energy.json`),
+(code: `build_site.py`, `download_raw.py`, `pyproject.toml`;
+data: `songs.py`, `overrides.json`, `energy.json`),
 `site/` output, top-level README with rebuild and "open in browser" instructions.
+`assets/genius_collapse_repeats.user.js` is an optional extra: a Tampermonkey script
+that collapses repeated sections when reading on genius.com itself.
 
 ### Rules
 
 - Verify every Genius URL with curl before putting it anywhere.
   Why: guessed slugs 301 to canonical multi-artist slugs or 404 outright;
   several first guesses were wrong in the reference build.
-- Drop all-blank sections before aligning.
-  Why: every Spanish page opens with an empty `[Letra de "..."]` credit section that has
-  no counterpart on the translation page; it silently shifted every section pairing by
-  one, mispairing all lyrics while looking plausible.
+- Drop all-blank sections before aligning (already in `split_sections`; keep it).
+  Why: original pages open with an empty credit section (`[Letra de "..."]` on Spanish
+  pages) that has no counterpart on the translation page; it silently shifted every
+  section pairing by one, mispairing all lyrics while looking plausible.
 - Treat `lyricsPlaceholderReason` as "no lyrics" only when its value is a string.
   Why: the key exists on every page with value null; substring-checking the key marked
   every song as untranscribed. A string value (e.g. "unreleased") means Genius has no
@@ -117,12 +136,15 @@ Project shape: `refs/` overview, `raw/` cache, `scripts/` uv project
 - After every merge change, re-check coverage and spot-check pairings programmatically
   (count rows missing a translation per page, print a sample side by side).
   Why: alignment bugs look fine in the build log and only show up in the rendered rows.
+- Keep the code files project-agnostic; project facts go in `songs.py`/the jsons only.
+  Why: the next concert copies the code from `assets/`; anything hardcoded there is a
+  bug waiting for project two. Improvements to the code belong back in `assets/`.
 
 ### Gotchas
 
 - Translation pages relabel sections with performers (`[Chorus: X & Y]` vs `[Coro]`)
   and translate the words -> exact-header matching never works across languages;
-  match on the normalized key.
+  match on the normalized key (`HEADER_WORDS`).
 - The two transcriptions differ in line granularity (ad-libs merged or split), so a few
   lines per song stay untranslated even when sections match; that is what the manual
   overrides pass is for; do not chase perfect automatic alignment.

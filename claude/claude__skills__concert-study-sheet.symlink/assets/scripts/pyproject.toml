@@ -1,0 +1,9 @@
+[project]
+name = "concert-scripts"
+version = "0.1.0"
+description = "Download Genius pages and build the local lyrics site"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.12",
+    "rapidfuzz>=3.0",
+]

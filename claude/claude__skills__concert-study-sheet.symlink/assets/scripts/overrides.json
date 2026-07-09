@@ -1,0 +1,7 @@
+{
+  "_comment": "Manual (LLM) translation pass: per song slug, exact original line -> English line. Applied by build_site.py wherever the automatic merge left a line untranslated (or to correct a bad pairing). The nuevayol entry is a real example from badbunny2026; entries whose slug is not in songs.py are ignored, so replace it at will.",
+  "nuevayol": {
+    "Yo estoy en la mía, no tengo adversario, no": "I'm doing my own thing, I have no rival, no",
+    "Con Los Yankee' y Los Met', Juan Soto": "With the Yankees and the Mets, Juan Soto"
+  }
+}
