@@ -42,6 +42,12 @@ ENERGY = json.loads((Path(__file__).parent / "energy.json").read_text())
 
 HEADER_RE = re.compile(r"^\s*\[[^\]]{1,80}\]\s*$")
 
+# invisible format characters some Genius pages prefix on every line
+# (e.g. U+200E left-to-right marks); they break header/blank detection
+INVISIBLE = dict.fromkeys(
+    map(ord, "\u200b\u200c\u200d\u200e\u200f\u2060\ufeff")
+)
+
 
 class LyricsNotFound(RuntimeError):
     pass
@@ -67,7 +73,7 @@ def extract_lines(path: Path) -> list[str]:
         for br in c.find_all("br"):
             br.replace_with("\n")
         for raw in c.get_text().split("\n"):
-            lines.append(raw.strip())
+            lines.append(raw.translate(INVISIBLE).strip())
     # collapse runs of blank lines and trim the edges
     out: list[str] = []
     for line in lines:
@@ -159,22 +165,43 @@ def merge(orig: list[str], en: list[str] | None) -> list[Section]:
     kb = [section_key(h) for h, _ in en_secs]
     merged: list[Section] = []
     matcher = SequenceMatcher(None, ka, kb, autojunk=False)
-    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+    opcodes = matcher.get_opcodes()
+    carry: list[str] = []  # en surplus handed to the following stretch
+    for n, (tag, i1, i2, j1, j2) in enumerate(opcodes):
         if tag == "equal":
+            nxt = opcodes[n + 1][0] if n + 1 < len(opcodes) else None
             for off in range(i2 - i1):
                 header, orig_lines = orig_secs[i1 + off]
-                merged.append((header, pair(orig_lines, en_secs[j1 + off][1])))
+                en_lines = en_secs[j1 + off][1]
+                # surplus en lines at the tail of the last matched section
+                # usually belong to the following unmatched original section
+                # (the translation merged two sections into one)
+                if (nxt in ("delete", "replace") and off == i2 - i1 - 1
+                        and len(en_lines) > len(orig_lines)):
+                    carry = [t for t in en_lines[len(orig_lines):] if t]
+                    en_lines = en_lines[:len(orig_lines)]
+                merged.append((header, pair(orig_lines, en_lines)))
             continue
         # structures diverge here: feed the translation lines of this
         # stretch to its original sections in order
-        en_pool = [l for _, ls in en_secs[j1:j2] for l in ls]
+        en_pool = carry + [l for _, ls in en_secs[j1:j2] for l in ls]
+        carry = []
         pos = 0
         for header, orig_lines in orig_secs[i1:i2]:
             merged.append((header, pair(orig_lines, en_pool[pos:pos + len(orig_lines)])))
             pos += len(orig_lines)
         leftover = [t for t in en_pool[pos:] if t]
         if leftover and merged:
+            # an en-only section often continues the previous one (the original
+            # merged two sections): fill its untranslated lines in order before
+            # appending what remains as translation-only rows
             header, rows = merged[-1]
+            rows = list(rows)
+            for k, (o, t) in enumerate(rows):
+                if not leftover:
+                    break
+                if o and not t:
+                    rows[k] = (o, leftover.pop(0))
             merged[-1] = (header, rows + [("", t) for t in leftover])
     return merged
 

@@ -32,6 +32,15 @@ The code handles the two edge cases this mode hits: `song_body()` guards the
 orig/translation path collision (both resolve to `NN_slug.en.html` when lang is en)
 and `genius_links()` drops the "no English translation" note when `LANG == "en"`.
 
+Non-Latin-script artist (verified on btsmonaco2026, Korean): for readability use the
+"Genius Romanizations" page as the original (`orig_slug`) and the
+"Genius English Translations" page as the translation; set `lang` to the
+BCP-47 romanized code (e.g. `ko-Latn`). Both community pages label sections in
+English, so header matching is exact-key and needs no `HEADER_WORDS` entry.
+Songs the artist sings in English get their normal page and `en_slug = None`.
+Expect more manual-pass work than a same-script pair: the two community
+transcriptions diverge more in section structure and line granularity.
+
 Runtime: the scripts are a [uv](https://docs.astral.sh/uv/) project;
 `uv run <script>.py` resolves the `pyproject.toml` deps (beautifulsoup4, rapidfuzz)
 with no venv management. `site/app.js` is plain browser JS; to syntax-check it without
@@ -84,6 +93,10 @@ node, `gjs` works on GNOME boxes (see gotchas).
    to exact-key matching), align the key sequences with `difflib.SequenceMatcher`,
    pair lines by position inside matched sections, and consume translation lines in
    order across divergent stretches, appending leftovers rather than dropping them.
+   Two repairs cover sections that exist on only one page (verified on btsmonaco2026):
+   leftover translation lines first fill untranslated originals at the tail of the
+   previous section, and a matched section's surplus translation lines are carried
+   into a following unmatched stretch (the translation page merged two sections).
    New language? Add its header vocabulary to `HEADER_WORDS` in the assets copy too,
    so the next project inherits it.
 
@@ -163,3 +176,8 @@ that collapses repeated sections when reading on genius.com itself.
 - No JS runtime for checking generated app.js? `gjs` is often present on GNOME boxes:
   a run that only fails with "document is not defined" proves the syntax is fine.
 - Genius is fine with plain curl but only with a browser User-Agent; the search API too.
+- Some Genius pages prefix every lyrics line with invisible format characters
+  (U+200E left-to-right marks on BTS romanizations), silently breaking header and
+  blank-line detection; `extract_lines()` strips them (the `INVISIBLE` table).
+- An override mapping a line to `""` clears a wrong automatic pairing on a line
+  that needs no translation (e.g. an English ad-lib inside a Korean verse).
