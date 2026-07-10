@@ -245,10 +245,13 @@ def section_classes(merged: list[Section], slug: str) -> list[str]:
 
 def song_body(num, slug) -> str:
     """The lyrics of one song as HTML sections, translations merged in."""
-    orig_lines = extract_lines(RAW / f"{num}_{slug}.{LANG}.html")
+    orig_path = RAW / f"{num}_{slug}.{LANG}.html"
+    en_path = RAW / f"{num}_{slug}.en.html"
+    orig_lines = extract_lines(orig_path)
     en_lines = None
-    if (RAW / f"{num}_{slug}.en.html").exists():
-        en_lines = extract_lines(RAW / f"{num}_{slug}.en.html")
+    # en_path == orig_path when the source language is English: no translation
+    if en_path != orig_path and en_path.exists():
+        en_lines = extract_lines(en_path)
     over = OVERRIDES.get(slug, {})
     parts = []
     if not orig_lines:
@@ -281,10 +284,12 @@ def song_body(num, slug) -> str:
 
 
 def genius_links(orig_slug, en_slug) -> str:
-    en_link = (
-        f' &middot; <a href="{GENIUS}{en_slug}">English translation</a>'
-        if en_slug else " &middot; no English translation on Genius"
-    )
+    if en_slug:
+        en_link = f' &middot; <a href="{GENIUS}{en_slug}">English translation</a>'
+    elif LANG == "en":
+        en_link = ""  # English-language concert: no translation page expected
+    else:
+        en_link = " &middot; no English translation on Genius"
     return f'<a href="{GENIUS}{orig_slug}">Genius</a>{en_link}'
 
 

@@ -1,7 +1,7 @@
 ---
 name: concert-study-sheet
 description: >
-  Build a bilingual lyrics study site for an upcoming concert: research the setlist,
+  Build a lyrics study site for an upcoming concert (bilingual when the artist does not sing in English): research the setlist,
   resolve Genius original + English-translation pages, scrape and merge them line by line,
   and emit a local HTML site plus a single self-contained file for the phone.
   Trigger on: "study sheet for <artist> concert", "setlist with lyrics",
@@ -23,6 +23,14 @@ copy it into the new project and fill in the data.
 It is a head start, not a turnkey run: every new artist/language needs the manual passes
 below (URL verification, translation overrides, header vocabulary, per-page quirks).
 A complete built example may still exist at `~/ephem/concerti/`.
+
+English-language artist (verified on brunomars2026): the pipeline degrades cleanly
+to a monolingual site. Set `lang: "en"` and `en_slug = None` for every song;
+the translation search (step 2), the merge (step 5) and the overrides pass (step 6)
+all become no-ops and `overrides.json` stays empty.
+The code handles the two edge cases this mode hits: `song_body()` guards the
+orig/translation path collision (both resolve to `NN_slug.en.html` when lang is en)
+and `genius_links()` drops the "no English translation" note when `LANG == "en"`.
 
 Runtime: the scripts are a [uv](https://docs.astral.sh/uv/) project;
 `uv run <script>.py` resolves the `pyproject.toml` deps (beautifulsoup4, rapidfuzz)
