@@ -12,6 +12,7 @@ Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when r
 - Do not format md files by wrapping text to a certain line length;
   add newlines on logical breaks, even within paragraphs or bullet points, eg after a period/semicolon or between clauses.
   This file is a sample of this style.
+- Spellcheck false positives: if a vscode extension reports a misspelling for a technical term, or for a british/american spelling difference, add the term to the repo's `.vscode/settings.json` `"cSpell.words"` list to silence it in the future.
 
 ## Working conventions
 
