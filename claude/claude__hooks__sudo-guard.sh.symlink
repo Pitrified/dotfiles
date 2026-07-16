@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# PreToolUse hook (Bash matcher): block sudo when it cannot work.
+#
+# Claude's shell has no TTY, so sudo cannot prompt for a password. When
+# passwordless sudo is unavailable, running sudo only produces a confusing
+# failure; this hook denies the call and points the model at the sudo-handoff
+# skill (hand the command to the user's own terminal with tee logging).
+#
+# Allows the call when:
+#   - the command has no sudo as a command word, or
+#   - `sudo -n true` succeeds (NOPASSWD or cached credentials).
+# Known false positive: sudo quoted inside a string still matches; the deny
+# message tells the model to rephrase in that case.
+
+input="$(cat)"
+
+if command -v jq >/dev/null 2>&1; then
+    cmd="$(printf '%s' "$input" | jq -r '.tool_input.command // empty' 2>/dev/null)"
+else
+    cmd="$(printf '%s' "$input" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("tool_input",{}).get("command",""))' 2>/dev/null)"
+fi
+
+[ -n "$cmd" ] || exit 0
+
+# sudo as a command word: start of line or preceded by a non-word character
+printf '%s\n' "$cmd" | grep -qE '(^|[^[:alnum:]_./-])sudo([[:space:]]|$)' || exit 0
+
+# passwordless sudo works: let it through
+sudo -n true 2>/dev/null && exit 0
+
+cat >&2 <<'MSG'
+sudo blocked: this shell has no TTY for the password prompt and passwordless
+sudo is unavailable, so the command cannot work. Do not retry it or attempt a
+workaround (no sudo -S, no su). Follow the sudo-handoff skill instead: hand the
+command to the user to run in their own terminal, appending
+`2>&1 | tee ~/handoff-logs/<NN><letter>-<slug>.log`, then verify from the log.
+(If sudo only appeared inside a quoted string here, rephrase the command to
+avoid the word and re-run.)
+MSG
+exit 2
