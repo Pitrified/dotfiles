@@ -28,13 +28,32 @@ Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when r
 
 Depth over speed - the skipped steps below are what turn a quick change into a bug.
 
-- Read before you act: open the actual file before answering about it or editing it; never speculate about code you have not read.
-- Fix the cause, not the symptom: trace a bug to its root before patching; if you must apply a workaround, say so and name what the real fix would be.
+- Read before you act: open the actual file before answering about it or editing it;
+  never speculate about code you have not read.
+- Fix the cause, not the symptom: trace a bug to its root before patching;
+  if you must apply a workaround, say so and name what the real fix would be.
 - Search before adding: look for the existing pattern, helper, or file first, and edit the real one rather than creating a parallel/ghost version - duplication is the common failure.
 - Verify before you call it done: run the relevant test/build/lint and report the result; "looks done" is not done.
 - When unsure, research before you guess: check the codebase, the docs, and the web to resolve the question rather than inventing an interpretation.
 - When research cannot resolve it, say so and state the assumption you are proceeding on; "I don't know" is a valid answer.
 - For non-trivial changes, review your own diff in a fresh pass before declaring completion, judging the result not the reasoning that produced it.
+
+## Simplicity
+
+Build for the requirement at hand, not for hypothetical inputs, callers, or futures.
+
+- Before adding something new, check whether it needs to exist at all;
+  if the need is speculative rather than real, skip it and say so in one line.
+- Search the codebase for an existing helper, util, type, or pattern before writing a new one;
+  reuse it instead of adding a parallel version. Duplication is the common failure, not verbosity.
+- Extra validation, abstraction layers, config knobs, and generality all need a real case that demands them;
+  if none exists, the direct version is correct.
+- Simplicity does not excuse skipping: input validation at trust boundaries, error handling
+  that prevents data loss, security, accessibility, or anything explicitly requested.
+- When a simplification cuts a real corner with a known ceiling
+  (a lock instead of a queue, an O(n^2) scan, a heuristic instead of the full solution),
+  say so and name the ceiling and the upgrade path, do not present it as finished silently.
+- Prefer clear, readable code over clever or compressed one-liners; shorter is not automatically simpler.
 
 ## Per-repo instructions
 
