@@ -1,5 +1,12 @@
 # Git checker
 
+## Helpers
+
+* `git_remote_swap` (`remote_swap.bash`):
+    toggle the `origin` remote transport between https and ssh (github only).
+    Run it inside a repo; it prints old -> new and shows `git remote -v`.
+    Non-github remotes are left untouched.
+
 ## RATIONALE 
 
 * Every repo in repos folders must be checked.
