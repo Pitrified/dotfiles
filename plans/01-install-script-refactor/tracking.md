@@ -47,6 +47,8 @@ clear the fix isn't a vim-specific concern. Background in
 | 3  | Reorder `bootstrap` to install `uv` before cloning dotfiles | [`03_bootstrap_install_uv_first.md`](03_bootstrap_install_uv_first.md)         | done    |
 | 4  | Move `install.py` into `install/` with a minimal `pyproject.toml` | [`04_restructure_install_subfolder.md`](04_restructure_install_subfolder.md) | done    |
 | 5  | Test coverage for target-path/nesting logic                | [`05_add_tests.md`](05_add_tests.md)                                          | done    |
+| 6  | Clean up untracked leftovers in the `bootstrap` repo       | [`06_bootstrap_repo_cleanup.md`](06_bootstrap_repo_cleanup.md)                | done    |
+| 7  | Migrate the exa aliases to eza                             | [`07_exa_to_eza_migration.md`](07_exa_to_eza_migration.md)                    | done    |
 
 Status values: draft / planned / in progress / done / superseded / discarded.
 
@@ -207,3 +209,43 @@ Status values: draft / planned / in progress / done / superseded / discarded.
   inside themselves, but `__pycache__/` doesn't get that treatment and
   showed up untracked after running pytest. Nothing committed - left
   for the user to review. This closes out all 5 phases of the plan.
+- 2026-07-18 : added phases 6-7 (planned, not implemented) after the
+  user flagged `~/bootstrap`'s dirty working tree. Investigated the
+  untracked files: `exa-linux-x86_64-v0.10.1.zip` + `bin/`/
+  `completions/`/`man/` are a duplicate of the manual exa install that
+  also lives in `~/setup_bootstrap/` (the intended download dir) - run
+  once from the wrong cwd; `bin/exa` is byte-identical to the installed
+  `~/.local/bin/exa` v0.10.1. `t.sh` is a 2-line scratch duplicating
+  `install_tools.sh`'s `mkdir/cd ~/setup_bootstrap`; `install_backup.sh`
+  is a markdown note holding one rclone mount command. Also found that
+  `install_tools.sh` now installs `eza` (exa's maintained fork) while
+  `dotfiles/bash/aliases_exa.bash` still calls `exa` - a fresh box would
+  get broken aliases; this box only works via the stale manual binary.
+  Phase 6 deletes the leftovers and keeps the rclone note; phase 7
+  installs eza via the real bootstrap path, renames the aliases to eza,
+  and removes `~/.local/bin/exa`. The user resolved the open decisions
+  in-file: `install_backup.sh` becomes a clean rclone install script
+  with a `README.md` bullet; no `.gitignore` (future messes should be
+  visible and fixed, not ignored); no `exa=eza` compat alias (`le`/`lt`
+  are the muscle-memory entry points).
+- 2026-07-18 : implemented phases 6 and 7. Phase 6: deleted the exa zip,
+  `bin/`/`completions/`/`man/`, and `t.sh` from `~/bootstrap`; rewrote
+  `install_backup.sh` as a clean rclone install script keeping the
+  mount command as a comment; added the `install_backup` bullet to
+  `README.md` and flipped `install_tools`'s `exa` bullet to `eza`.
+  Phase 7: installed eza 0.23.5 from the gierens apt repo via
+  sudo-handoff (Claude's shell has no TTY for the password; commands run
+  by the user, verified from `~/handoff-logs/07a-07f`). `git mv`'d
+  `bash/aliases_exa.bash` to `bash/aliases_eza.bash` with `exa` → `eza`
+  throughout. Hit the predicted stale-environment snag in a new place:
+  the aliases still didn't load because `~/.bash_aliases` is
+  *generated* by `install.py` with per-file paths, and its `[ -f ... ]`
+  guard silently skipped the renamed file - reran `install.py` to
+  regenerate it, aliases then resolved. Verified `le`/`lt` exit 0 in a
+  fresh interactive shell and the full tree flag set
+  (`--long --git --all --tree --level --ignore-glob`) directly against
+  eza. Removed `~/.local/bin/exa`; `which exa` finds nothing. Remaining
+  `exa` mentions are only `colors_wsl.md`'s historical build notes, per
+  plan. `~/bootstrap` git status now shows only the intended changes
+  (`README.md` modified, clean `install_backup.sh` untracked); commits
+  left to the user. `~/handoff-logs/` can be deleted.
