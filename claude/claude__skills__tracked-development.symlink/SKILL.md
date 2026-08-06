@@ -61,26 +61,46 @@ the phases were derived from.
 #### Open questions convention
 
 Questions are numbered `Q1`, `Q2`, ... and numbering never resets - a later
-batch continues where the previous one stopped. Each question ships with an
-`ANS: ...` placeholder line so the user can answer by editing the file directly:
+batch continues where the previous one stopped. Each question carries the
+context needed to answer it cold, lettered options where there is a real choice,
+a recommendation, and an empty `NEW_ANS:` slot for the user to type into:
 
 ```markdown
 - Q1: <the question, with enough context to answer it cold>
-  ANS: ...
-- Q2: <question>
-  ANS: ...
+  a. <option>
+  b. <option>
+  Recommended: a, because <the reason, in one line>.
+  NEW_ANS:
+- Q2: <question, where the answer is open rather than a choice>
+  NEW_ANS:
 ```
 
-The loop: the user fills in `ANS:` lines (in the file or in chat), then the
-answers get **folded in** - update the decisions, phases, and sub-plans that the
-answer affects. Do not delete the answered questions: the Q + ANS pairs stay in
-the file as the decision record (ADR); they explain why the plan has its shape.
-Only fold in, never rewrite an existing answer.
+The recommendation goes **above** the answer slot, so the cheapest possible
+reply is a single letter and the reasoning is in front of the user at the moment
+they decide. It stays in the file whether or not it was taken: a question where
+the user overrode the recommendation then reads as a decision rather than as an
+unexplained choice.
+
+Two tags, and the difference is the point:
+
+- `NEW_ANS:` is an answer the assistant has not processed yet.
+- `ANS:` is an answer already folded into the plan.
+
+The loop: the user fills in `NEW_ANS:` lines (in the file or in chat), then
+`grep -n NEW_ANS` finds exactly the new batch - not the forty already settled -
+and each one gets **folded in**, updating the decisions, phases, and sub-plans
+it affects. As the last step of folding a batch in, demote its `NEW_ANS:` tags
+to `ANS:`. That clears the grep for the next round. A start file mid-planning
+holds a mix of both; a settled one holds only `ANS:`.
+
+Do not delete the answered questions: the Q + ANS pairs stay in the file as the
+decision record (ADR); they explain why the plan has its shape. Only fold in,
+never rewrite an existing answer.
 
 New questions that surface while folding in (or later in the work) are appended
 as a new batch *after* the answered ones, continuing the numbering (`Q5`,
-`Q6`, ...), each with a fresh `ANS: ...` placeholder. Whenever iterating on the
-plans, reread the md files and incorporate any user edits found there.
+`Q6`, ...), each with a fresh `NEW_ANS:` slot. Whenever iterating on the plans,
+reread the md files and incorporate any user edits found there.
 
 ### `tracking.md` - the index
 
@@ -197,8 +217,8 @@ this shape:
 
 1. **Bootstrap.** Create the folder and `00_start.md`. Capture the idea,
    analysis, decisions, and open questions. Surface real open questions to the
-   user rather than guessing, as numbered `Qn` items with `ANS: ...`
-   placeholders; fold answers in per the open questions convention.
+   user rather than guessing, as numbered `Qn` items with a recommendation and a
+   `NEW_ANS:` slot; fold answers in per the open questions convention.
 2. **Derive phases.** Break the work into sequential, bounded phases - each with
    clear goals, an out-of-scope boundary, and a verifiable "Done when". Prefer
    the cheapest/lowest-risk phase first. Write `tracking.md` with the phases
