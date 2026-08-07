@@ -7,6 +7,9 @@ description: >-
   frontmatter. Use whenever work spans several phases or sessions, or when the
   user asks for "tracked development", a "phased plan", a "tracking file", a
   "plan folder", or to keep a long effort organized across context windows.
+  Also covers reviewing a plan before executing it: verifying its claims against
+  the system, checking consistency, bloat, pitfalls and anti-patterns, and
+  add/remove passes.
 ---
 
 # Tracked development
@@ -42,6 +45,7 @@ Naming:
 - `00_start.md` sorts first, ahead of any phase (it is prose, not a phase).
 - Phase sub-plans use `NN_feat_name.md` with a zero-padded number and
   `snake_case` name, so they sort in execution order.
+- A folder holds roughly five sub-plans. Past that, the work might be two features, assess.
 
 ## The three file roles
 
@@ -101,6 +105,9 @@ New questions that surface while folding in (or later in the work) are appended
 as a new batch *after* the answered ones, continuing the numbering (`Q5`,
 `Q6`, ...), each with a fresh `NEW_ANS:` slot. Whenever iterating on the plans,
 reread the md files and incorporate any user edits found there.
+
+Review findings use this same mechanism rather than one of their own - see
+"Reviewing a plan" below.
 
 ### `tracking.md` - the index
 
@@ -179,16 +186,69 @@ Context: [`00_start.md`](00_start.md)[, depends on [`0M_...md`](0M_....md)].
 
 - <verifiable exit criterion>
 - <e.g. the project's verification suite passes>
+
+## What the implementation found
+
+<what only appeared once the code ran; absent until then>
 ```
 
-## Spin-off features
+The last section is written after the phase runs, and only if there is
+something to say: what the code showed that the plan could not. Everything
+above it stays as written. A finding that needs fixing becomes a new step.
 
-Work that surfaces mid-effort but does not belong to the current feature's
-scope (a side-finding, a "while we are at it", a deferred capability) becomes a
-**new sibling feature folder**, not an extra phase. Create the next-numbered
-folder with a minimal `00_start.md` at `status: draft` frontmatter: a short
-note on what it is and where it came from, linking back to the originating
-feature's `00_start.md` for reference.
+## Reviewing a plan
+
+Review a phase without waiting to be asked, at three points: when its sub-plans
+are written, as the first act of executing it, and when it looks finished. The
+third run is where defects in what was just built show up, so run it even when
+the phase passed its own tests.
+
+Five questions:
+
+- **claims** - the plan asserts things about the system. Pick the assertions
+  that look shaky and would change the plan if they were wrong, and check those.
+  Judgement, not an audit.
+- **consistency** - do the goals, tables and steps agree with each other?
+  do the plans contradict each other?
+- **bloat** - what is structure for its own sake, or generality with no case?
+- **pitfalls** - what could go wrong during execution that the plan does not mention?
+- **anti-patterns** - a proxy standing in for the real check, a second
+  implementation of something that already exists, a tool that measures
+  something it is part of. general good coding practices.
+
+Correct a wrong claim in the plan itself: these are living documents, and each
+should keep stating what *will* be done. Split or merge phases when reality has
+diverged further than an edit can cover. Anything that is not a correction is a
+finding.
+
+Log the review, including when it found nothing.
+
+### Add/remove - when the plan feels finished
+
+Propose exactly five things to add and three to remove, with a pro, a con and a
+recommendation for each, in chat only, nothing written. An open invitation to
+improve a plan only ever grows it; the quota to cut three forces a defence of
+what is already there.
+
+### What a review produces
+
+Findings. Write each as a numbered `Qn` in the open questions of `00_start.md`,
+with its recommendation and a `NEW_ANS:` slot, and let the normal fold-in loop
+apply them, so agreeing to a finding and applying it stay separate steps.
+
+## Work that surfaces mid-effort
+
+Reviews and implementations both turn up work that is not the step at hand.
+Where it goes depends on whether it is in scope.
+
+**In scope: the next numbered step.** A real defect gets its own sub-plan.
+Fixed in passing inside another step, it leaves no record that it existed.
+
+**Out of scope: a sibling feature folder.** A side-finding, a "while we are at
+it", a deferred capability - not an extra phase in this one. Create the
+next-numbered folder with a minimal `00_start.md` at
+`status: draft` frontmatter: a short note on what it is and where it came from,
+linking back to the originating feature's `00_start.md` for reference.
 
 Keep the scopes independent: the spin-off must be executable on its own later,
 and the originating feature must not depend on it. The originating feature
@@ -215,10 +275,9 @@ is part of the history. Note the reason at the top of the body.
 When asked to start tracked work, or partway through work that has grown into
 this shape:
 
-1. **Bootstrap.** Create the folder and `00_start.md`. Capture the idea,
-   analysis, decisions, and open questions. Surface real open questions to the
-   user rather than guessing, as numbered `Qn` items with a recommendation and a
-   `NEW_ANS:` slot; fold answers in per the open questions convention.
+1. **Bootstrap.** Create the folder and `00_start.md`. Capture the idea, the
+   analysis and the decisions, and raise the real open questions rather than
+   guessing, per the open questions convention above.
 2. **Derive phases.** Break the work into sequential, bounded phases - each with
    clear goals, an out-of-scope boundary, and a verifiable "Done when". Prefer
    the cheapest/lowest-risk phase first. Write `tracking.md` with the phases
@@ -226,10 +285,12 @@ this shape:
 3. **Write a sub-plan per phase** (`NN_feat_name.md`) with `status:` frontmatter.
    It is fine to detail near-term phases fully and leave later ones as `draft`.
 4. **Execute a phase.** Set its status to `in progress` in both the frontmatter
-   and the table. Do the work.
-5. **Close a phase.** When "Done when" is verified, set status to `done` in both
-   places, and **append a dated line to the Log** describing what was actually
-   done (including experiments tried, even ones that failed - they are findings).
+   and the table. **Review the plan before writing any code** (see "Reviewing a
+   plan"), correcting it where it turns out to be wrong. Then do the work.
+5. **Close a phase.** When "Done when" is verified, review the phase once more,
+   set status to `done` in both places, and **append a dated line to the Log**
+   describing what was actually done (including experiments tried, even ones
+   that failed - they are findings).
 6. **Recover a session.** On a new session or after `/clear`, read `tracking.md`
    first, then `00_start.md`, then the sub-plan of the first non-`done` phase.
    The files, not the prior context, are the source of truth.
@@ -244,6 +305,8 @@ this shape:
 - Record what was *done and learned*, not what is *planned* (plans live in the
   sub-plans). A failed experiment is worth a line - it stops the next session
   repeating it.
+- A review gets a line whether or not it found anything; otherwise a checked
+  plan and an unchecked one look the same.
 
 ## Keeping it honest
 
@@ -251,5 +314,5 @@ this shape:
   drift, fix the files before continuing.
 - Update the files as part of the work, not as an afterthought - they are how
   the next session (or the user) understands where things stand.
-- These are living documents. Refine `00_start.md` and split or merge phases
-  when reality diverges from the original plan; record the change in the Log.
+- After editing a plan mid-effort, re-read the plans sequenced after it. An
+  upstream change can invalidate what comes downstream of it.
