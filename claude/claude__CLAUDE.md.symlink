@@ -7,7 +7,7 @@ Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when r
 
 - Never use em dashes (`--`, `---`, or Unicode `—`). Use a hyphen `-` or rewrite the sentence.
 - Prefer clear, specific writing over filler.
-  Avoid hype adjectives/adverbs (bold, brutal, honest, quietly, seamless, ...) that add tone but no information;
+  Avoid hype adjectives/adverbs/verbs (bold, brutal, honest, quietly, seamless, bites, ...) that add tone but no information;
   cut them or state the concrete fact instead. Headers are plain labels, no parentheticals.
 - Do not format md files by wrapping text to a certain line length;
   add newlines on logical breaks, even within paragraphs or bullet points, eg after a period/semicolon or between clauses.
