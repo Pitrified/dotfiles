@@ -30,6 +30,7 @@
       "Read(**/.env)"
     ]
   },
+  "cleanupPeriodDays": 365,
   "model": "opus[1m]",
   "effortLevel": "medium",
   "theme": "auto",
