@@ -37,17 +37,35 @@ Seven memories across six projects.
 
 ### 1. Background jobs and watchers
 
-The new rule. Three sightings: `snap_fit` 2026-07-26 (watchers armed on a success string polled for
+The new rule. Four sightings: `snap_fit` 2026-07-26 (watchers armed on a success string polled for
 over 175 minutes after their jobs were killed, three times in one session, ten stragglers cleared at
 once; and a self-matching `pkill` killed its own shell mid-command, so edits chained after it
 silently never ran and the change looked applied); `house-renderer` 2026-09-13 (the same waits,
-written from scratch, correct only because the failure alternation happened to be there).
+written from scratch, correct only because the failure alternation happened to be there);
+`house-renderer` 2026-09-15, which is the one that adds a rule rather than repeating one.
+
+That fourth sighting: two `until` loops waiting on a pair of Cycles renders, **patterns correctly
+bracketed**, both polling for the rest of the session. `pgrep -f` reads the whole command line, and
+the loop's line went on to report:
+
+```sh
+until ! pgrep -f "[i]ncasso_black"; do sleep 20; done; ls renders/incasso_black.png
+```
+
+The `ls` at the end is an unbracketed match on the watcher itself. The renders had finished and been
+used; the watchers were found only because the user asked whether anything was still running. So the
+bracketing rule as written was followed and was not enough, which is exactly the kind of gap that
+justifies writing the reasons down beside the rules.
 
 Draft content, reasons kept attached because the bare rules read as superstition and get dropped:
 
 - **Bracket the first character of every `pgrep` and `pkill` pattern**: `pgrep -f "[m]y_script"`,
   never the bare name. Unbracketed, the pattern matches the shell running it: a `pgrep` watcher sees
   itself and never exits, a `pkill` kills its own shell.
+- **Bracketing the pattern is not enough if the rest of the line names the job.** `pgrep -f` reads
+  the whole command line, so a report chained after the loop - `; ls out/my_script.png` - is an
+  unbracketed match on the watcher itself and the loop never ends. Either bracket every occurrence,
+  or let the loop be the only thing on that line that names the job and report from a separate call.
 - **Put a kill in its own call.** Never chain work after a `pkill` in one command.
 - **Watch the process, not a success string.** `until ! pgrep -f "[m]y_script"; do sleep N; done`
   ends when the job ends, whatever happened to it.
@@ -130,6 +148,19 @@ Go session; these are about tool use rather than file types, and load unconditio
 past roughly 80 lines in one file and that the answer is to prune as much as you add.
 `~/.claude/CLAUDE.md` is at 65. So items 2 and 3 go in as a handful of lines, not paragraphs, and
 everything longer goes to its own `rules/` file, where the budget is per file.
+
+## Merged in
+
+`~/repos/plans/2026-09-15_00_watcher_self_match_rule.md` was written box-wide the day the fourth
+sighting happened, before this plan was found. Its content is folded in above and the file is
+deleted rather than left to disagree with this one: two notes about one rule is the same failure the
+plan is about. `~/repos/plans` keeps it in git history if anyone wants the original.
+
+What that note had and this one did not: the self-match-via-the-rest-of-the-line rule, the fourth
+sighting, and a short "if this becomes a skill" section. The last of those is the only part not
+carried over, because this plan already answers it - the rule goes to `~/.claude/rules/harness.md`,
+which loads unconditionally, and a skill is the heavier tool for something that needs to be in
+context before the mistake rather than invoked after it.
 
 ## Steps
 
