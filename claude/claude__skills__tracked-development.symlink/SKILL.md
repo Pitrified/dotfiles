@@ -9,7 +9,10 @@ description: >-
   "plan folder", or to keep a long effort organized across context windows.
   Also covers reviewing a plan before executing it: verifying its claims against
   the system, checking consistency, bloat, pitfalls and anti-patterns, and
-  add/remove passes.
+  add/remove passes. Ships scripts/plans.py, which lists and checks the numbered
+  plans/ folders of a repo: use it when asked what is in progress or what to work
+  on next, when spinning off or finishing a folder, when a plan file fails a
+  gate, or when two branches have claimed the same folder number.
 ---
 
 # Tracked development
@@ -29,13 +32,16 @@ overhead.
 ## Folder layout
 
 One folder per initiative. Each file is one concern.
+In a repo, the initiatives are numbered folders under `plans/`, one per feature:
+`plans/NN_name/`. The number is identity and creation order, not priority.
 
 ```
-<plan-folder>/
+plans/NN_name/
   00_start.md            # bootstrap: the idea, analysis, decisions, open questions
   tracking.md            # the index: phases table + append-only log (read this first)
   01_feat_name.md        # sub-plan for phase 1
   02_feat_name.md        # sub-plan for phase 2
+  02.1_feat_name.md      # side-document of phase 2: research or a capture, no status
   NN_feat_name.md        # ...one per phase
 ```
 
@@ -43,8 +49,12 @@ Naming:
 
 - All files use `snake_case`.
 - `00_start.md` sorts first, ahead of any phase (it is prose, not a phase).
-- Phase sub-plans use `NN_feat_name.md` with a zero-padded number and
-  `snake_case` name, so they sort in execution order.
+- Phase sub-plans are `NN_<name>.md` with a zero-padded number, so they sort in
+  execution order. `feat_name` is a placeholder: `03_checker_and_gate.md` is as
+  valid as `03_feat_checker.md`, and no tool reads the word `feat`.
+- `NN.M_<name>.md` is a side-document of phase NN: a research note, an analysis,
+  a capture. It carries no status and gets no row in the phases table.
+- Numbers are unique within a folder and need not be contiguous.
 - A folder holds roughly five sub-plans. Past that, the work might be two features, assess.
 
 ## The three file roles
@@ -59,8 +69,29 @@ The origin document. Free-form prose, not a checklist. It captures:
   shape of everything downstream),
 - open questions, following the convention below.
 
-This file is append-and-refine, not status-tracked. It is the reasoning record
-the phases were derived from.
+This file is append-and-refine: the reasoning record the phases were derived
+from. It is also the folder's identity card, so it opens with frontmatter that
+the script reads:
+
+```yaml
+---
+status: draft
+priority: 0
+description: |
+  Two or three lines saying what this feature is and why, readable by someone
+  who has not opened the folder. It is what a listing shows.
+depends_on: [20_repo_split]
+comment: |
+  anything worth keeping that has no field
+---
+```
+
+`status` is the folder's status, `priority` orders the listing (born at 0,
+bumped by one when it matters more, back to 0 when `done`). `depends_on` and
+`comment` are optional: the folders that must be done first, and freeform text
+nothing parses. The full schema and
+every rule the checker enforces are in
+[reference/frontmatter.md](reference/frontmatter.md).
 
 #### Open questions convention
 
@@ -109,6 +140,18 @@ reread the md files and incorporate any user edits found there.
 Review findings use this same mechanism rather than one of their own - see
 "Reviewing a plan" below.
 
+**Question numbers are local to the file that raised them.** A bare `(Q4)` in
+any other file is a broken reference; name the file, as
+`13_key_distribution/00_start.md` Q4.
+
+**Reopening a decision from a later folder.** Anything can be reopened on new
+evidence, including an answer in a folder that is already `done`. The later
+folder raises and answers the question in its own `00_start.md`. In the earlier
+file, the old answer stays as written and gets a note under it naming the file
+and question that reopened it and what changed; its `tracking.md` gets a log
+line saying which key decision is superseded. The done folder stays `done`:
+reopening a decision does not reopen its phases.
+
 ### `tracking.md` - the index
 
 The first file to read in any session - the map of the whole effort. It holds:
@@ -150,7 +193,7 @@ can be longer than a one-liner if relevant information is needed.
 - 2026-06-15 : phase 1 - froze the public API, defined the content layout; tests green
 ```
 
-### `NN_feat_name.md` - sub-plans
+### `NN_<name>.md` - sub-plans
 
 One per phase. Each starts with **frontmatter** carrying its status, then the
 plan for that phase. The status in the frontmatter and in the `tracking.md`
@@ -256,6 +299,18 @@ notes the spin-off in its decisions (and tracking key decisions) with a link,
 then stops mentioning it. A draft spin-off needs no `tracking.md` or phases
 until it is actually picked up.
 
+**Its number.** "Next-numbered" means next free across every branch, not in
+this checkout: a number is claimed the moment any branch creates the folder.
+Run `plans.py branches`, tell the person which numbers are taken and on which
+refs, and ask which to use. Two branches that each take `max + 1` on their own
+produce the collision one number along.
+
+**Links across branches.** Each feature is worked on its own branch (below), so
+a spin-off usually lives on a branch the originating folder is not on, and a
+relative link to it is broken there. Link within a branch; across branches,
+name the folder (`25_skill_to_dotfiles`, on `feat/25_skill_to_dotfiles`) and
+turn the name into a link once both are on the same branch.
+
 ## Status values (frontmatter `status:`)
 
 | Status        | Meaning                                                         |
@@ -270,6 +325,58 @@ until it is actually picked up.
 Keep `superseded` and `discarded` files in place - the record of a dropped path
 is part of the history. Note the reason at the top of the body.
 
+## Plans are a diary, docs are the as-is
+
+`plans/` records how a project got where it is; the project's docs record what
+it is now. A reader who needs to know why something is the way it is reads the
+docs, not a diary entry from four features ago.
+
+So nothing outside `plans/` points at a specific plan: no path to a plan folder
+or file, no `Qn`/`Dn` id, in code, comments, scripts or docs. When one of those
+needs to lean on a decision, the decision goes into the doc whose topic it is,
+and the citation points there. A decision with no obvious home means a missing
+doc, not an exception. `plans.py check --citations` enforces this.
+
+Meta files that describe the convention (a repo's agent instructions, a docs
+index) may describe the *shape*, such as `plans/<folder>/tracking.md`, but not
+point at an instance of it.
+
+## Branches and merging
+
+A feature folder is worked on a branch named after it, `feat/<NN_name>`, so the
+branch list sorts the way the plans do and a branch name answers what it is for
+with a folder to read.
+
+The merge is not part of finishing the feature. An effort ends with its last
+phase closed: sub-plan and table at `done`, a dated log line, the folder's
+`priority` back at 0. The branch then waits, because work found along the way
+often belongs on it. Merging is a separate decision, taken by a person who
+knows whether anything else is coming.
+
+## How a plan is written
+
+Plans keep the reasoning from being re-derived, not from being reopened.
+Reopening on new evidence is the plan working: record what changed and leave
+the previous answer visible rather than editing it away.
+
+- Write each point at the strength it has. "for now", "until the spike
+  reports", "unless X changes" are accurate about most choices and cost
+  nothing. Keep "never" and "hard requirement" for the few things that are
+  fixed. A line written as an absolute is read a month later as a deal breaker,
+  and then something obvious does not get tried.
+- Weight remarks by how they were made. An offhand comment is a signal, not an
+  instruction. When one would become a constraint, mark it provisional or ask
+  before promoting it.
+
+## The script
+
+`scripts/plans.py` in this skill's folder lists and checks the `plans/` tree of
+a repo, standard library only. The workflows it serves (what to work on next,
+spinning off, a number used twice, finishing a folder), how a repo adopts it,
+and how its copies are kept in step are in
+[reference/plans-script.md](reference/plans-script.md). Read that file before
+running it.
+
 ## Workflow
 
 When asked to start tracked work, or partway through work that has grown into
@@ -282,7 +389,8 @@ this shape:
    clear goals, an out-of-scope boundary, and a verifiable "Done when". Prefer
    the cheapest/lowest-risk phase first. Write `tracking.md` with the phases
    table (all `planned`/`draft`) and an empty Log.
-3. **Write a sub-plan per phase** (`NN_feat_name.md`) with `status:` frontmatter.
+3. **Write a sub-plan per phase** (`NN_<name>.md`) with `status:` frontmatter.
+   Set the folder's `00_start.md` to `in progress` when the first phase starts.
    It is fine to detail near-term phases fully and leave later ones as `draft`.
 4. **Execute a phase.** Set its status to `in progress` in both the frontmatter
    and the table. **Review the plan before writing any code** (see "Reviewing a
@@ -290,10 +398,13 @@ this shape:
 5. **Close a phase.** When "Done when" is verified, review the phase once more,
    set status to `done` in both places, and **append a dated line to the Log**
    describing what was actually done (including experiments tried, even ones
-   that failed - they are findings).
-6. **Recover a session.** On a new session or after `/clear`, read `tracking.md`
-   first, then `00_start.md`, then the sub-plan of the first non-`done` phase.
-   The files, not the prior context, are the source of truth.
+   that failed - they are findings). When the last phase closes, set the
+   folder's `00_start.md` to `done` and its `priority` back to 0.
+6. **Recover a session.** On a new session or after `/clear`, run
+   `plans.py list` first where the repo has the script: it is the roadmap across
+   folders, and there is no roadmap document. Then, for the folder being worked,
+   read `tracking.md`, then `00_start.md`, then the sub-plan of the first
+   non-`done` phase. The files, not the prior context, are the source of truth.
 
 ## Log conventions
 
