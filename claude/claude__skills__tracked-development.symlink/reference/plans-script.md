@@ -67,8 +67,8 @@ There is no roadmap document. This output is it.
 3. Create `plans/NN_name/00_start.md` with full frontmatter (`status: draft`, `priority: 0`, a
    `description` block) and the note of where the idea came from. A draft needs no `tracking.md` until
    it is picked up.
-4. Work on it in a branch named after it: `feat/<NN_name>`. Name, do not link, a folder that is on
-   another branch.
+4. Work on it in a branch named after it, `feat/<NN_name>`, cut from the default branch; its first
+   commit is the new `00_start.md`. Name, do not link, a folder that is on another branch.
 
 ### A number is used twice
 

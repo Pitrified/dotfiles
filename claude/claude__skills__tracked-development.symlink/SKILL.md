@@ -303,7 +303,9 @@ until it is actually picked up.
 this checkout: a number is claimed the moment any branch creates the folder.
 Run `plans.py branches`, tell the person which numbers are taken and on which
 refs, and ask which to use. Two branches that each take `max + 1` on their own
-produce the collision one number along.
+produce the collision one number along. The spin-off's `00_start.md` is first
+committed on its own branch, `feat/<NN_name>`, cut from the default branch, not
+on the originating folder's branch.
 
 **Links across branches.** Each feature is worked on its own branch (below), so
 a spin-off usually lives on a branch the originating folder is not on, and a
