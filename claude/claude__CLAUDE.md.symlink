@@ -20,6 +20,7 @@ Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when r
 - Raise descriptive, named exceptions rather than bare/generic ones, in any language.
 - Keep changes minimal and scoped to the task; do not refactor unrelated code.
 - Do not commit, push, or perform other outward-facing actions unless asked.
+- A message that visibly stops mid-sentence or mid-answer is partial: ask for the rest before acting on it, instead of guessing and spending a full turn on work.
 - Privileged commands: if `sudo -n true` fails, do not run or present sudo commands directly -
   follow the `sudo-handoff` skill (user runs them in their own terminal, teed to logs Claude verifies).
   A PreToolUse hook enforces the block; on that error, switch to the skill, do not retry.
