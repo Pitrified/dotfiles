@@ -98,16 +98,17 @@ every rule the checker enforces are in
 Questions are numbered `Q1`, `Q2`, ... and numbering never resets - a later
 batch continues where the previous one stopped. Each question carries the
 context needed to answer it cold, lettered options where there is a real choice,
-a recommendation, and an empty `NEW_ANS:` slot for the user to type into:
+a recommendation, and an empty `NEW_ANS:` slot for the user to type into.
+Keep it a clean bullet point:
 
 ```markdown
 - Q1: <the question, with enough context to answer it cold>
-  a. <option>
-  b. <option>
-  Recommended: a, because <the reason, in one line>.
-  NEW_ANS:
+  - a. <option>
+  - b. <option>
+  - Recommended: a, because <the reason, in one line>.
+  - NEW_ANS:
 - Q2: <question, where the answer is open rather than a choice>
-  NEW_ANS:
+  - NEW_ANS:
 ```
 
 The recommendation goes **above** the answer slot, so the cheapest possible
