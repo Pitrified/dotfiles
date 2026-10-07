@@ -35,6 +35,28 @@ Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when r
 Act when the plan is clear and validated by the user.
 Do not exceed the scope of the request.
 
+When in a planning phase, read whatever the plan needs and run whatever changes no state:
+the source, the docs, `git log` and other read-only git queries, a query against the project's own code,
+a check script, a scratch file of your own.
+That is planning rather than a probe, and skipping it is how a plan fills up with claims that are merely plausible.
+
+Two kinds of thing are deep probes, and both are negotiated beforehand rather than reported afterwards.
+
+A command that changes state outside the plan files, however cheap or quick it looks:
+a commit, a push to a bucket or a remote, a render in place or any other write over a tracked file,
+reaching into another machine over SSH for a quick check, a migration, a cleanup.
+Cost is not the test here. A commit takes an instant and is still not mine to make.
+
+A pass that changes no state but costs real machine time:
+more than about five minutes in total, or the same command run over more than a dozen inputs.
+A single query that takes a minute is planning. A sweep over the whole set is not.
+
+A deep probe is often exactly what would settle the open question, and it is still negotiated first.
+Name it in one line, or propose it in the plan being written as an open question, with what it touches and what it costs, then wait:
+"I can answer this by doing X, which writes Y and takes about Z".
+Approval for one probe is not approval for the next one.
+The planning phase ends when the user says to execute, not when the plan looks finished to me.
+
 ## Rigor
 
 Depth over speed - the skipped steps below are what turn a quick change into a bug.
