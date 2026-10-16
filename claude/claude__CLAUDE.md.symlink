@@ -28,6 +28,12 @@ Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when r
 - Privileged commands: if `sudo -n true` fails, do not run or present sudo commands directly -
   follow the `sudo-handoff` skill (user runs them in their own terminal, teed to logs Claude verifies).
   A PreToolUse hook enforces the block; on that error, switch to the skill, do not retry.
+- Shell chains fail closed: when a later step only makes sense if the earlier ones succeeded
+  (a commit, a push, a render or write over tracked files, a delete), start the chain with `set -euo pipefail`.
+  Put each step on its own line or join with `;`, never `&&`: `set -e` is ignored for every command of an `&&` list but the last, so a failure stops the list and the next line still runs.
+  Write a check whose normal "nothing found" is a non-zero exit so it fails only on a real problem (`grep -c ... || true`, then test the number).
+  Keep ordered steps in order in one chain, e.g. commit before pushing what the commit records.
+  Read-only chains (a `grep | head` to look at something) need none of this.
 
 ## Scope
 
