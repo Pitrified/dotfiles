@@ -27,6 +27,10 @@
 [init]
 	defaultBranch = main
 
+# a first `git push` on a new branch creates origin/<branch> and tracks it
+[push]
+	autoSetupRemote = true
+
 [merge "unityyamlmerge"]
 	name = Unity SmartMerge
 	driver = /home/pmn/Unity/Hub/Editor/6000.4.4f1/Editor/Data/Tools/UnityYAMLMerge merge -p %O %B %A %A
