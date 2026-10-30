@@ -1,4 +1,5 @@
 {
+  "cleanupPeriodDays": 365,
   "permissions": {
     "allow": [
       "Bash(ls:*)",
@@ -30,12 +31,7 @@
       "Read(**/.env)"
     ]
   },
-  "cleanupPeriodDays": 365,
   "model": "opus[1m]",
-  "effortLevel": "medium",
-  "theme": "auto",
-  "autoCompactEnabled": true,
-  "agentPushNotifEnabled": true,
   "hooks": {
     "PreToolUse": [
       {
@@ -48,5 +44,9 @@
         ]
       }
     ]
-  }
+  },
+  "effortLevel": "medium",
+  "theme": "auto",
+  "autoCompactEnabled": true,
+  "agentPushNotifEnabled": true
 }
