@@ -12,7 +12,7 @@ scripts/spin_worktree feat/NN_name
 creates the folder, runs that repo's installs, and gives the command that starts a second Claude session there, in its own zellij session with Remote Control on, so it shows up in the web UI.
 The session that ran the script keeps working in the main checkout.
 
-Status: planning. Nothing outside this note and the shellcheck note is written until the user says to execute.
+Status: executed 2026-10-30 through step 8.3; see "Execution log". Waiting on the user for the commits (step 7 and the house-renderer branch) and the step 8.4 test.
 
 ## Source material
 
@@ -83,6 +83,7 @@ House-renderer's own, stays in its `docs/worktrees.md` and its script:
   - **Trust is not a problem for a repo already trusted.** Claude records the trust answer on the main checkout's path, so a worktree of a trusted repo starts without the question. A repo never opened in Claude asks it in the pane, and the user answers it once, from the web UI or with `zellij attach`.
   - **Closing the zellij session ends Claude a few seconds later**, not at once; `kill-session` then `delete-session` is enough, nothing to kill by hand.
 - **Read-only main checkout, partly enforced.** The settings file from step 6 holds `permissions.deny` rules `Edit(//<main>/**)` and `Write(//<main>/**)`.
+  Changed at execution: `Edit(//<main>/**)` alone, since the docs say "`Edit` rules apply to all built-in tools that edit files"; the guard test below shows it stopping both the Edit tool and a Bash redirect.
   The docs: "Deny rules block in every mode, including `bypassPermissions`", and Edit deny rules cover the built-in file tools, the file commands Claude Code recognises in Bash (`sed`, `tee`, ...) and redirection targets.
   It is passed with `--settings` on the worktree session only, since a rule in `.claude/settings.local.json` would reach the main checkout's session too.
   Reads stay allowed; the PNG copy and `git` need them.
@@ -146,6 +147,17 @@ House-renderer's own, stays in its `docs/worktrees.md` and its script:
 - Remove `~/.claude/skills/worktrees` and revert the dotfiles commit.
 - In a repo that adopted it, revert the commit adding `scripts/spin_worktree`; worktrees already made by it are ordinary worktrees and close by the runbook.
 - `shellcheck`: the rollback line in its note.
+
+## Execution log
+
+- 2026-10-30 : step 3. `SKILL.md` and `scripts/spin_worktree` written. The template sets `set -Eeuo pipefail`: without `-E` the ERR trap does not fire inside `setup_repo`, found by the failing-setup test.
+- 2026-10-30 : step 4. Eleven scenarios against a throwaway repo with zellij stubbed, all as expected: new and existing feat branch, branch held by another worktree, existing folder, non-feat branch with and without a suffix, existing zellij session, long name cut to 64, no arguments, run from a subfolder, run from a worktree. No `CLAUDE*` variable reached `zellij attach`. A failing `setup_repo` stops before the launch and prints the remove command. `bash -n` and `shellcheck` clean.
+- 2026-10-30 : step 5. A real launch on the throwaway: the shell pane opens in the worktree, the Claude pane has no `CLAUDE*` variable and Remote Control on, the peer list shows `wt-repo-70-guard_check` (so `--name` works). The trust question showed, as expected for a repo never opened. The guard: asked by message to try, that session was denied an Edit-tool edit and a Bash `>>` on the main checkout's file and allowed one in its own folder; the files on disk agree.
+- 2026-10-30 : step 6. `~/.claude/skills/worktrees` linked; the skill shows in the skill list.
+- 2026-10-30 : step 8.1. `main` fast-forwarded to `feat/81_impianti_rooms` (`git fetch . feat/81_impianti_rooms:main`); the main checkout stays on `feat/81_impianti_rooms` with its uncommitted edit.
+- 2026-10-30 : step 8.2. `feat/87_spin_worktree` spun with the template (`REPO_SHORT=house`, empty setup) into `../house-renderer-87`; Claude started there with no trust question. The doc's hand steps run once: both `bucket-pull`s downloaded nothing, the copy brought the PNGs across.
+- 2026-10-30 : step 8.3. In the worktree: `scripts/spin_worktree` with house-renderer's `setup_repo`, core identical to the template; `docs/worktrees.md` cut to the house-specific rules, the wrong memory section gone. `shellcheck` clean, `make check` passed (750 tests). Not committed.
+- 2026-10-30 : renamed at the user's word. The skill `worktrees` is now `sibling-worktree` (`claude/claude__skills__sibling-worktree.symlink/`, linked as `~/.claude/skills/sibling-worktree`). The original checkout is called the main worktree, the added one a linked worktree, as the git-worktree manual names them; "main checkout" in this note is the same thing. Template and house-renderer copy re-checked: `shellcheck` clean, cores identical, the eleven scenarios pass, `make check` passed.
 
 ## Open questions
 
