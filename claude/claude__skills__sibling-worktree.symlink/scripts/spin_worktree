@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# Spin a worktree of this repository beside the main worktree, set it up, and
+# start a Claude session in it, in its own zellij session with Remote Control.
+#
+#   scripts/spin_worktree feat/NN_name         -> ../<repo>-NN
+#   scripts/spin_worktree <branch> <suffix>    -> ../<repo>-<suffix>
+#
+# Run from the main worktree. Prints the new folder on stdout; everything else
+# goes to stderr. The core below the line is the sibling-worktree skill's template
+# (~/.claude/skills/sibling-worktree/scripts/spin_worktree); REPO_SHORT and setup_repo
+# above it are this repository's.
+# -E: the ERR trap below also fires inside setup_repo.
+set -Eeuo pipefail
+
+# Short name in the session name, wt-<REPO_SHORT>-<NN>-<name>.
+REPO_SHORT=repo
+
+# This repository's setup, run from the new folder: installs, links to the main
+# worktree's gitignored secrets, copies of the ignored output the worktree needs.
+# $1 is the main worktree, $2 the new folder.
+setup_repo() {
+    :
+}
+
+# ---- core, refreshed from the skill's template --------------------------------
+
+# zellij refuses a session name whose socket path passes the Unix limit; 64 fits
+# under /run/user/<uid>/zellij/contract_version_1/.
+MAX_SESSION_NAME=64
+
+log() { echo "spin_worktree: $*" >&2; }
+die() {
+    log "$*"
+    exit 1
+}
+
+[[ $# -ge 1 && $# -le 2 ]] || die "usage: spin_worktree feat/NN_name | spin_worktree <branch> <suffix>"
+branch=$1
+command -v zellij >/dev/null || die "zellij is not on PATH"
+
+git_dir=$(git rev-parse --path-format=absolute --git-dir)
+common_dir=$(git rev-parse --path-format=absolute --git-common-dir)
+[[ $git_dir == "$common_dir" ]] || die "run from the main worktree, not from a linked worktree"
+main=$(git rev-parse --show-toplevel)
+
+if [[ $branch =~ ^feat/([0-9]+)_(.+)$ ]]; then
+    suffix=${2:-${BASH_REMATCH[1]}}
+    session="wt-$REPO_SHORT-${BASH_REMATCH[1]}-${BASH_REMATCH[2]}"
+else
+    [[ $# -eq 2 ]] || die "$branch is not feat/NN_name: give the folder suffix as a second argument"
+    suffix=$2
+    session="wt-$REPO_SHORT-$suffix"
+fi
+if ((${#session} > MAX_SESSION_NAME)); then
+    session=${session:0:MAX_SESSION_NAME}
+    log "session name cut to $session"
+fi
+
+folder="$(dirname "$main")/$(basename "$main")-$suffix"
+[[ ! -e $folder ]] || die "$folder exists"
+if zellij list-sessions --short --no-formatting 2>/dev/null | grep -qx "$session"; then
+    die "a zellij session $session exists"
+fi
+
+if git show-ref --verify --quiet "refs/heads/$branch"; then
+    held=$(git worktree list --porcelain |
+        awk -v b="branch refs/heads/$branch" '/^worktree /{w=substr($0, 10)} $0 == b {print w}')
+    [[ -z $held ]] || die "$branch is already checked out in $held"
+    git worktree add "$folder" "$branch" >&2
+else
+    # The local default branch: on a box that cannot push, it may be ahead of origin.
+    base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD) || base=main
+    git worktree add -b "$branch" "$folder" "${base#origin/}" >&2
+fi
+trap 'log "failed; $folder is left as it is: git worktree remove --force $folder"' ERR
+
+cd "$folder"
+setup_repo "$main" "$folder"
+
+# The worktree session's own settings, in the worktree's git dir: outside the
+# working tree, and removed with it. `//` makes the path absolute.
+settings="$(git rev-parse --path-format=absolute --git-dir)/claude-settings.json"
+cat >"$settings" <<EOF
+{
+  "permissions": {
+    "deny": ["Edit(/$main/**)"]
+  }
+}
+EOF
+
+# A zellij server hands its own environment to every pane, so the variables of
+# the Claude session running this script are dropped before it starts.
+unset_claude=()
+while IFS= read -r var; do
+    unset_claude+=(-u "$var")
+done < <(compgen -e | grep '^CLAUDE' || true)
+env "${unset_claude[@]}" zellij attach --create-background "$session" >&2
+zellij --session "$session" run --cwd "$folder" --name claude -- \
+    claude --name "$session" --remote-control "$session" --settings "$settings" >&2
+
+log "Claude session $session, in the web UI and the peer list under that name"
+echo "$folder"
