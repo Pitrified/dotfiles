@@ -12,7 +12,7 @@ scripts/spin_worktree feat/NN_name
 creates the folder, runs that repo's installs, and gives the command that starts a second Claude session there, in its own zellij session with Remote Control on, so it shows up in the web UI.
 The session that ran the script keeps working in the main checkout.
 
-Status: executed 2026-10-30 through step 8.3; see "Execution log". Waiting on the user for the commits (step 7 and the house-renderer branch) and the step 8.4 test.
+Status: done 2026-10-31; see "Execution log". `feat/87_spin_worktree` in house-renderer waits on the user's merge.
 
 ## Source material
 
@@ -158,6 +158,9 @@ House-renderer's own, stays in its `docs/worktrees.md` and its script:
 - 2026-10-30 : step 8.2. `feat/87_spin_worktree` spun with the template (`REPO_SHORT=house`, empty setup) into `../house-renderer-87`; Claude started there with no trust question. The doc's hand steps run once: both `bucket-pull`s downloaded nothing, the copy brought the PNGs across.
 - 2026-10-30 : step 8.3. In the worktree: `scripts/spin_worktree` with house-renderer's `setup_repo`, core identical to the template; `docs/worktrees.md` cut to the house-specific rules, the wrong memory section gone. `shellcheck` clean, `make check` passed (750 tests). Not committed.
 - 2026-10-30 : renamed at the user's word. The skill `worktrees` is now `sibling-worktree` (`claude/claude__skills__sibling-worktree.symlink/`, linked as `~/.claude/skills/sibling-worktree`). The original checkout is called the main worktree, the added one a linked worktree, as the git-worktree manual names them; "main checkout" in this note is the same thing. Template and house-renderer copy re-checked: `shellcheck` clean, cores identical, the eleven scenarios pass, `make check` passed.
+- 2026-10-31 : step 7. Dotfiles committed (the skill, then this note). House-renderer's adoption committed on `feat/87_spin_worktree`, not merged.
+- 2026-10-31 : step 8.4. From the main worktree, the committed script spun `test/spin_check` into `../house-renderer-spintest`: both pulls, `uv sync`, the `.r2.env` link, every PNG copied, the guard settings, Claude with Remote Control as `wt-house-spintest`. The hand-off prompt sent to it arrived, and its reply showed the main worktree's memory directory and `MEMORY.md` loaded. Closed by the runbook: session killed and deleted, worktree removed, branch deleted.
+- 2026-10-31 : removed at the user's word: the throwaway repos and the `wt-repo-70-guard_check` session, and the `../house-renderer-87` worktree with its session, which the user does not need; `feat/87_spin_worktree` keeps the commit. Transcripts kept.
 
 ## Open questions
 
