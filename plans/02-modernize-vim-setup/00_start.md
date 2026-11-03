@@ -255,3 +255,18 @@ Settled with the user on the phase 3 Plan draft.
 32. **`<leader>fs` on `~/snippet`?** → **Dropped**.
 33. **flash `char` mode?** → **On**, flash's default: `f`/`t`/`F`/`T` highlight their targets, work across lines and repeat with `f`/`t`, with labels when needed.
     Rejected: off (native `f`/`t`/`;`/`,`, as with easymotion, which never touched them).
+
+## Phase 4 decisions - resolved 2026-11-03
+
+Settled with the user on the phase 4 Plan draft.
+
+34. **Tools on this box now?** → **Yes**: basedpyright (`uv tool`), gopls (`go install`), lua-language-server (release tarball under `~/.local/opt`), nodejs, npm and shfmt from apt, bash-language-server from npm with `--prefix ~/.local`.
+    System note `~/repos/plans/2026-11-03_03_lsp_servers.md`. Phase 5 reuses the same choices for `~/bootstrap`.
+35. **basedpyright strictness?** → **`typeCheckingMode = "standard"`**; projects can raise it in `pyproject.toml`.
+    Rejected: basedpyright's default `recommended` (flags missing annotations, `Any` and more; the old setup had no type checker).
+36. **Snippet keys?** → `<C-j>` jumps forward in a snippet, else accepts the selected item; `<C-p>` jumps back in a snippet, else selects the previous item. The rest of blink's default preset stays.
+37. **The own snippets?** → **All 8 dropped** after the user's review: `~/repos` has 232 Python files on loguru, 2 on stdlib `logging`, none with the snippets' logger, `fmt_cn`, `Observable` or `ty.Dict`/`ty.List` patterns; `varflog` is Python's `{name=}`; friendly-snippets and gopls cover the Go method.
+    No `snippets/` folder and no `<leader>ue`. Rejected: porting them; a single loguru `logger.debug` snippet.
+38. **Diagnostics on screen?** → virtual text on, signs in the number column, `severity_sort`, an `E2 W1` count in the statusline, no location list opening by itself (`<leader>bs` fills it).
+39. **blink's fuzzy matcher?** → the prebuilt Rust binary, checked against the release's `.sha256`, with `prefer_rust_with_warning`.
+    Rejected: `lua` (no download, but no typo resistance or frecency).

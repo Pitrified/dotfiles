@@ -36,7 +36,7 @@ Analysis, inventory, and the decisions behind this scope are in
 | 1  | Resolve open questions & decisions                    | [`01_resolve_decisions.md`](01_resolve_decisions.md)               | done   |
 | 2  | Scaffold the Neovim config (init.lua, lazy.nvim boot) | [`02_scaffold_neovim_config.md`](02_scaffold_neovim_config.md)     | done   |
 | 3  | Migrate plugins + delete dead mappings                | [`03_migrate_plugins.md`](03_migrate_plugins.md)                   | in progress |
-| 4  | LSP, diagnostics & completion setup                   | [`04_lsp_and_completion.md`](04_lsp_and_completion.md)             | draft  |
+| 4  | LSP, diagnostics & completion setup                   | [`04_lsp_and_completion.md`](04_lsp_and_completion.md)             | in progress |
 | 5  | Modernize the install script for Neovim               | [`05_modernize_install_script.md`](05_modernize_install_script.md) | draft  |
 | 6  | Docs, migration guide, remove `vim.symlink`           | [`06_docs_cleanup.md`](06_docs_cleanup.md)                         | draft  |
 
@@ -123,3 +123,30 @@ out on 2026-07-02, see Log).
   Python folds: treesitter's foldexpr wins over `folding.vim` (the autocmd runs after the ftplugin); `GetFold` stays defined for the comparison.
 - 2026-11-03 : the user installed ripgrep 15.1.0 and fd-find 10.3.0 (log `~/handoff-logs/10a-apt-ripgrep-fd.log`); `/usr/bin/rg`, `/usr/bin/fdfind`, `~/.local/bin/ruff` resolve; fzf-lua's checkhealth finds `rg` and `fdfind`.
   Phase 3 waits on the user's manual checks and the python fold choice.
+- 2026-11-03 : the user cannot run phase 3's manual checks for now and asked to go on; phase 3 stays `in progress` until they are done.
+  Drafted phase 4's Plan section from the nvim-lspconfig configs, the blink.cmp docs and its v1.10.2 source (the prebuilt matcher is checked against the release's `.sha256`), lazydev, and 0.12's headless diagnostic and LSP-mapping defaults.
+  The "0.12 blink shows no LSP completions" report turned out to be a `vim.pack` setup mistake, so no workaround is planned.
+  Six open questions in the plan: tools now, basedpyright strictness, the `<C-j>`/`<C-p>` snippet keys against blink's `<C-p>`, the own snippets, diagnostics on screen, blink's fuzzy matcher.
+- 2026-11-03 : user settled phase 4 questions 1, 2, 3, 5, 6 (decisions 34-36, 38, 39): tools now, basedpyright `standard`, the `<C-j>`/`<C-p>` keys, diagnostics on screen, the Rust matcher.
+  Question 4 (decision 37) waits on the user's review of the 8 own snippets.
+  Wrote the system note `~/repos/plans/2026-11-03_03_lsp_servers.md` and ran its unprivileged steps 1-4: basedpyright 1.40.2 (it brings its own node through `nodejs-wheel-binaries` 24.19.0), gopls v0.24.0 in `~/go/bin`, lua-language-server 3.19.2 (tarball sha256 matched) in `~/.local/opt`, working through the `~/.local/bin` symlink without a wrapper.
+  The apt `nodejs npm shfmt` install is handed to the user (log `11a-apt-node-shfmt.log`); bash-language-server follows it.
+  For the snippet review: `~/repos` has 232 Python files on `from loguru import logger`, 2 on `import logging`, none with the snippets' `logging.getLogger(f"c.`, `fmt_cn`, `Observable` or `ty.Dict`/`ty.List`.
+- 2026-11-03 : the user installed nodejs 22.22.1, npm 9.2.0 and shfmt 3.12.0 (log `~/handoff-logs/11a-apt-node-shfmt.log`, no `E:` lines); bash-language-server 5.8.1 installed with `npm --prefix ~/.local`, no `~/.npmrc` written.
+  All tools of the system note resolve and print their versions.
+  User dropped all 8 own snippets after the review (decision 37); step 5 (snippet JSON) removed from the plan.
+  Phase 4 is now `planned`.
+- 2026-11-03 : executing phase 4 on `master`.
+  New `lua/plugins/lsp.lua` (nvim-lspconfig, configs only; lazydev), `lua/plugins/blink.lua` (blink.cmp v1.10.2, friendly-snippets), `lua/config/diagnostics.lua`; shfmt in `conform.lua`; `gr` label in which-key; statusline count.
+  blink's prebuilt matcher matches the release asset's GitHub digest; my first headless run quit mid-download, which made the next start download again; a completed download stays put.
+  Changes from the plan:
+  the statusline count uses 0.12's `vim.diagnostic.status()` (`E:1 W:1`, redrawn on `DiagnosticChanged`) instead of an own helper;
+  blink's command-line completion is off, so `:` keeps the wildmenu setup from phase 2;
+  LSP Keyword items get `score_offset - 4`: blink ranks snippets 3 lower, so basedpyright's `for`/`try` keywords beat the friendly-snippets of the same name and `<C-j>` accepted the bare word.
+  Headless checks pass: all six servers attach (ruff + basedpyright, gopls, dartls, bashls, lua_ls); ruff F841 and no E501, basedpyright `standard` reports the type error; ruff hover off; `gd`; `<leader>bs` fills the location list and `]l` wraps; shfmt via `<leader>bb`; lua_ls resolves `vim.diagnostic` to the runtime with no diagnostics in the config; `os.pa` lists basedpyright items; `for` + `<C-j>` expands, `<C-j>`/`<C-p>` walk the placeholders; checkhealth: no errors (lazydev ships no health check; notes: gopls's `gotmpl` filetype is unknown to Neovim, ruff UTF-8 vs basedpyright UTF-16 position encodings); clean startup on none/py/go/dart/sh/lua/md.
+  Found: with an expr fold (treesitter or the old `GetFold`) and `foldlevel=0`, the inserted snippet lands in a closed fold, the placeholder selection covers the whole fold and typing replaces the whole snippet; correct with `foldlevel=99` or `nofoldenable`. Fix waits on the user.
+  Test artifacts: a swap file and blink's frecency data from my own runs, both removed; later runs used a scratch `XDG_STATE_HOME`.
+- 2026-11-03 : user chose to turn folds off during a snippet. blink's `snippets.expand` now sets `nofoldenable` in the window and restores it on the next settled normal mode (scheduled check: `vim.snippet` passes through normal mode on its way to select mode).
+  Headless at `foldlevel=0`: `for` + `<C-j>`, then `<C-j>`/`<C-p>` walk the placeholders to `for x in things:` / `print(x)`; folds are back on after `<Esc>`.
+  Noted, unchanged: after `<Esc>` the new block shows as a closed fold, the same as a block typed by hand at `foldlevel=0`.
+  Phase 4 waits on the user's manual checks.
