@@ -1,6 +1,9 @@
-# override hist sizes
-HISTSIZE=100000
-HISTFILESIZE=200000
+# hist sizes: assigning HISTFILESIZE truncates the file at once, so ~/.bashrc must not set a lower one
+HISTSIZE=10000
+HISTFILESIZE=10000
+
+# erasedups cleans the in-memory list only: history -a below still appends duplicates to the file
+HISTCONTROL=ignoreboth:erasedups
 
 # https://www.shellhacks.com/tune-command-line-history-bash/
 # use history -a to append immediately a command, in case of crash

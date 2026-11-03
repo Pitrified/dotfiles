@@ -40,6 +40,12 @@ Private git configs can be put in `~/.gitconfig.local`, that is included by `git
 
 Additional vim settings can be saved in `~/.vimrc.local`, that is sourced at the _end_ of `vim.symlink/vimrc`
 
+### Bash history size
+
+`bash/bash_aliases.bash` sets `HISTSIZE` and `HISTFILESIZE`, but `~/.bashrc` is not tracked here and the stock Ubuntu one sets them too.
+Bash truncates the history file as soon as `HISTFILESIZE` is assigned, so the stock `HISTFILESIZE=2000` cuts the file to 2000 lines at every shell start, before the higher value here is sourced.
+Remove the `HISTSIZE` and `HISTFILESIZE` lines from `~/.bashrc` on each new machine.
+
 ### install.py
 
 Lives at `install/install.py`, with its own `pyproject.toml` (`uv`-managed,
