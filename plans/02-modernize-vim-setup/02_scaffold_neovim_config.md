@@ -1,5 +1,5 @@
 ---
-status: planned
+status: in progress
 ---
 
 # Phase 2 - Scaffold the Neovim config
@@ -82,7 +82,7 @@ Settled with the user 2026-11-03 (`00_start.md` decisions 24-27):
    - as-is: `jk`/`jK`/`kj`, `j`/`k` ↔ `gj`/`gk`, visual `J`/`K`, `<leader>w`/`q`, the `<leader>n*` toggles (`nh`, `nc`, `nw`, `nl`, `ns`), `<leader>ya`, `<leader>cf`/`cc`,
      window split/navigate/move (`<leader>d`/`s`/`h`/`j`/`k`/`l`/`m*`), `<leader>es`, `gcy`/`gcp`/`gcP` on the built-in `gcc`.
    - changed: `<leader>re` opens `init.lua` from `stdpath('config')`; `<leader>rs` runs `:source %`; `<leader>ms`/`mr` use `stdpath('state')/sessions` (created on first use) instead of `~/.vim/sessions`;
-     `<F5>` calls a Lua port of `strip_trailing_whitespace`; the terminal-mode `<leader><leader>*` mappings are rewritten for Neovim's terminal (`<C-\><C-n>` then the window command, since Vim's `<C-w>` passthrough does not exist there).
+     `<F5>` calls a Lua port of `strip_trailing_whitespace`; the terminal-mode window mappings move from `<leader><leader>*` to a `<C-w>` prefix as in Vim's terminal (`<C-w>h/j/k/l`, `<C-w>H/J/K/L`, `<C-w>gt`/`gT`, `<C-w>.` sends a literal `<C-w>`), each running `<C-\><C-n>` then the window command (decision 28: a `<Space>` prefix delayed every space typed in the terminal).
    - dropped as now default: `Y` (= `y$` since 0.6), visual `*`/`#` (search the selection since 0.10).
    - dropped as obsolete: `<leader>np` (`paste` toggle; Neovim handles bracketed paste) and the scroll-wheel `EnterNormalMode`/`ExitNormalMode` hack (Neovim's terminal scrolls its scrollback with the mouse; checked during verification).
    - left for phase 3: `[l`/`]l`/`[q`/`]q` (wrap helper), `<leader>nr`, `<leader>bb`, `<leader>f*`, the which-key `<leader>` popup; `<leader>ue` and `<leader>bs` for phase 4.
@@ -96,8 +96,8 @@ Settled with the user 2026-11-03 (`00_start.md` decisions 24-27):
 6. **`after/ftplugin/` in Lua, live content only.** Dead mappings are never copied, so phase 3's delete step becomes a check:
    - `python.lua`: `textwidth=88`, the `@r`/`@t`/`@s` macros via `vim.fn.setreg`; the `GetFold` foldexpr carried as-is (phase 3 compares it with treesitter folds).
    - `go.lua`, `html.lua`, `cpp.lua`, `java.lua`: `foldmethod=syntax` (window-local; the old go file used a global `set`).
-   - `markdown.lua`: `g:markdown_folding`.
-   - `tex.lua`: `g:tex_flavor` and the abbreviations; no `IMAP` calls.
+   - `g:markdown_folding` and `g:tex_flavor` moved to `options.lua` instead: the runtime filetype plugins read them, so set from `after/ftplugin` they only took effect from the second file of that type (a bug in the old setup too).
+   - `tex.lua`: the abbreviations, now buffer-local (the old `iab` made them global after the first tex file); no `IMAP` calls.
 7. **Link.** `uv run install/install.py --dry-run`, read the plan it prints, then the real run.
    This creates `~/.config/nvim`, regenerates `~/.bash_aliases` and writes a backup folder, as every install run does.
 8. **Verify:**

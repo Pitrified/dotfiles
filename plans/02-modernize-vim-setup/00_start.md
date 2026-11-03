@@ -236,4 +236,8 @@ Settled with the user on the phase 2 Plan draft.
 25. **`<leader>rs`?** → **`:source %`**: lazy.nvim does not support re-sourcing `init.lua`. Rejected: dropping the mapping.
 26. **Local override file?** → **`~/.nvim.local.lua`**, Lua only, matching the `~/.<name>.local` pattern; it cannot live in `~/.config/nvim`, which is the repo folder.
 27. **Branch?** → **`master`**, as for plan 01.
+28. **Terminal-mode window mappings?** → **`<C-w>` prefix**, as in Vim's terminal: `<C-w>h/j/k/l` go, `<C-w>H/J/K/L` move, `<C-w>gt`/`gT` tabs, `<C-w>.` sends a literal `<C-w>` to the shell.
+    Found by the user in the manual check: the ported `<leader><leader>*` mappings made every space typed in `:terminal` wait for a possible mapping.
+    Rejected: Alt+h/j/k/l (zellij's default pane-focus keys); no mappings, only `<C-\><C-n>` (two steps per move).
+    Also `jk` leaves terminal mode (`<C-\><C-n>`), matching the insert-mode `jk`; added at the user's request.
 

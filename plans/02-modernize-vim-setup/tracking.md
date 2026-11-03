@@ -34,7 +34,7 @@ Analysis, inventory, and the decisions behind this scope are in
 | #  | Phase                                                | Plan                                                          | Status |
 | -- | ----------------------------------------------------- | ---------------------------------------------------------------- | ------ |
 | 1  | Resolve open questions & decisions                    | [`01_resolve_decisions.md`](01_resolve_decisions.md)               | done   |
-| 2  | Scaffold the Neovim config (init.lua, lazy.nvim boot) | [`02_scaffold_neovim_config.md`](02_scaffold_neovim_config.md)     | planned |
+| 2  | Scaffold the Neovim config (init.lua, lazy.nvim boot) | [`02_scaffold_neovim_config.md`](02_scaffold_neovim_config.md)     | in progress |
 | 3  | Migrate plugins + delete dead mappings                | [`03_migrate_plugins.md`](03_migrate_plugins.md)                   | draft  |
 | 4  | LSP, diagnostics & completion setup                   | [`04_lsp_and_completion.md`](04_lsp_and_completion.md)             | draft  |
 | 5  | Modernize the install script for Neovim               | [`05_modernize_install_script.md`](05_modernize_install_script.md) | draft  |
@@ -95,3 +95,13 @@ out on 2026-07-02, see Log).
   Phase 3: dead-mapping delete became a check, added the treesitter revisit of `UpdateTodoKeywords`. Phase 6: added the `gvimdiff` references in bash and git config.
 - 2026-11-03 : user settled phase 2's open questions (decisions 24-27): gruvbox.nvim with the `Folded` override, the other colorschemes dropped; `<leader>rs` is `:source %`; `~/.nvim.local.lua`; execute on `master`.
   Phase 2 is now `planned`.
+- 2026-11-03 : executed phase 2 steps 1-8 on `master`.
+  New `nvim/config__nvim.symlink/`: `init.lua`, `lua/config/{options,keymaps,autocmds,lazy}.lua`, `lua/plugins/colorscheme.lua`, `after/ftplugin/{python,tex,go,html,cpp,java}.lua`, `after/ftplugin/python/folding.vim` (carried as-is), `lazy-lock.json`.
+  `install.py` dry run then real run linked `~/.config/nvim` (backup folder `~/.rcback03`); `Lazy! sync` installed lazy.nvim and gruvbox.nvim.
+  Headless checks pass: clean startup with no stderr for none/py/go/tex/md/html files, option values, filetypes and fold methods, `Folded` bg `#282828`, mappings and descs, `@s` macro, `<F5>`, `gcy`, `pythonTodo` on NOTE, backups in the state dir, cursor restore, `:checkhealth lazy` with no errors or warnings.
+  Changes from the plan: `markdown_folding`/`tex_flavor` set in `options.lua` (load-order fix), tex abbreviations buffer-local, macros set charwise (setreg guessed linewise for `@s`), lazy's luarocks support disabled (no plugin needs it).
+  Headless tests in `/tmp` showed no backup and no restored cursor: Neovim's defaults `backupskip=/tmp/*` and `shada` `r/tmp/`, working as intended; rechecked outside `/tmp`.
+  Left for the user by hand: colors, statusline, terminal-mode mappings, mouse scroll in `:terminal`, clipboard over SSH. Phase 2 stays `in progress` until then.
+- 2026-11-03 : manual check by the user: `<Space>` in `:terminal` waited for the `<leader><leader>*` terminal mappings.
+  Moved them to a `<C-w>` prefix (decision 28); headless check: no terminal mapping starts with `<Space>`, `<C-w>h` from a terminal leaves terminal mode and moves to the left window.
+- 2026-11-03 : added terminal-mode `jk` → `<C-\><C-n>` at the user's request; checked with real input events: mode goes from `t` to `nt`.
