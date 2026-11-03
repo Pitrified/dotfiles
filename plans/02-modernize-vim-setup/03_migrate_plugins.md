@@ -25,7 +25,7 @@ Decisions behind the mapping: `00_start.md` → "Plugin decisions - resolved 202
    | vim-commentary | built-in `gc`/`gcc` | `gcy`/`gcp`/`gcP` rewritten on top of the built-in |
    | vim-unimpaired | built-in `[q` `]q` `[b` `]b` `[l` `]l` ... | the wrap-around `[l`/`]l`/`[q`/`]q` helper (`autoload/wrap_command.vim`, `plugin/wrap_command.vim`) ported to Lua |
    | fzf + fzf.vim | fzf-lua | reuses `~/.fzf`; the `<leader>f*` mappings kept; `:Ag` becomes `live_grep` on ripgrep |
-   | ultisnips + vim-snippets | engine chosen in phase 4 with completion, plus friendly-snippets | the 8 own snippets (`UltiSnips/{python,go}.snippets`) use only tabstops and are rewritten in the engine's format |
+   | ultisnips + vim-snippets | built-in `vim.snippet` through blink.cmp, plus friendly-snippets (set up in phase 4) | the 8 own snippets (`UltiSnips/{python,go}.snippets`) use only tabstops and are rewritten as vscode-format JSON |
    | vim-skeleton | own autocmd, no plugin | `BufNewFile *.py` reads `templates/skel.py` and fills `@BASENAME@` |
    | vim-autoformat | conform.nvim | `<leader>bb`; ruff format for Python, LSP fallback |
    | rainbow | rainbow-delimiters.nvim | `<leader>nr` toggle kept |
@@ -54,7 +54,7 @@ Decisions behind the mapping: `00_start.md` → "Plugin decisions - resolved 202
 
 ## Out of scope
 
-- LSP/completion plugins and the snippet engine - phase 4,
+- LSP, completion (blink.cmp) and snippets - phase 4,
   even though they're also "plugins," they get their own phase given the
   amount of configuration involved.
 

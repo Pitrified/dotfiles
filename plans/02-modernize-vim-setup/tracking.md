@@ -24,9 +24,10 @@ Analysis, inventory, and the decisions behind this scope are in
 - **Config shape:** short `init.lua` plus `lua/config/` and `lua/plugins/` modules; Neovim default state dirs; a machine-local override hook kept; `gvimrc` dropped (terminal only).
 - **Tools:** ruff via `uv tool`; other system tools in `~/bootstrap`, only if the config needs them.
 - **Neovim 0.12.6** from the upstream tarball plus the `tree-sitter` CLI, under `~/.local` (apt is too old for nvim-treesitter `main`); lazy.nvim kept over 0.12's experimental `vim.pack`.
+- **LSP:** native 0.12 `vim.lsp.config`/`enable` for Python (ruff server + basedpyright), Lua, Go, Dart, Bash; servers system-installed, no mason; blink.cmp with built-in `vim.snippet`.
 - **Plugins:** every kept plugin ported to its modern equivalent (table in `03_migrate_plugins.md`); vim-regedit dropped; flash.nvim on `s`/`S`; which-key.nvim over mini.clue.
 - Full reasoning and rejected alternatives for each: `00_start.md` → "Open
-  questions - resolved", "Scaffold decisions - resolved 2026-11-03" and "Plugin decisions - resolved 2026-11-03".
+  questions - resolved", "Scaffold decisions", "Plugin decisions" and "LSP decisions" (all resolved 2026-11-03).
 
 ## Phases
 
@@ -82,3 +83,10 @@ out on 2026-07-02, see Log).
   Rewrote `03_migrate_plugins.md` goals with the old-to-new table; updated phases 2 and 5 for the 0.12 install.
   System note for the switch: `~/repos/plans/2026-11-03_01_neovim_0_12_tarball.md`, not yet executed.
   Phase 4 still to be assessed.
+- 2026-11-03 : executed `~/repos/plans/2026-11-03_01_neovim_0_12_tarball.md`.
+  Both downloads matched their release sha256 digests; Neovim 0.12.6 in `~/.local/opt/nvim-0.12.6`, linked from `~/.local/bin/nvim`; `tree-sitter` 0.27.1 in `~/.local/bin`.
+  The user removed the apt `neovim`/`neovim-runtime` (log `~/handoff-logs/09a-apt-remove-neovim.log`); `nvim` now resolves only to `~/.local/bin/nvim`, v0.12.6.
+- 2026-11-03 : assessed phase 4 against Neovim 0.12 (native LSP API and default mappings, nvim-lspconfig as configs only, `ruff-lsp` deprecated, ruff defaults cover the old flake8 ignores).
+  User settled decisions 20-23: LSP for Python, Lua, Go, Dart and Bash (node joins bootstrap for bash-language-server), system installs over mason, basedpyright over ty, blink.cmp over native completion.
+  Rewrote `04_lsp_and_completion.md` goals; added the server installs to phase 5; phase 3's snippet row now points at blink + `vim.snippet`.
+  All six phases are now assessed; next is detailing phase 2's Plan section.

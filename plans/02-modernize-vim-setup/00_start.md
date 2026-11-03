@@ -204,3 +204,24 @@ Settled with the user while assessing phase 3.
     Its last release was v3.17.0 (2025-02) and its last commit 2025-10, with no open bug about 0.12.
     Rejected: mini.clue (mature, in mini.nvim since 2023 with stable releases, but its triggers are opt-in buffer-local mappings that later buffer mappings such as an LSP `on_attach` can shadow).
     mini.clue is the fallback if which-key stops working on a later Neovim.
+
+## LSP decisions - resolved 2026-11-03
+
+Settled with the user while assessing phase 4.
+Context: Neovim 0.12 ships `vim.lsp.config`/`vim.lsp.enable`, default LSP mappings (`grn`, `gra`, `grr`, `gri`, `K`) and a native `autocomplete` option whose only source is LSP;
+nvim-lspconfig (v2.12.0) is now mainly a set of server configs in `lsp/*.lua`.
+The repos on this box are mostly Python, then md/yaml/json, some ts/js, dart, go and sh; no `.tex`.
+
+20. **Languages with an LSP?** → **Python, Lua, Go, Dart and Bash.**
+    Lua is for editing the nvim config itself; Dart's server comes with the Flutter SDK (`dart language-server`).
+    Bash's `bash-language-server` needs node, so node joins the bootstrap installs.
+    Rejected for now: yaml, json, ts/tsx, markdown and LaTeX (texlab).
+21. **How servers are installed?** → **System installs**, no mason.nvim, consistent with decision 13:
+    `uv tool` for the Python tools, `go install` for gopls, everything else in `~/bootstrap`.
+    Rejected: mason.nvim (a second package manager living inside nvim, outside bootstrap).
+22. **Python servers?** → **`ruff server`** (lint and format) plus **basedpyright** (types, go-to-definition, hover), both via `uv tool`.
+    Ruff's default rule set already leaves out the old flake8 ignores (E501, E266, E203; W503 does not exist in ruff) and keeps F841, so no extra rule config is needed.
+    Rejected: `ruff-lsp` (deprecated); ty (Astral, 0.0.95 and still beta; a later swap once it reaches 1.0).
+23. **Completion and snippets?** → **blink.cmp** (v1.10.2) with LSP, buffer, path and snippet sources.
+    Snippets run on Neovim's built-in `vim.snippet` through blink, with friendly-snippets replacing vim-snippets; the 8 own UltiSnips snippets are rewritten as vscode-format JSON.
+    Rejected: native `autocomplete` (LSP is its only source); nvim-cmp (superseded); LuaSnip and UltiSnips (not needed for tabstop-only snippets).

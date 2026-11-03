@@ -16,20 +16,26 @@ in the original assessment and an update for the Neovim move. See
    (the same method as this box, see `~/repos/plans/2026-11-03_01_neovim_0_12_tarball.md`; apt and the PPA are too old, `00_start.md` decision 14).
    Pin a version and check the release's sha256 digest; re-running with the same version is a no-op.
    ripgrep and fd come from apt (fzf-lua's `live_grep` and file search).
-   Python tools such as ruff come from `uv tool`; any other system tool the final config needs
-   (node, ripgrep, fd, a C compiler for treesitter, ...) is installed here, and only if it is actually used.
+   Any other system tool is installed here only if the final config actually uses it.
 2. Drop the `~/.myvim/{swap,undo,backup}` `mkdir` lines: the new config uses Neovim's default state dirs.
 3. Non-interactive plugin bootstrap: lazy.nvim auto-installs itself and its
    plugins on first launch (`lazy.setup` handles this without a manual
    `PlugInstall` step), so the "needs to be manually closed" TODO can likely
    go away entirely rather than just being scripted better - confirm during
    this phase.
-4. Drop the `build-essential`/`cmake`/`python3-dev` apt installs that only
+4. Drop the `cmake`/`python3-dev` apt installs that only
    existed for YouCompleteMe (deleted in phase 3).
+   Keep a C compiler (`build-essential` or just `gcc`): nvim-treesitter compiles its parsers with it.
 5. Rename the script (e.g. `install_neovim.sh`) if that matches the rest of
    the bootstrap repo's naming, or keep `install_vim.sh` if renaming churns
    references elsewhere - check `bootstrap/`'s other scripts for how they
    reference each other before deciding.
+6. Language servers and formatters from phase 4 (decisions 20-22), all outside nvim:
+   - `uv tool`: ruff, basedpyright.
+   - `go install`: gopls (needs the Go toolchain from `install_go.sh`).
+   - GitHub release, pinned with sha256: lua-language-server (not in apt).
+   - apt: nodejs + npm (22.x on 26.04), shellcheck, shfmt; then bash-language-server from npm with a user-owned prefix (no root needed for `npm -g`), exact prefix decided here.
+   - Dart: nothing, `dart language-server` ships with the Flutter SDK.
 
 ## Plan
 
