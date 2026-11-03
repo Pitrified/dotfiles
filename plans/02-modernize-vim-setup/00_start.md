@@ -225,3 +225,15 @@ The repos on this box are mostly Python, then md/yaml/json, some ts/js, dart, go
 23. **Completion and snippets?** → **blink.cmp** (v1.10.2) with LSP, buffer, path and snippet sources.
     Snippets run on Neovim's built-in `vim.snippet` through blink, with friendly-snippets replacing vim-snippets; the 8 own UltiSnips snippets are rewritten as vscode-format JSON.
     Rejected: native `autocomplete` (LSP is its only source); nvim-cmp (superseded); LuaSnip and UltiSnips (not needed for tabstop-only snippets).
+
+## Phase 2 decisions - resolved 2026-11-03
+
+Settled with the user on the phase 2 Plan draft.
+
+24. **Colorscheme?** → **ellisonleao/gruvbox.nvim** with a `Folded` background override to `bg0`, the one change `gruvbox-bootleg.vim` made to 2017 gruvbox.
+    It has the treesitter, LSP and diagnostic highlight groups the 2017 file lacks. antares, hotpot, spacecamp and the bootleg file are dropped.
+    Rejected: carrying `gruvbox-bootleg.vim` over unchanged (works with `termguicolors`, but no modern highlight groups).
+25. **`<leader>rs`?** → **`:source %`**: lazy.nvim does not support re-sourcing `init.lua`. Rejected: dropping the mapping.
+26. **Local override file?** → **`~/.nvim.local.lua`**, Lua only, matching the `~/.<name>.local` pattern; it cannot live in `~/.config/nvim`, which is the repo folder.
+27. **Branch?** → **`master`**, as for plan 01.
+

@@ -27,6 +27,10 @@ have settled what the setup actually looks like.
    run the bootstrap script and `install.py`, first launch of `nvim`.
    Where it lives (the setup README or a separate file) is decided here.
 5. Delete `vim.symlink/` from the repo once phases 2-4 have ported everything that is kept.
+6. Update the vim references outside `vim.symlink/`:
+   `bash/bash_aliases.bash` `gd()` calls `gvimdiff`, `git/gitconfig.symlink` sets `merge.tool = gvimdiff`
+   (both become `nvim -d` / `nvimdiff`), and decide whether an `nvim/aliases.bash` (e.g. `alias vim=nvim`) is wanted.
+   `vim.symlink/completion.bash` (commented out, but sourced from `~/.bash_aliases`) goes with the folder; re-run `install.py` so the generated file drops it.
 
 ## Plan
 

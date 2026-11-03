@@ -27,14 +27,14 @@ Analysis, inventory, and the decisions behind this scope are in
 - **LSP:** native 0.12 `vim.lsp.config`/`enable` for Python (ruff server + basedpyright), Lua, Go, Dart, Bash; servers system-installed, no mason; blink.cmp with built-in `vim.snippet`.
 - **Plugins:** every kept plugin ported to its modern equivalent (table in `03_migrate_plugins.md`); vim-regedit dropped; flash.nvim on `s`/`S`; which-key.nvim over mini.clue.
 - Full reasoning and rejected alternatives for each: `00_start.md` → "Open
-  questions - resolved", "Scaffold decisions", "Plugin decisions" and "LSP decisions" (all resolved 2026-11-03).
+  questions - resolved", "Scaffold decisions", "Plugin decisions", "LSP decisions" and "Phase 2 decisions" (all resolved 2026-11-03).
 
 ## Phases
 
 | #  | Phase                                                | Plan                                                          | Status |
 | -- | ----------------------------------------------------- | ---------------------------------------------------------------- | ------ |
 | 1  | Resolve open questions & decisions                    | [`01_resolve_decisions.md`](01_resolve_decisions.md)               | done   |
-| 2  | Scaffold the Neovim config (init.lua, lazy.nvim boot) | [`02_scaffold_neovim_config.md`](02_scaffold_neovim_config.md)     | draft  |
+| 2  | Scaffold the Neovim config (init.lua, lazy.nvim boot) | [`02_scaffold_neovim_config.md`](02_scaffold_neovim_config.md)     | planned |
 | 3  | Migrate plugins + delete dead mappings                | [`03_migrate_plugins.md`](03_migrate_plugins.md)                   | draft  |
 | 4  | LSP, diagnostics & completion setup                   | [`04_lsp_and_completion.md`](04_lsp_and_completion.md)             | draft  |
 | 5  | Modernize the install script for Neovim               | [`05_modernize_install_script.md`](05_modernize_install_script.md) | draft  |
@@ -90,3 +90,8 @@ out on 2026-07-02, see Log).
   User settled decisions 20-23: LSP for Python, Lua, Go, Dart and Bash (node joins bootstrap for bash-language-server), system installs over mason, basedpyright over ty, blink.cmp over native completion.
   Rewrote `04_lsp_and_completion.md` goals; added the server installs to phase 5; phase 3's snippet row now points at blink + `vim.snippet`.
   All six phases are now assessed; next is detailing phase 2's Plan section.
+- 2026-11-03 : drafted phase 2's Plan section after checking 0.12 option defaults headless (many old options are now defaults; default `backupdir` starts with `.`) and the colorscheme (`gruvbox-bootleg.vim` is 2017 gruvbox with one fold-background tweak).
+  Four open questions in the plan: colorscheme (gruvbox.nvim recommended), `<leader>rs` under lazy.nvim, local override file name, branch.
+  Phase 3: dead-mapping delete became a check, added the treesitter revisit of `UpdateTodoKeywords`. Phase 6: added the `gvimdiff` references in bash and git config.
+- 2026-11-03 : user settled phase 2's open questions (decisions 24-27): gruvbox.nvim with the `Folded` override, the other colorschemes dropped; `<leader>rs` is `:source %`; `~/.nvim.local.lua`; execute on `master`.
+  Phase 2 is now `planned`.

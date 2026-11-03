@@ -36,7 +36,7 @@ Decisions behind the mapping: `00_start.md` → "Plugin decisions - resolved 202
    | vim-which-key | which-key.nvim | `<leader>` popup; mappings get `desc` fields so it has labels |
 
 2. Not ported: syntastic (superseded by phase 4's LSP diagnostics) and vim-regedit (no longer used).
-3. Delete: the four dead `Plug` remnants, `after/ftplugin/python/general.vim`'s
+3. Not carried over (phase 2 ports only live content, so this is a check that none of it reached the new config): the four dead `Plug` remnants, `after/ftplugin/python/general.vim`'s
    `<leader>bb`/`<leader>bf` (Black) and `<leader>gd` (YcmCompleter)
    mappings, `after/ftplugin/go/general.vim`'s Go mappings (phase 4 brings LSP equivalents),
    `after/ftplugin/tex/mapping.vim`'s `IMAP(...)` calls,
@@ -46,7 +46,9 @@ Decisions behind the mapping: `00_start.md` → "Plugin decisions - resolved 202
    python-specific `:Black` override) - after deleting the Black mapping,
    `<leader>bb` runs conform.nvim everywhere, confirm
    no other filetype re-overrides it.
-5. Folding: the hand-written python `foldexpr` (`after/ftplugin/python/folding.vim`) and the `foldmethod=syntax` ftplugins are checked against treesitter folds; keep whichever behaves as expected, delete the other.
+5. Revisit what treesitter changes: `UpdateTodoKeywords` (ported in phase 2) uses regex `syntax keyword`, which does not run when treesitter highlights a buffer;
+   find a treesitter-era way to highlight NOTE/MAYBE/YES/NO/QUESTION.
+6. Folding: the hand-written python `foldexpr` (`after/ftplugin/python/folding.vim`) and the `foldmethod=syntax` ftplugins are checked against treesitter folds; keep whichever behaves as expected, delete the other.
 
 ## Plan
 
