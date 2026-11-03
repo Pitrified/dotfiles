@@ -64,7 +64,6 @@ opt.statusline = table.concat({
 })
 
 -- globals read by the runtime filetype plugins, so they must be set before any file opens
-vim.g.markdown_folding = 1
 vim.g.tex_flavor = "latex"
 
 -- netrw

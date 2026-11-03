@@ -26,18 +26,17 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 -- .html is always html, even with {% %} templates that would detect as htmldjango
 vim.filetype.add({ extension = { html = "html" } })
 
--- extra keywords in every *Todo syntax group
-local todo_keywords = { "NOTE", "MAYBE", "YES", "NO", "QUESTION" }
-vim.api.nvim_create_autocmd("Syntax", {
+-- new python files start from the skeleton, with @BASENAME@ as the file name without extension
+local skeleton = vim.fn.stdpath("config") .. "/templates/skel.py"
+vim.api.nvim_create_autocmd("BufNewFile", {
   group = group,
-  callback = function()
-    local seen = {}
-    for line in vim.gsplit(vim.fn.execute("syntax list"), "\n") do
-      local syn_group = line:match("^(%w*Todo)%s")
-      if syn_group and not seen[syn_group] then
-        seen[syn_group] = true
-        vim.cmd(("syntax keyword %s contained %s"):format(syn_group, table.concat(todo_keywords, " ")))
-      end
+  pattern = "*.py",
+  callback = function(args)
+    local basename = vim.fn.fnamemodify(args.file, ":t:r"):gsub("%%", "%%%%")
+    local lines = vim.fn.readfile(skeleton)
+    for i, line in ipairs(lines) do
+      lines[i] = line:gsub("@BASENAME@", basename)
     end
+    vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, lines)
   end,
 })

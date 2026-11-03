@@ -63,6 +63,26 @@ map("t", "<C-w>gT", "<C-\\><C-n>gT", { desc = "Previous tab" })
 map("t", "<C-w>.", "<C-w>", { desc = "Send <C-w> to the shell" })
 map("t", "jk", "<C-\\><C-n>", { desc = "Leave terminal mode" })
 
+-- quickfix and location list steps that wrap around at the ends (was vim-unimpaired plus wrap_command.vim);
+-- quiet when the list is empty or missing
+local function list_step(cmd, wrap_cmd)
+  return function()
+    local ok, err = pcall(vim.cmd, cmd)
+    if ok then
+      return
+    end
+    if err:find("E553") then
+      vim.cmd(wrap_cmd)
+    elseif not (err:find("E42") or err:find("E776")) then
+      vim.notify(err, vim.log.levels.ERROR)
+    end
+  end
+end
+map("n", "[q", list_step("cprevious", "clast"), { desc = "Previous quickfix entry (wraps)" })
+map("n", "]q", list_step("cnext", "cfirst"), { desc = "Next quickfix entry (wraps)" })
+map("n", "[l", list_step("lprevious", "llast"), { desc = "Previous location entry (wraps)" })
+map("n", "]l", list_step("lnext", "lfirst"), { desc = "Next location entry (wraps)" })
+
 -- make and restore sessions; also `nvim -S <file>`
 local sessions_dir = vim.fn.stdpath("state") .. "/sessions"
 vim.fn.mkdir(sessions_dir, "p")
