@@ -19,8 +19,14 @@ Analysis, inventory, and the decisions behind this scope are in
   `~/.nvim`. Not vim-specific, so it's tracked as its own plan:
   [`../01-install-script-refactor/`](../01-install-script-refactor/). This
   plan only needs the result.
+- **Config location:** `nvim/config__nvim.symlink/` → `~/.config/nvim`, using the install.py nesting from plan 01 (done).
+- **All machines move to Neovim:** `vim.symlink/` is removed once ported; the pull ships the new config, the updated `~/bootstrap` script and a migration guide together.
+- **Config shape:** short `init.lua` plus `lua/config/` and `lua/plugins/` modules; Neovim default state dirs; a machine-local override hook kept; `gvimrc` dropped (terminal only).
+- **Tools:** ruff via `uv tool`; other system tools in `~/bootstrap`, only if the config needs them.
+- **Neovim 0.12.6** from the upstream tarball plus the `tree-sitter` CLI, under `~/.local` (apt is too old for nvim-treesitter `main`); lazy.nvim kept over 0.12's experimental `vim.pack`.
+- **Plugins:** every kept plugin ported to its modern equivalent (table in `03_migrate_plugins.md`); vim-regedit dropped; flash.nvim on `s`/`S`; which-key.nvim over mini.clue.
 - Full reasoning and rejected alternatives for each: `00_start.md` → "Open
-  questions - resolved".
+  questions - resolved", "Scaffold decisions - resolved 2026-11-03" and "Plugin decisions - resolved 2026-11-03".
 
 ## Phases
 
@@ -31,7 +37,7 @@ Analysis, inventory, and the decisions behind this scope are in
 | 3  | Migrate plugins + delete dead mappings                | [`03_migrate_plugins.md`](03_migrate_plugins.md)                   | draft  |
 | 4  | LSP, diagnostics & completion setup                   | [`04_lsp_and_completion.md`](04_lsp_and_completion.md)             | draft  |
 | 5  | Modernize the install script for Neovim               | [`05_modernize_install_script.md`](05_modernize_install_script.md) | draft  |
-| 6  | Documentation cleanup                                 | [`06_docs_cleanup.md`](06_docs_cleanup.md)                         | draft  |
+| 6  | Docs, migration guide, remove `vim.symlink`           | [`06_docs_cleanup.md`](06_docs_cleanup.md)                         | draft  |
 
 Status values: draft / planned / in progress / done / superseded / discarded.
 
@@ -65,3 +71,14 @@ out on 2026-07-02, see Log).
   phase 2 file was removed here and phases 3-7 renumbered to 2-6. No scope
   change beyond the split - the install.py plan isn't being expanded yet,
   that's a later planning pass.
+- 2026-11-03 : plan 01 is done, so phase 2 is unblocked.
+  Checked the box: no vim or nvim installed (`~/.vim` still links to `vim.symlink`), apt offers neovim 0.11.6, no node/ruff/ripgrep/fd.
+  Settled the scaffold questions with the user (decisions 6-13 in `00_start.md`) and folded them into phases 2, 5 and 6.
+  Neovim install on this box handed to the user, system note `~/repos/plans/2026-11-03_00_install_neovim.md`.
+  Phases 3-6 still to be assessed against Neovim 0.11 before detailing.
+- 2026-11-03 : apt `neovim` 0.11.6 installed and verified (logs `~/handoff-logs/08a`, `08b`).
+  Assessing phase 3 found that nvim-treesitter's `main` branch needs Neovim 0.12+ and tree-sitter-cli 0.26.1+, newer than apt has.
+  User chose Neovim 0.12.6 from the tarball plus the tree-sitter CLI under `~/.local` (decision 14, supersedes the apt install), and settled the plugin mapping (decisions 15-19).
+  Rewrote `03_migrate_plugins.md` goals with the old-to-new table; updated phases 2 and 5 for the 0.12 install.
+  System note for the switch: `~/repos/plans/2026-11-03_01_neovim_0_12_tarball.md`, not yet executed.
+  Phase 4 still to be assessed.

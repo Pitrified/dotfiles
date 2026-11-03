@@ -12,12 +12,13 @@ in the original assessment and an update for the Neovim move. See
 
 ## Goals
 
-1. Install `neovim` instead of `vim-gtk3` (plus whatever `mason.nvim`
-   expects to be present on the system for building language servers, e.g.
-   a C compiler / Node.js, depending on phase 4's server choices).
-2. Idempotent directory setup: `~/.myvim/{swap,undo,backup}` (or their
-   Neovim-side equivalents, if paths changed as part of phase 2) created
-   with `mkdir -p` / existence checks, so re-running the script is a no-op.
+1. Install Neovim 0.12+ from the upstream release tarball and the `tree-sitter` CLI (0.26.1+) from its GitHub release, both under `~/.local`, instead of `vim-gtk3`
+   (the same method as this box, see `~/repos/plans/2026-11-03_01_neovim_0_12_tarball.md`; apt and the PPA are too old, `00_start.md` decision 14).
+   Pin a version and check the release's sha256 digest; re-running with the same version is a no-op.
+   ripgrep and fd come from apt (fzf-lua's `live_grep` and file search).
+   Python tools such as ruff come from `uv tool`; any other system tool the final config needs
+   (node, ripgrep, fd, a C compiler for treesitter, ...) is installed here, and only if it is actually used.
+2. Drop the `~/.myvim/{swap,undo,backup}` `mkdir` lines: the new config uses Neovim's default state dirs.
 3. Non-interactive plugin bootstrap: lazy.nvim auto-installs itself and its
    plugins on first launch (`lazy.setup` handles this without a manual
    `PlugInstall` step), so the "needs to be manually closed" TODO can likely

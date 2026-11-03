@@ -2,7 +2,7 @@
 status: draft
 ---
 
-# Phase 6 - Documentation cleanup
+# Phase 6 - Documentation, migration guide and vim removal
 
 ## Overview
 
@@ -21,11 +21,12 @@ have settled what the setup actually looks like.
    intent, the LSP/mason/nvim-cmp setup from phase 4, where `.vimrc.local`'s
    Neovim-era equivalent fits (if one exists after phase 2), how to add a
    plugin or a new language server.
-3. Update `dotfiles/README.md` only if phase 2 or
-   [`../01-install-script-refactor/`](../01-install-script-refactor/)
-   changed the symlink mechanism or topic naming enough to need it (e.g.
-   documenting the new `__`-nesting support for topic-level folder
-   symlinks).
+3. Update `dotfiles/README.md` for the new `nvim/` topic (it still names `vim.symlink` as the folder-symlink example).
+4. Migration guide for an existing machine, shipped in the same pull as the new config and the updated `~/bootstrap` script:
+   remove the stale `~/.vim` link and `~/.myvim`, uninstall `vim-gtk3` and the YouCompleteMe build packages,
+   run the bootstrap script and `install.py`, first launch of `nvim`.
+   Where it lives (the setup README or a separate file) is decided here.
+5. Delete `vim.symlink/` from the repo once phases 2-4 have ported everything that is kept.
 
 ## Plan
 

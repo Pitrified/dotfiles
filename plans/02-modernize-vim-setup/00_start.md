@@ -157,3 +157,50 @@ needs the *result* once that lands.
    since it's a general symlink-mechanism fix, not vim-specific. Rejected:
    `~/.nvim` + `NVIM_APPNAME` (works without touching install.py, but leaves
    the asymmetry in place and doesn't help the Claude-skills case).
+
+## Scaffold decisions - resolved 2026-11-03
+
+Settled with the user once [`../01-install-script-refactor/`](../01-install-script-refactor/) was done, before detailing phase 2.
+
+6. **Folder layout?** → **`nvim/config__nvim.symlink/`** → `~/.config/nvim`, an item-level folder symlink inside an `nvim/` topic.
+   Matches `git/config__git__ignore.symlink` and the `claude/claude__skills__*.symlink/` folders, and leaves room in the topic for an `aliases.bash` and a README.
+   Rejected: a top-level `config__nvim.symlink/` like `vim.symlink` (works, but gives the topic no home for its other files).
+7. **Where to test?** → **Install Neovim on this box now**, ahead of phase 5.
+   First done with apt `neovim` 0.11.6 (system note `~/repos/plans/2026-11-03_00_install_neovim.md`);
+   **superseded the same day** by Neovim 0.12.6 from the upstream tarball plus the `tree-sitter` CLI, both under `~/.local`, see decision 14.
+   System note: `~/repos/plans/2026-11-03_01_neovim_0_12_tarball.md`.
+8. **Fate of `vim.symlink/`?** → **Remove it; every machine migrates to Neovim.**
+   One pull brings the new dotfiles config together with the updated `~/bootstrap` install script, plus a migration guide for an existing machine (stale `~/.vim` link, `~/.myvim`, old packages).
+   `vim.symlink/` stays in the tree only while it is the source being ported (phases 2-4).
+9. **Lua structure?** → **Neat and clean**: a short `init.lua` that loads `lua/config/` modules (options, keymaps, autocmds) and lazy.nvim with specs in `lua/plugins/`.
+   Rejected: one large `init.lua`.
+10. **Swap, undo and backup dirs?** → **Neovim defaults** under `stdpath('state')` (`~/.local/state/nvim`), not `~/.myvim/*`.
+    This also drops the `mkdir` step from the install script.
+11. **Machine-local override (`~/.vimrc.local`)?** → **Keep** an equivalent hook, sourced at the end of the config when the file exists.
+    Exact file name decided in phase 2.
+12. **`gvimrc`?** → **Drop**; Neovim is used in the terminal only, no GUI frontend.
+13. **System tools for the new setup?** → install whatever is needed:
+    Python tools (ruff) via `uv tool`; anything else nvim needs (node, ripgrep, fd, ...) goes into the `~/bootstrap` repo, only if the final config actually uses it.
+
+## Plugin decisions - resolved 2026-11-03
+
+Settled with the user while assessing phase 3.
+
+14. **Neovim version?** → **0.12.6 from the upstream release tarball**, installed under `~/.local` with no sudo, plus the `tree-sitter` CLI from its GitHub release in `~/.local/bin`; the apt `neovim` is removed.
+    Why: the modern replacement for vim-polyglot, nvim-treesitter's `main` branch, needs Neovim 0.12+ and tree-sitter-cli 0.26.1+.
+    Ubuntu 26.04 apt has Neovim 0.11.6 and tree-sitter-cli 0.25.9, and the Neovim stable PPA stopped at 22.04.
+    `~/bootstrap` installs the same way on every machine (phase 5).
+    Rejected: staying on 0.11 with nvim-treesitter's frozen `master` branch (not a modern port).
+15. **Plugin manager, now that 0.12 ships `vim.pack`?** → **lazy.nvim stays** (decision 3).
+    `vim.pack` is still marked experimental and has no lazy loading or UI.
+16. **Port style?** → **Port everything to the modern equivalent**: a built-in, a Lua plugin, or own Lua code.
+    Legacy code is rewritten where needed. The full old-to-new table is in [`03_migrate_plugins.md`](03_migrate_plugins.md).
+17. **vim-regedit?** → **Drop**, no longer used.
+18. **easymotion replacement keys?** → **flash.nvim on `s`/`S`**, its defaults.
+    This gives up the built-in `s` (substitute character); `cl` does the same.
+    Rejected: the old easymotion prefix `<leader><leader>`.
+19. **Key-hint popup?** → **which-key.nvim.**
+    It detects every mapping with no trigger list, so buffer-local LSP mappings from phase 4 cannot break it.
+    Its last release was v3.17.0 (2025-02) and its last commit 2025-10, with no open bug about 0.12.
+    Rejected: mini.clue (mature, in mini.nvim since 2023 with stable releases, but its triggers are opt-in buffer-local mappings that later buffer mappings such as an LSP `on_attach` can shadow).
+    mini.clue is the fallback if which-key stops working on a later Neovim.
