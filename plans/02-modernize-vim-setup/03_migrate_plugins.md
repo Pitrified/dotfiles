@@ -1,5 +1,5 @@
 ---
-status: draft
+status: in progress
 ---
 
 # Phase 3 - Migrate plugins to lazy.nvim, delete dead mappings
@@ -52,7 +52,61 @@ Decisions behind the mapping: `00_start.md` → "Plugin decisions - resolved 202
 
 ## Plan
 
-- (Detail once phase 2's scaffold exists to migrate plugins into.)
+Facts checked before writing (current READMEs and sources, 2026-11-03):
+
+- nvim-treesitter `main`: `lazy = false` (no lazy-loading), `build = ":TSUpdate"`, `require("nvim-treesitter").install{...}`.
+  Highlighting (`vim.treesitter.start()`) and folds (`vim.treesitter.foldexpr()`) are Neovim features enabled per filetype; its indent is marked experimental.
+  When treesitter highlights a buffer, regex syntax is off, so `foldmethod=syntax` and `syntax keyword` (the phase 2 `UpdateTodoKeywords`) stop working there.
+- nvim-surround 4.x needs Neovim 0.12 (`version = "^4.0.0"`).
+- flash.nvim: the README spec maps `s` (jump), `S` (treesitter select), `r` (remote, operator mode), `R` (treesitter search), `<C-s>` (toggle in `/` search).
+  Its `char` mode is on by default and changes `f`/`t`/`F`/`T`/`;`/`,` (highlights and jump labels).
+- treesj: default keys are `<space>m/j/s`, which clash with our leader; `use_default_keymaps = false` and own `gS`/`gJ`.
+- fzf-lua: uses `fd`, else `fdfind` (Ubuntu's name), else `rg`, else `find`; `live_grep` needs `rg`.
+- vim-skeleton's `@BASENAME@` is the file name without extension.
+- todo-comments.nvim (maintained, last commit 2025-11) highlights keywords in comments only (treesitter) with a configurable vim-regex pattern.
+- `~/snippet` does not exist on this box (target of `<leader>fs`); `~/ephem`, `~/repos`, `~/dotfiles` do.
+
+### Open questions for this phase
+
+All five are settled (`00_start.md`, decisions 29-33).
+
+1. ~~Tools on this box now~~ → yes, in step 1 (decision 29). System note: `~/repos/plans/2026-11-03_02_ripgrep_fd_ruff.md`.
+2. ~~flash `char` mode~~ → on, flash's default (decision 33).
+3. ~~TODO keywords under treesitter~~ → todo-comments.nvim (decision 30).
+4. ~~Parsers to install~~ → the proposed list without dart (decision 31).
+5. ~~`<leader>fs` on `~/snippet`~~ → dropped (decision 32).
+
+### Steps
+
+1. **Tools** per the system note: the user installs ripgrep and fd-find from apt (sudo-handoff, log `10a-apt-ripgrep-fd.log`), then `uv tool install ruff`; check the three versions.
+2. **Treesitter** (`lua/plugins/treesitter.lua`): the spec above, installing the decision 31 parsers.
+   A `FileType` autocmd runs `pcall(vim.treesitter.start)`; when it succeeds, it sets the window's `foldmethod=expr` and `foldexpr=v:lua.vim.treesitter.foldexpr()`.
+   Indent stays on the runtime indent scripts (treesitter indent is experimental, and the Python one is weaker than the runtime's).
+   Delete `after/ftplugin/{go,html,cpp,java}.lua` (syntax folds, superseded) and `g:markdown_folding` from `options.lua`.
+   Python: keep `after/ftplugin/python/folding.vim` for the side-by-side test in step 9, then delete the loser.
+3. **Editing plugins**, one spec file each in `lua/plugins/`:
+   nvim-surround (`version = "^4.0.0"`, defaults);
+   nvim-autopairs (`event = "InsertEnter"`, defaults; blink.cmp integration in phase 4);
+   treesj (`gS` split, `gJ` join, default keymaps off);
+   flash (the README keys; `char` mode on, the default);
+   rainbow-delimiters (defaults, `<leader>nr` toggles it for the buffer);
+   todo-comments (decision 30).
+4. **fzf-lua** (`lua/plugins/fzf.lua`), mappings kept from the old setup:
+   `<leader>ff` files, `<leader>fp` files in `..`, `<leader>fd`/`fe`/`fr` files in `~/dotfiles`/`~/ephem`/`~/repos` (`<leader>fs` dropped),
+   `<leader>fa` live grep (was `:Ag`), `<leader>fb` buffers, `<leader>fl` lines of open buffers (was `:Lines`).
+5. **conform.nvim** (`lua/plugins/conform.lua`): `<leader>bb` formats with `lsp_format = "fallback"`; `ruff_format` for Python, `gofmt` for Go.
+   No format-on-save (the old setup had none). shfmt joins in phase 4 with the Bash tools.
+6. **which-key.nvim** (`lua/plugins/which-key.lua`): default preset; group labels for `<leader>f` find, `n` toggles, `m` windows/sessions, `r` config, `c` folds, `b` format.
+   The phase 2 mappings already carry `desc`.
+7. **Own Lua replacing plugins:**
+   - wrap-around `[q`/`]q`/`[l`/`]l` in `keymaps.lua` (port of `wrap_command.vim`): run `cprevious`/`cnext` (`l` variants), on E553 wrap to `clast`/`cfirst`, stay quiet on E42/E776 (empty or no list).
+   - skeleton: `BufNewFile *.py` reads `templates/skel.py` from the config folder (copied from `vim.symlink/templates/`) and fills `@BASENAME@`.
+   - the phase 2 `UpdateTodoKeywords` autocmd is removed (replaced by todo-comments in step 3).
+8. **Check** that no dead names reached the config: the grep in "Done when".
+9. **Verify:**
+   - headless: `Lazy! sync` installs everything; `:checkhealth` for lazy, nvim-treesitter, fzf-lua, conform, which-key with no errors; clean startup on py/go/md/lua files.
+   - headless: treesitter active in a `.py` buffer, fold expr set; `<leader>bb` formats a messy `.py` (ruff) and `.go` (gofmt); `ysiw)`, `gS`, autopairs on `(`, the wrap helper on a two-entry quickfix list, the skeleton on a new `.py`.
+   - by hand, the user: flash labels on `s`/`S` and `char` mode on `f`/`t`, which-key popup, the fzf pickers, rainbow colors, TODO keyword highlight, and Python folds: treesitter vs the old `GetFold`, keep one.
 
 ## Out of scope
 

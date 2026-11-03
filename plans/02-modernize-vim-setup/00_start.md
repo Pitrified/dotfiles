@@ -241,3 +241,17 @@ Settled with the user on the phase 2 Plan draft.
     Rejected: Alt+h/j/k/l (zellij's default pane-focus keys); no mappings, only `<C-\><C-n>` (two steps per move).
     Also `jk` leaves terminal mode (`<C-\><C-n>`), matching the insert-mode `jk`; added at the user's request.
 
+
+## Phase 3 decisions - resolved 2026-11-03
+
+Settled with the user on the phase 3 Plan draft.
+
+29. **Tools on this box now?** → **Yes**, in phase 3 step 1 rather than waiting for phase 5: ripgrep and fd-find from apt, ruff with `uv tool`.
+    System note `~/repos/plans/2026-11-03_02_ripgrep_fd_ruff.md`. Phase 5 still adds them to `~/bootstrap` for the other machines.
+30. **TODO keywords under treesitter?** → **todo-comments.nvim**, with NOTE, MAYBE, YES, NO, QUESTION added to its defaults and a pattern matching the bare word, in comments only.
+    Rejected: extending the treesitter `comment` parser query (only matches `KEYWORD:`); dropping the extra keywords.
+31. **Parsers?** → python, lua, go, gomod, bash, markdown, markdown_inline, yaml, json, toml, html, css, javascript, typescript, tsx, gitcommit, diff, dockerfile, vim, vimdoc, query, regex.
+    Dart dropped from the proposal at the user's request; Dart files keep regex syntax (the Dart LSP from decision 20 is unaffected).
+32. **`<leader>fs` on `~/snippet`?** → **Dropped**.
+33. **flash `char` mode?** → **On**, flash's default: `f`/`t`/`F`/`T` highlight their targets, work across lines and repeat with `f`/`t`, with labels when needed.
+    Rejected: off (native `f`/`t`/`;`/`,`, as with easymotion, which never touched them).

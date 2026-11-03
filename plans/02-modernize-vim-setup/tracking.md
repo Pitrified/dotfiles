@@ -35,7 +35,7 @@ Analysis, inventory, and the decisions behind this scope are in
 | -- | ----------------------------------------------------- | ---------------------------------------------------------------- | ------ |
 | 1  | Resolve open questions & decisions                    | [`01_resolve_decisions.md`](01_resolve_decisions.md)               | done   |
 | 2  | Scaffold the Neovim config (init.lua, lazy.nvim boot) | [`02_scaffold_neovim_config.md`](02_scaffold_neovim_config.md)     | done   |
-| 3  | Migrate plugins + delete dead mappings                | [`03_migrate_plugins.md`](03_migrate_plugins.md)                   | draft  |
+| 3  | Migrate plugins + delete dead mappings                | [`03_migrate_plugins.md`](03_migrate_plugins.md)                   | in progress |
 | 4  | LSP, diagnostics & completion setup                   | [`04_lsp_and_completion.md`](04_lsp_and_completion.md)             | draft  |
 | 5  | Modernize the install script for Neovim               | [`05_modernize_install_script.md`](05_modernize_install_script.md) | draft  |
 | 6  | Docs, migration guide, remove `vim.symlink`           | [`06_docs_cleanup.md`](06_docs_cleanup.md)                         | draft  |
@@ -108,4 +108,18 @@ out on 2026-07-02, see Log).
 - 2026-11-03 : manual checks by the user, in a local terminal on this box: colors fine (markdown only gets the plain regex syntax until treesitter in phase 3), statusline shows path, flags, `:b<n>`, filetype and position, mouse scroll works in `:terminal` (the old scroll hack is not needed), `yy` reaches the system clipboard through `xclip` (Wayland session, via XWayland).
   Not tested: pasting from another app into Neovim, and the clipboard over SSH (OSC 52), which matters only when Neovim runs remotely.
   Phase 2 done; phase 3 next.
+- 2026-11-03 : drafted phase 3's Plan section from the current plugin READMEs and sources (nvim-treesitter `main` setup, flash keys and `char` mode, treesj default keys clashing with leader, fzf-lua's `fdfind` detection, todo-comments).
+  Five open questions in the plan: tools now (ripgrep, fd-find, ruff), flash `char` mode, TODO keywords under treesitter, parser list, `<leader>fs` on a folder missing here.
 
+- 2026-11-03 : user settled phase 3 questions 1, 3, 4, 5 (decisions 29-32): tools now, todo-comments.nvim, parser list without dart, `<leader>fs` dropped.
+  Wrote the system note `~/repos/plans/2026-11-03_02_ripgrep_fd_ruff.md`. Flash `char` mode still open.
+- 2026-11-03 : user settled the last phase 3 question (decision 33): flash `char` mode on. Phase 3 is now `planned`.
+- 2026-11-03 : executing phase 3 on `master`.
+  ruff 0.17.3 installed with `uv tool`; the apt ripgrep and fd-find install is handed to the user (log `10a-apt-ripgrep-fd.log`), not yet run.
+  New specs in `lua/plugins/`: treesitter, surround, autopairs, treesj, flash, rainbow, todo-comments, conform, which-key, fzf; `templates/skel.py`; wrap helper in `keymaps.lua`; skeleton autocmd in `autocmds.lua`, replacing `UpdateTodoKeywords`; `g:markdown_folding` removed.
+  Changes from the plan: only `after/ftplugin/{go,html}.lua` deleted; cpp and java have no parser, so they keep regex syntax and their syntax folds.
+  todo-comments pattern is `.{-}<(KEYWORDS)>` (non-greedy, very magic): the greedy `.*` picked the last keyword on a line; it highlights one keyword per line and carries it onto following comment lines (default `multiline`).
+  Headless checks pass: 22 parsers installed; treesitter highlight and fold expr in py/go/md/lua, cpp on syntax folds; checkhealth with no errors (flash, surround, todo-comments ship none; optional icon and image-preview warnings); conform formats py (ruff) and go (gofmt); `ysiw)`/`ds)`, `gS`/`gJ`, autopairs, `]q`/`[q` wrap and quiet on an empty list, skeleton fills `@BASENAME@`, rainbow toggle, dead-name grep empty, clean startup.
+  Python folds: treesitter's foldexpr wins over `folding.vim` (the autocmd runs after the ftplugin); `GetFold` stays defined for the comparison.
+- 2026-11-03 : the user installed ripgrep 15.1.0 and fd-find 10.3.0 (log `~/handoff-logs/10a-apt-ripgrep-fd.log`); `/usr/bin/rg`, `/usr/bin/fdfind`, `~/.local/bin/ruff` resolve; fzf-lua's checkhealth finds `rg` and `fdfind`.
+  Phase 3 waits on the user's manual checks and the python fold choice.
