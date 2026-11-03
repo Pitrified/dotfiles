@@ -13,6 +13,8 @@ return {
     formatters_by_ft = {
       python = { "ruff_format" },
       go = { "gofmt" },
+      sh = { "shfmt" },
+      bash = { "shfmt" },
     },
   },
 }

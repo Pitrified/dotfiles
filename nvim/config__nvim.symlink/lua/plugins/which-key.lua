@@ -12,6 +12,7 @@ return {
       { "<leader>n", group = "toggles" },
       { "<leader>r", group = "config" },
       { "<leader>y", group = "yank" },
+      { "gr", group = "LSP" },
     },
   },
 }

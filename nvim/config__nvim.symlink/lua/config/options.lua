@@ -50,12 +50,14 @@ opt.undofile = true
 opt.termguicolors = true
 opt.background = "dark"
 
--- statusline: path, flags, then buffer number, filetype, position
+-- statusline: path, flags, then diagnostic counts, buffer number, filetype, position
 opt.statusline = table.concat({
   "%<", -- cut at start if the line is too long
   "%f", -- path relative to current directory
   " %h%m%r", -- help, modified, readonly flags
   "%=", -- right align from here
+  -- diagnostic counts as `E:2 W:1 `, nothing when there are none (the guard from the 0.12 default statusline)
+  "%{% luaeval('(package.loaded[''vim.diagnostic''] and next(vim.diagnostic.count()) and vim.diagnostic.status() .. '' '') or '''' ') %}",
   ":b%n", -- buffer number with :b in front
   "%y", -- filetype
   "%w", -- preview window flag

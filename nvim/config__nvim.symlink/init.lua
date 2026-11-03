@@ -4,6 +4,7 @@ vim.g.mapleader = " "
 require("config.options")
 require("config.keymaps")
 require("config.autocmds")
+require("config.diagnostics")
 require("config.lazy")
 
 -- Machine-specific overrides, kept out of the repo.
