@@ -34,7 +34,7 @@ Analysis, inventory, and the decisions behind this scope are in
 | #  | Phase                                                | Plan                                                          | Status |
 | -- | ----------------------------------------------------- | ---------------------------------------------------------------- | ------ |
 | 1  | Resolve open questions & decisions                    | [`01_resolve_decisions.md`](01_resolve_decisions.md)               | done   |
-| 2  | Scaffold the Neovim config (init.lua, lazy.nvim boot) | [`02_scaffold_neovim_config.md`](02_scaffold_neovim_config.md)     | in progress |
+| 2  | Scaffold the Neovim config (init.lua, lazy.nvim boot) | [`02_scaffold_neovim_config.md`](02_scaffold_neovim_config.md)     | done   |
 | 3  | Migrate plugins + delete dead mappings                | [`03_migrate_plugins.md`](03_migrate_plugins.md)                   | draft  |
 | 4  | LSP, diagnostics & completion setup                   | [`04_lsp_and_completion.md`](04_lsp_and_completion.md)             | draft  |
 | 5  | Modernize the install script for Neovim               | [`05_modernize_install_script.md`](05_modernize_install_script.md) | draft  |
@@ -105,3 +105,7 @@ out on 2026-07-02, see Log).
 - 2026-11-03 : manual check by the user: `<Space>` in `:terminal` waited for the `<leader><leader>*` terminal mappings.
   Moved them to a `<C-w>` prefix (decision 28); headless check: no terminal mapping starts with `<Space>`, `<C-w>h` from a terminal leaves terminal mode and moves to the left window.
 - 2026-11-03 : added terminal-mode `jk` → `<C-\><C-n>` at the user's request; checked with real input events: mode goes from `t` to `nt`.
+- 2026-11-03 : manual checks by the user, in a local terminal on this box: colors fine (markdown only gets the plain regex syntax until treesitter in phase 3), statusline shows path, flags, `:b<n>`, filetype and position, mouse scroll works in `:terminal` (the old scroll hack is not needed), `yy` reaches the system clipboard through `xclip` (Wayland session, via XWayland).
+  Not tested: pasting from another app into Neovim, and the clipboard over SSH (OSC 52), which matters only when Neovim runs remotely.
+  Phase 2 done; phase 3 next.
+
