@@ -20,6 +20,8 @@ Language-specific rules live in `~/.claude/rules/<lang>.md` and load only when r
 - Raise descriptive, named exceptions rather than bare/generic ones, in any language.
 - Keep changes minimal and scoped to the task; do not refactor unrelated code.
 - Do not commit, push, or perform other outward-facing actions unless asked.
+- When handing me a git command to run (a push, a fetch), write it as `git -C <repo path> ...`, never with the `!` prefix:
+  I run it in my regular terminal, not from the Claude interface.
 - Never act on `main` when the repo is on another branch.
   Say so and ask if an action on another branch is needed.
 - Never act on another machine over SSH (or any other remote shell) without a clear instruction to do so.
